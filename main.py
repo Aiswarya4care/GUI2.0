@@ -4,12 +4,12 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import *
-import subprocess
 
 from cutadapt_fqc import cafa
 from cutadapt_fqc_drag import cafadra
 from annotation import anno
 from filter_somatic import filtereng_som
+from panelcreation import panel
 
 window=tk.Tk()
 
@@ -28,7 +28,7 @@ projectdirPath=tk.StringVar()
 window.geometry("650x600")
 window.title("Patient Data Processing")  
 
-
+#Browsing the folder with samples or to perform analysis
 def browse():
     global folderPath
     global project
@@ -37,13 +37,15 @@ def browse():
     folder_selected = filedialog.askdirectory()
     folderPath.set(folder_selected)
 
+#Selecting project directory (somatic or germline folders)
 def projectdir_browse():
     #choosing a project dir
     projectdir_selected = filedialog.askdirectory()
     projectdirPath.set(projectdir_selected)
     
-
+#saving all the global and cross file variables in globalv.py file
 def globalva_update():
+    Output.delete('1.0',END)
     libkit=library_kit.get()
     proj= project.get()
     location = folderPath.get()
@@ -53,14 +55,15 @@ def globalva_update():
     l1= 'location=' + "'" + location + "'"
     l2= 'libkit=' + "'" + libkit + "'"
     l3= 'proj=' + "'" + proj + "'"
-    l4= 'proj=' + "'" + proj + "'"
-    l5='appsess=' + "'" + appsess + "'"
-    l6='projectdir=' + "'" + projectdir + "'"
-    file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5,'\n',l6])
+    l4='appsess=' + "'" + appsess + "'"
+    l5='projectdir=' + "'" + projectdir + "'"
+    file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5])
     file1.close()
-    display= l1 + '\n' +l2+'\n'+l3+'\n'+l4+'\n'+l5+'\n'+l6
-    Output.insert(END, display)
-
+    file1 = open(GUIpath + '/globalv.py',"r")
+    data=file1.read()
+    Output.config(state=NORMAL)
+    Output.insert(1.0, data)
+   
 #Refresh basespace
 def bsrefresh():
     os.system("basemount basespace/")
@@ -81,6 +84,10 @@ def annotate():
 #Filter-Engine Somatic
 def filtersomatic():
     filtereng_som()
+
+#Panel creation
+def panelcreation():
+    panel()
 
 #Quit
 def quit():
@@ -148,6 +155,9 @@ projlabel.config(font=('Nunito Sans',12))
 #Annotation
 annotate_btn=tk.Button(window, text = 'Annotation', command = annotate,height = 1, width = 15) 
 
+#Panel creation
+panel_btn=tk.Button(window, text = 'Panel Creation', command = panelcreation ,height = 1, width = 15) 
+
 #Filter Engine Somatic
 filtersom_btn=tk.Button(window, text = 'Filter Engine Somatic', command = filtersomatic,height = 1, width = 15) 
 
@@ -173,7 +183,8 @@ globalv_btn.grid(row=5,column=0,pady=3)
 bsrefresh_btn.grid(row=5,column=1,pady=3)
 
 Output.grid(row=6,column=0,pady=3,columnspan=5)
-annotate_btn.grid(row=9,column=0,pady=3) 
+panel_btn.grid(row=9,column=0,pady=3) 
+annotate_btn.grid(row=9,column=1,pady=3) 
 filtersom_btn.grid(row=10,column=0,pady=3)
 close_btn.grid(row=12,column=0,pady=3)
 
