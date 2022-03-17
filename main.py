@@ -9,6 +9,7 @@ import subprocess
 from cutadapt_fqc import cafa
 from cutadapt_fqc_drag import cafadra
 from annotation import anno
+from filter_somatic import filtereng_som
 
 window=tk.Tk()
 
@@ -60,6 +61,11 @@ def globalva_update():
     display= l1 + '\n' +l2+'\n'+l3+'\n'+l4+'\n'+l5+'\n'+l6
     Output.insert(END, display)
 
+#Refresh basespace
+def bsrefresh():
+    os.system("basemount basespace/")
+    os.system("basemount basespace/")
+
 #Run Cutadapt and FastQC
 def cutad_fqc():
     cafa()
@@ -68,11 +74,15 @@ def cutad_fqc():
 def cutad_fqc_dra():
     cafadra()
 
-############################# Annotation & Filtration (Somatic & Germline) #################################
+#Annotation 
 def annotate():
     anno()
 
+#Filter-Engine Somatic
+def filtersomatic():
+    filtereng_som()
 
+#Quit
 def quit():
     file1 = open(GUIpath + '/globalv.py',"w+")
     file1.write('location=' + "'" + "'")
@@ -114,7 +124,10 @@ appsession= tk.Entry(window, width = 27, textvariable=appsession)
 appsessionlabel.config(font=('Nunito Sans',12))
 
 #submit button
-globalv_btn=tk.Button(window,text = 'Submit', command = globalva_update, height = 1, width = 15)
+globalv_btn=tk.Button(window,text = 'Submit', command = globalva_update, height = 1, width = 16)
+
+#basespace refresh button
+bsrefresh_btn=tk.Button(window,text = 'Refresh Basespace', command = bsrefresh, height = 1, width = 16)
 
 #Display Information
 Output = Text(window, height = 7, width = 60, bg = "light cyan")
@@ -127,14 +140,16 @@ cutad_fqclabel.config(font=('Nunito Sans',13))
 #Cutadapt, Fastqc and dragen button
 cutad_fqc_dra_btn=tk.Button(window,text = 'Run FQ, CA and Dragen', command = cutad_fqc_dra, height = 1, width = 16)
 
-
 #projectdir browse button
 projlabel= tk.Label(window, text='Choose Project Folder')
 projbrowse_btn=tk.Button(window,text = 'Select Project Folder', command = projectdir_browse, height = 1, width = 18)
 projlabel.config(font=('Nunito Sans',12))
 
-#Annotation_Somatic
+#Annotation
 annotate_btn=tk.Button(window, text = 'Annotation', command = annotate,height = 1, width = 15) 
+
+#Filter Engine Somatic
+filtersom_btn=tk.Button(window, text = 'Filter Engine Somatic', command = filtersomatic,height = 1, width = 15) 
 
 #Quit button
 close_btn=tk.Button(window, text="Quit", command=quit, height = 1, width = 15)
@@ -151,14 +166,15 @@ appsessionlabel.grid(row=3,column=0,pady=3)
 appsession.grid(row=3,column=1,pady=3)
 projlabel.grid(row=4,column=0,pady=3)
 projbrowse_btn.grid(row=4, column=1,pady=3)
-globalv_btn.grid(row=5,column=0,pady=3)
-Output.grid(row=6,column=0,pady=3,columnspan=5)
 cutad_fqc_btn.grid(row=8, column=0,pady=3)
 cutad_fqc_dra_btn.grid(row=8,column=1,pady=3)
 
+globalv_btn.grid(row=5,column=0,pady=3)
+bsrefresh_btn.grid(row=5,column=1,pady=3)
 
+Output.grid(row=6,column=0,pady=3,columnspan=5)
 annotate_btn.grid(row=9,column=0,pady=3) 
-
+filtersom_btn.grid(row=10,column=0,pady=3)
 close_btn.grid(row=12,column=0,pady=3)
 
 window.mainloop()        
