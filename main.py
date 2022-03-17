@@ -8,7 +8,7 @@ import subprocess
 
 from cutadapt_fqc import cafa
 from cutadapt_fqc_drag import cafadra
-from anno_som import anno
+from annotation import anno
 
 window=tk.Tk()
 
