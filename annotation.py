@@ -24,8 +24,6 @@ def anno():
 
     #modifying the annotation_mod.sh file
     annofile=location+'/annotation_mod.sh'
-    print(annofile)
-    
     # Read in the file
     with open(annofile, 'r') as file :
         filedata = file.read()
