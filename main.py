@@ -150,7 +150,7 @@ cutad_fqc_btn=tk.Button(window,text = 'Cutadapt & FastQ', command = cutad_fqc, h
 cutad_fqclabel.config(font=('Nunito Sans',13))
 
 #Cutadapt, Fastqc and dragen button
-cutad_fqc_dra_btn=tk.Button(window,text = 'Run FQ, CA and Dragen', command = cutad_fqc_dra, height = 1, width = 18)
+cutad_fqc_dra_btn=tk.Button(window,text = 'Run CA, FQ and Dragen', command = cutad_fqc_dra, height = 1, width = 18)
 
 #projectdir browse button
 projlabel= tk.Label(window, text='Choose Project Folder')
