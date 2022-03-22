@@ -1,5 +1,6 @@
 import os
 import globalv
+import config_gui
 import re
 from importlib import reload
 
@@ -9,11 +10,16 @@ GUIpath=os.getcwd()
 
 
 def anno():
-    #choosing the location for annotation (should contain list.txt)
+    #fetching the location for annotation (should contain list.txt) and the project dir
     reload(globalv)
     location= globalv.location
     projectdir= globalv.projectdir
     
+    #fetching config location from config_gui file
+    annotation_db= config_gui.annotation_db
+    annotation_spk= config_gui.annotation_spk
+    simplifyvcf= config_gui.simplifyvcf
+
     #copying annotation.sh and config.pl to the selected location
     loc_ann_file= GUIpath + '/Annotation/annotation_mod.sh'
     loc_confi_file= GUIpath + '/Annotation/config.pl'
@@ -30,8 +36,11 @@ def anno():
     with open(annofile, 'r') as file :
         filedata = file.read()
 
-    # Replace the target string
+    # Replace the project directory location, annotation_db. annotation_spk
         filedata = filedata.replace('{{projectdir}}', projectdir)
+        filedata = filedata.replace('{{annotation_db}}', annotation_db)
+        filedata = filedata.replace('{{annotation_spk}}', annotation_spk)
+        filedata = filedata.replace('{{simplifyvcf}}', simplifyvcf)
 
     # Write the file out again
     with open(annofile, 'w') as file:

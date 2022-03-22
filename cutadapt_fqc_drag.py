@@ -1,5 +1,6 @@
 import os
 import globalv
+import config_gui
 import pandas as pd
 import numpy as np
 import tkinter as tk
@@ -16,6 +17,11 @@ def cafadra():
     libkit=globalv.libkit
     proj=globalv.proj
     appsess=globalv.appsess
+
+    #fetching project id from config_gui file
+    proj_somatic_dna=config_gui.proj_somatic_dna
+    proj_germline=config_gui.proj_germline
+    proj_somatic_rna=config_gui.proj_somatic_rna
 
     #retrieving sample name 
     file_list=os.listdir(location)
@@ -52,52 +58,50 @@ def cafadra():
     
     if libkit=="Roche":
         adapter="AGATCGGAAGAGC"
-        bed_file_loc= "roche_hg19_panel.bed"
+        
     elif libkit=="Illumina":
         adapter="CTGTCTCTTATACACATCT"
-        bed_file_loc="CEX_illumina_nextera_panel.bed"
+        
     else:
         adapter="AGATCGGAAGAGC"
-        bed_file_loc="New_agilent_panel.bed"
+        
 
 #project selection and project id retrieval
     
     if proj=="Somatic DNA":
-        vctype="1"
-        pid="175429254"
-        proj_des="Somatic_Patient_Samples_3"
+        pid= proj_somatic_dna
+        
     elif proj=="Somatic RNA":
-        pid="148206064"
+        pid= proj_somatic_rna
     else:
-        pid="166558401"
-        vctype="0"
-        proj_des="Germline_Patient_Sample"
+        pid= proj_germline
+                
 
 #command for dragen
     if libkit=="Illumina" and proj=="Somatic DNA":
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:175429254 -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
     
     if libkit=="Illumina" and proj=="Germline":
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:166558401 -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
 
     if libkit=="Agilent" and proj=="Somatic DNA":
         bed_id=20024037150
-        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:175429254 -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
     
     if libkit=="Agilent" and proj=="Germline":
         bed_id=20024037150        
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:166558401 -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
 
     if libkit=="Roche" and proj=="Somatic DNA":
         bed_id=20977118310
-        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:175429254 -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
 
     if libkit=="Roche" and proj=="Germline":
         bed_id=20977118310        
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:166558401 -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
     
     if proj=="Somatic RNA":
-        cmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:148206064 -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:0 -o commandline-disclaimer:true"
+        cmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:0 -o commandline-disclaimer:true"
     
 #for dragen 
     
