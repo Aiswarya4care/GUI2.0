@@ -179,5 +179,3 @@ def cafadra():
     else:
         rm_cmd=" rm "+ location + "/" + "temp1.sh"
         os.system(rm_cmd) 
-        
-cafadra()

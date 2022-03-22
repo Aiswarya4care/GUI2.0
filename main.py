@@ -4,7 +4,6 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import *
-
 from cutadapt_fqc import cafa
 from cutadapt_fqc_drag import cafadra
 from annotation import anno
