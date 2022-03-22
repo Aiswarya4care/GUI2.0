@@ -1,6 +1,6 @@
 ############# Project ID ###########
 proj_somatic_dna= '175429254'
-germline= '166558401'
+proj_germline= '166558401'
 proj_somatic_rna= '148206064'
 
 ############# Annotation ###########
