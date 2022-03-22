@@ -1,5 +1,4 @@
 import os
-from globalv import *
 import globalv
 import tkinter as tk
 from tkinter import ttk
