@@ -4,6 +4,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from importlib import reload
 
 import globalv
 

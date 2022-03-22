@@ -1,16 +1,18 @@
 import os
 import globalv
 import re
+from importlib import reload
 
 #current working directory
 global GUIpath
 GUIpath=os.getcwd()
 
-#choosing the location for annotation (should contain list.txt)
-location= globalv.location
-projectdir= globalv.projectdir
 
 def anno():
+    #choosing the location for annotation (should contain list.txt)
+    reload(globalv)
+    location= globalv.location
+    projectdir= globalv.projectdir
     
     #copying annotation.sh and config.pl to the selected location
     loc_ann_file= GUIpath + '/Annotation/annotation_mod.sh'

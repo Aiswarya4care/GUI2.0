@@ -2,14 +2,16 @@ import os
 import numpy as np
 import pandas as pd
 import tkinter as tk
+from importlib import reload
 
 import globalv
-
-location= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
   
 def msi():
+    reload(globalv)
+    location= globalv.location
+    libkit=globalv.libkit
+    proj=globalv.proj
+
     file_list=os.listdir(location)
     if 'MSI' in file_list:
         os.system("rm -r " + location + "/MSI")   

@@ -2,13 +2,17 @@ import os
 import pandas as pd
 import warnings
 import re
+from importlib import reload
+
 import globalv
 
-dirpath= globalv.location
 global GUIpath
 GUIpath=os.getcwd()
 
 def filtereng_som():
+    reload(globalv)
+    dirpath= globalv.location
+    
     #importing external files for filter engine
     collist= pd.read_csv(GUIpath+ "/Filter/columns.csv")
     genes= pd.read_csv(GUIpath+ "/Filter/som_genes.csv")

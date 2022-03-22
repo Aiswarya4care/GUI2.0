@@ -6,13 +6,17 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
+from importlib import reload
 
-location= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
-appsess=globalv.appsess
 
 def cafadra():
+    reload(globalv)
+
+    location= globalv.location
+    libkit=globalv.libkit
+    proj=globalv.proj
+    appsess=globalv.appsess
+
     #retrieving sample name 
     file_list=os.listdir(location)
     if 'cutadaptlog' in file_list:

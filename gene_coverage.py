@@ -6,19 +6,20 @@ import glob
 from tkinter import filedialog
 from tkinter import messagebox
 from functools import reduce
+from importlib import reload
 
 import globalv
 
-path= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
-
 
 def gene_cov():
+	reload(globalv)
+	path= globalv.location
+	libkit=globalv.libkit
+	proj=globalv.proj
+
 	mkdir_cmd_2='mkdir '+ path +'/'+'sample_coverage'
 	os.system(mkdir_cmd_2)
-	
-	
+		
 	f = open(path+'/'+'list.txt')
 	for line in f:
 		line_2=line.replace('\n',"")
@@ -38,6 +39,10 @@ def gene_cov():
 		print('##########Ending Coverage Calculation for '+line_2+' #################')
 
 def compile_gene_cov():
+	reload(globalv)
+	path= globalv.location
+	libkit=globalv.libkit
+	proj=globalv.proj
 	mkdir_cmd_3='mkdir '+ path +'/'+'Average'
 	os.system(mkdir_cmd_3)
 	f = open(path+'/'+'list.txt')

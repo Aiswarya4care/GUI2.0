@@ -5,14 +5,15 @@ import warnings
 import re
 import tkinter as tk
 from tkinter import filedialog
+from importlib import reload
 
 import globalv
 
-location= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
-
 def panel():
+    reload(globalv)
+    location= globalv.location
+    libkit=globalv.libkit
+    proj=globalv.proj
     file_list=os.listdir(location)
     if 'panel' in file_list:
         os.system("rm -r " + location + "/panel")

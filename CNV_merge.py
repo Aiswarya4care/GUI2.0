@@ -5,6 +5,7 @@ import glob
 import tkinter as tk
 from functools import reduce
 import inflect
+from importlib import reload
 
 import globalv
 

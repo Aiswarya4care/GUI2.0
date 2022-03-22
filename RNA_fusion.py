@@ -1,14 +1,16 @@
 import os
 import pandas as pd
 import glob
+from importlib import reload
 
 import globalv
 
-path= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
 
 def rna_fus():
+	reload(globalv)
+	path= globalv.location
+	libkit=globalv.libkit
+	proj=globalv.proj
 	#copying the files from basespace to local system
 	f = open(path+'/'+'list.txt')
 	for line in f:

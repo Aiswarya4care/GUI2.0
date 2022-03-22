@@ -2,13 +2,17 @@ import os
 import pandas as pd
 import warnings
 import re
+from importlib import reload
+
 import globalv
 
-dirpath= globalv.location
 global GUIpath
 GUIpath=os.getcwd()
 
 def filtereng_germ():
+	reload(globalv)
+	dirpath= globalv.location
+
 	collist= pd.read_csv(GUIpath+ "/Filter/columns.csv")
 	genes= pd.read_csv(GUIpath+ "/Filter/som_genes.csv")
 	canonical = pd.read_excel(GUIpath+ "/Filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')

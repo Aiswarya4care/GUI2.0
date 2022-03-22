@@ -3,17 +3,21 @@ import numpy as np
 import pandas as pd
 import tkinter as tk
 import warnings
+from importlib import reload
 
 import globalv
 
-dirpath= globalv.location
 global GUIpath
 GUIpath=os.getcwd()
+    
 
 # FOR WITHOUT ART SAMPLES #
 #Filtration: PASS filter, Af>= 0.05, MQ >=20, DP >= 30, Func. known gene, Exonic Func., Pop freq (combined), af (0.44 & 0.55), 4ubuntu cohort alone
 
 def tmb():
+    reload(globalv)
+    dirpath= globalv.location
+    
     collist= pd.read_csv(GUIpath+ "/Filter/columns.csv")
     cohort4= pd.read_csv(GUIpath+ "/Filter/4basecare-germline-cohort.tsv",sep='\t')
     folders= os.listdir(dirpath)
