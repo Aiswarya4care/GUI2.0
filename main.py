@@ -47,7 +47,6 @@ def projectdir_browse():
 #saving all the global and cross file variables in globalv.py file
 def globalva_update():
     Output.delete('1.0',END)
-    
     libkit=library_kit.get()
     proj= project.get()
     location = folderPath.get()
@@ -63,7 +62,6 @@ def globalva_update():
     file1.close()
     file1 = open(GUIpath + '/globalv.py',"r")
     data=file1.read()
-
     Output.config(state=NORMAL)
     Output.insert(1.0, data)
    
