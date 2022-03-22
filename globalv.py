@@ -1,5 +1,3 @@
-location='/home/ash/Desktop/annot'
-libkit='Roche'
-proj='Somatic RNA'
-appsess='123123'
-projectdir='/home/ash/Desktop/GUI2'
+location=''
+libkit=''
+proj=''
