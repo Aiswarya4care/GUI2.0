@@ -119,7 +119,7 @@ browselabel.config(font=('Nunito Sans',12))
 
 
 #dropdown for library kits    
-kitlabel= tk.Label(window, text= 'Select the library kit')
+kitlabel= tk.Label(window, text= 'Select the bed file')
 kitchoosen = ttk.Combobox(window, width = 26, textvariable = library_kit)
 kitchoosen['values'] = ('Roche', 'Illumina','Agilent')
 kitlabel.config(font=('Nunito Sans',12))

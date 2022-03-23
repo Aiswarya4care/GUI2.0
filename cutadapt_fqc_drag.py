@@ -9,21 +9,25 @@ from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
 
+#current working directory
+global GUIpath
+GUIpath=os.getcwd()
 
 def cafadra():
     reload(globalv)
-
     location= globalv.location
     libkit=globalv.libkit
     proj=globalv.proj
     appsess=globalv.appsess
-
+    bed_id=globalv.bed_id
+    
     #fetching project id from config_gui file
     proj_somatic_dna=config_gui.proj_somatic_dna
     proj_germline=config_gui.proj_germline
     proj_somatic_rna=config_gui.proj_somatic_rna
+    fastqc= config_gui.fastqc
 
-    #retrieving sample name 
+    #retrieving sample names 
     file_list=os.listdir(location)
     if 'cutadaptlog' in file_list:
         os.system("rm " + location + "/cutadaptlog")
@@ -38,31 +42,20 @@ def cafadra():
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
     
-    if 'temp1.sh' in samples:
-        samples.remove('temp1.sh')
-    if 'panel' in samples:
-        samples.remove('panel')
-    if 'panellog.txt' in samples:
-        samples.remove('panellog.txt')
-    if 'cutadaptlog.txt' in samples:    
-        samples.remove('cutadaptlog.txt')
-    if 'FQlog.txt' in samples:    
-        samples.remove('FQlog.txt')
-    if 'MSI' in samples:
-        samples.remove('MSI')
-    if 'CNV' in samples:
-        samples.remove('CNV')
-    if 'cutadaptlog' in samples:
-        samples.remove('cutadaptlog')   
-#kit chosen and retrieving adapters 
+    #Removing default file names from the sample name list
+    default_files=config_gui.default_files
+    for s in default_files:
+        if s in samples:
+            samples.remove(s)
     
-    if libkit=="Roche":
-        adapter="AGATCGGAAGAGC"
-        
-    elif libkit=="Illumina":
+    #kit chosen and retrieving adapters 
+    
+    if libkit=="Illumina":
+        bed_file_info= "fixed-bed:Illumina_Exome_TargetedRegions_v1.2"
         adapter="CTGTCTCTTATACACATCT"
-        
+              
     else:
+        bed_file_info= "fixed-bed:custom -o target_bed_id:"+ str(bed_id)
         adapter="AGATCGGAAGAGC"
         
 
@@ -70,91 +63,43 @@ def cafadra():
     
     if proj=="Somatic DNA":
         pid= proj_somatic_dna
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
         
     elif proj=="Somatic RNA":
         pid= proj_somatic_rna
+        cmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+    
     else:
         pid= proj_germline
-                
+        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
 
-#command for dragen
-    if libkit=="Illumina" and proj=="Somatic DNA":
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+    #Coping the shell script and modifying the content  
+    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq_dragen.sh'     
+    os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     
-    if libkit=="Illumina" and proj=="Germline":
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:Illumina_Exome_TargetedRegions_v1.2 -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+    #giving the necessary permissions
+    os.chdir(location)
+    os.system('chmod 777 *')
 
-    if libkit=="Agilent" and proj=="Somatic DNA":
-        bed_id=20024037150
-        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
-    
-    if libkit=="Agilent" and proj=="Germline":
-        bed_id=20024037150        
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+    #modifying the annotation_mod.sh file
+    cafqdrafile=location+'/ca_fq_dragen.sh'
+    # Read in the file
+    with open(cafqdrafile, 'r') as file :
+        filedata = file.read()
 
-    if libkit=="Roche" and proj=="Somatic DNA":
-        bed_id=20977118310
-        cmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+    # Replace the project directory location, annotation_db. annotation_spk
+        filedata = filedata.replace('{{samplenames}}', str(samples).strip("[]").replace("'","").replace(",",""))
+        filedata = filedata.replace('{{adapter}}', adapter)
+        filedata = filedata.replace('{{location}}', location)
+        filedata = filedata.replace('{{fastqc}}', fastqc)
+        filedata = filedata.replace('{{pid}}', pid)
+    
+    # Write the file out again
+    with open(cafqdrafile, 'w') as file:
+        file.write(filedata)
 
-    if libkit=="Roche" and proj=="Germline":
-        bed_id=20977118310        
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:"+ str(bed_id) +" -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
-    
-    if proj=="Somatic RNA":
-        cmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:0 -o commandline-disclaimer:true"
-    
-#for dragen 
-    
-    
-    l2="for i in *_R1.fastq.gz"
-    l3="do"
-    l4="   SAMPLE=$(echo ${i} | sed \"s/_R1\.fastq\.gz//\") "
-    l5="   echo ${SAMPLE}_R1.fastq.gz ${SAMPLE}_R2.fastq.gz"
-    l6="   cutadapt -j 30 -m 35 -a "+ adapter +" -A " +adapter+" -o ${SAMPLE}_S1_L001_R1_001.fastq.gz -p ${SAMPLE}_S1_L001_R2_001.fastq.gz ${SAMPLE}_R1.fastq.gz ${SAMPLE}_R2.fastq.gz >" + location + "/cutadaptlog" + "/${SAMPLE}_cutadaptlog.txt"
-    l7="done"
-    l8="bs upload dataset --project="
-    l10="samples=(" + str(samples).strip("[]").replace("'","").replace(",","") + ")"
-    l11="for i in ${samples[@]};  do"
-    l12="echo $i;"
-    l13="bsid=`bs get biosample -n $i –terse | grep \"Id\" | head -1 | grep -Eo '[0-9]{1,}'`;"
-    l14="bsids+=($bsid)"
-    l15="done"
-    l16="printf -v joined '%s,' \"${bsids[@]}\""
-    l17="bsids=${joined%,}"
-    l18="echo $bsids"
-    l1="perl /home/ubuntu/Programs/fastqc_v0.11.9/FastQC/fastqc *.gz"
-    
     os.system("mkdir "+ location+ "/cutadaptlog")
-    temp= location + "/temp1.sh"
-    f= open(temp,"x")
-    f.close()
-    f= open(temp,"w+")
-    f.write("cd " + location)
-    f.write('\n' + l2)
-    f.write('\n' + l3)
-    f.write('\n' + l4)
-    f.write('\n' + l5)
-    f.write('\n' + l6)
-    f.write('\n' + l7)
-    f.write('\n'+ l8 + str(pid) + " *R1_001.fastq.gz *R2_001.fastq.gz")
-    f.write('\n' + l10)
-    f.write('\n' + l11)
-    f.write('\n' + l12)
-    f.write('\n' + l13)
-    f.write('\n' + l14)
-    f.write('\n' + l15)
-    f.write('\n' + l16)
-    f.write('\n'+l17)
-    f.write('\n'+l18)
-    f.write('\n'+ cmd)
-    f.write('\n'+"echo \"########################\"")
-    f.write('\n'+"echo \"Dragen Launched\"")
-    f.write('\n'+"echo \"########################\"")
-    f.write('\n' + l1)
-    f.write('\n'+"echo \"########################\"")
-    f.write('\n'+"echo \"FastQC completed\"")
-    f.write('\n'+"echo \"########################\"")
-    f.close()
+    
  ###location and info
     print("################################")
     print("######### INFORMATION ##########")
