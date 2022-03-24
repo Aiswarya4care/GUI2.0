@@ -1,5 +1,5 @@
 location=''
-libkit=''
-proj=''
+dragen_bed_file=''
+sample_type=''
 appsess=''
 projectdir=''

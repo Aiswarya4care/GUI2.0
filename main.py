@@ -18,9 +18,9 @@ global GUIpath
 GUIpath=os.getcwd()
 
 # declaring string variables for tkinter
-library_kit=tk.StringVar()
+dra_bed=tk.StringVar()
 location_name=tk.StringVar()
-project= tk.StringVar()
+sampletype= tk.StringVar()
 folderPath=tk.StringVar()
 appsession=tk.StringVar()
 projectdirPath=tk.StringVar()
@@ -33,7 +33,7 @@ window.title("Patient Data Processing")
 def browse():
     global folderPath
     global project
-    global library_kit
+    global dragen_bed
     global appsession
     folder_selected = filedialog.askdirectory()
     folderPath.set(folder_selected)
@@ -47,15 +47,15 @@ def projectdir_browse():
 #saving all the global and cross file variables in globalv.py file
 def globalva_update():
     Output.delete('1.0',END)
-    libkit=library_kit.get()
-    proj= project.get()
+    dragen_bed=dra_bed.get()
+    stype= sampletype.get()
     location = folderPath.get()
     appsess= appsession.get()
     projectdir=projectdirPath.get()
     file1 = open(GUIpath + '/globalv.py',"w+")
     l1= 'location=' + "'" + location + "'"
-    l2= 'libkit=' + "'" + libkit + "'"
-    l3= 'proj=' + "'" + proj + "'"
+    l2= 'dragen_bed=' + "'" + dragen_bed + "'"
+    l3= 'sample_type=' + "'" + stype + "'"
     l4='appsess=' + "'" + appsess + "'"
     l5='projectdir=' + "'" + projectdir + "'"
     file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5])
@@ -98,8 +98,8 @@ def filtergermline():
 def quit():
     file1 = open(GUIpath + '/globalv.py',"w+")
     file1.write('location=' + "'" + "'")
-    file1.write('\n' + 'libkit=' + "'"  + "'")
-    file1.write('\n' +'proj=' + "'" + "'")
+    file1.write('\n' + 'dragen_bed_file=' + "'"  + "'")
+    file1.write('\n' +'sample_type=' + "'" + "'")
     file1.write('\n' +'appsess=' + "'"  + "'")
     file1.write('\n' +'projectdir=' + "'"  + "'")
     file1.close()
@@ -118,17 +118,19 @@ browse_btn=tk.Button(window,text = 'Browse', command = browse, height = 1, width
 browselabel.config(font=('Nunito Sans',12))
 
 
-#dropdown for library kits    
-kitlabel= tk.Label(window, text= 'Select the bed file')
-kitchoosen = ttk.Combobox(window, width = 26, textvariable = library_kit)
-kitchoosen['values'] = ('Roche', 'Illumina','Agilent')
-kitlabel.config(font=('Nunito Sans',12))
+#dropdown for dragen bedfiles
+dragbedfiles= os.listdir(GUIpath+'/bed_files/dragen_bed_files')
+dragbedfiles.insert(0, 'Illumina')
+dragbedlabel= tk.Label(window, text= 'Select the bed file for DRAGEN')
+dragbedchosen = ttk.Combobox(window, width = 26, textvariable = dra_bed)
+dragbedchosen['values'] = (dragbedfiles)
+dragbedlabel.config(font=('Nunito Sans',12))
 
 #selecting projects and retrieving project IDs
-projectlabel= tk.Label(window, text= 'Select the project')
-projectchoosen = ttk.Combobox(window, width = 26, textvariable = project)
-projectchoosen['values'] = ('Somatic DNA', 'Somatic RNA','Germline')
-projectlabel.config(font=('Nunito Sans',12))
+sampletypelabel= tk.Label(window, text= 'Select the sample type')
+sampletypechosen = ttk.Combobox(window, width = 26, textvariable = sampletype)
+sampletypechosen['values'] = ('Somatic DNA', 'Somatic RNA','Germline')
+sampletypelabel.config(font=('Nunito Sans',12))
 
 #Appsession details
 appsessionlabel= tk.Label(window, text='Enter Appsession details')
@@ -176,10 +178,10 @@ close_btn=tk.Button(window, text="Quit", command=quit, height = 1, width = 18)
 ################# Positioning ##########################
 browselabel.grid(row=0,column=0,pady=8)
 browse_btn.grid(row=0, column=1,pady=8)
-kitlabel.grid(row=1, column=0,pady=8)
-kitchoosen.grid( row = 1,column = 1,pady=8)
-projectlabel.grid(row=2,column=0,pady=8)
-projectchoosen.grid(row=2, column=1,pady=8)
+dragbedlabel.grid(row=1, column=0,pady=8)
+dragbedchosen.grid( row = 1,column = 1,pady=8)
+sampletypelabel.grid(row=2,column=0,pady=8)
+sampletypechosen.grid(row=2, column=1,pady=8)
 appsessionlabel.grid(row=3,column=0,pady=8)
 appsession.grid(row=3,column=1,pady=8)
 projlabel.grid(row=4,column=0,pady=8)

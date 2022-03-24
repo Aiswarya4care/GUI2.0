@@ -1,4 +1,5 @@
 import os
+from sqlite3 import adapters
 import globalv
 import config_gui
 import pandas as pd
@@ -8,6 +9,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
+from config_gui import bed_ids
 
 #current working directory
 global GUIpath
@@ -16,23 +18,25 @@ GUIpath=os.getcwd()
 def cafadra():
     reload(globalv)
     location= globalv.location
-    libkit=globalv.libkit
-    proj=globalv.proj
+    dragen_bed=globalv.dragen_bed
+    sample_type=globalv.sample_type
     appsess=globalv.appsess
-    bed_id=globalv.bed_id
-    
+    bed_id=bed_ids[dragen_bed]
+    projectdir=globalv.projectdir
+
     #fetching project id from config_gui file
     proj_somatic_dna=config_gui.proj_somatic_dna
     proj_germline=config_gui.proj_germline
     proj_somatic_rna=config_gui.proj_somatic_rna
     fastqc= config_gui.fastqc
+    
 
     #retrieving sample names 
     file_list=os.listdir(location)
     if 'cutadaptlog' in file_list:
         os.system("rm " + location + "/cutadaptlog")
-    if 'temp1.sh' in file_list:
-        os.system("rm " + location + "/temp1.sh")
+    if 'cafq_script.sh' in file_list:
+        os.system("rm " + location + "/cafq_script.sh")
    
     
     samples=[]
@@ -50,28 +54,27 @@ def cafadra():
     
     #kit chosen and retrieving adapters 
     
-    if libkit=="Illumina":
+    if dragen_bed=="Illumina":
         bed_file_info= "fixed-bed:Illumina_Exome_TargetedRegions_v1.2"
-        adapter="CTGTCTCTTATACACATCT"
-              
+             
     else:
         bed_file_info= "fixed-bed:custom -o target_bed_id:"+ str(bed_id)
-        adapter="AGATCGGAAGAGC"
         
-
 #project selection and project id retrieval
     
-    if proj=="Somatic DNA":
+    if sample_type=="Somatic DNA":
         pid= proj_somatic_dna
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        adapter='AGATCGGAAGAGC'
+        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
         
-    elif proj=="Somatic RNA":
+    elif sample_type=="Somatic RNA":
         pid= proj_somatic_rna
-        cmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
-    
+        bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+        adapter='CTGTCTCTTATACACATCT'
     else:
         pid= proj_germline
-        cmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
     loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq_dragen.sh'     
@@ -92,6 +95,7 @@ def cafadra():
         filedata = filedata.replace('{{adapter}}', adapter)
         filedata = filedata.replace('{{location}}', location)
         filedata = filedata.replace('{{fastqc}}', fastqc)
+        filedata = filedata.replace('{{bscmd}}', bscmd)
         filedata = filedata.replace('{{pid}}', pid)
     
     # Write the file out again
@@ -104,13 +108,13 @@ def cafadra():
     print("################################")
     print("######### INFORMATION ##########")
     print("################################")
-    print("Selected Project is " + str(proj))
+    print("Selected project directory is " + str(projectdir))
     print("Project ID is " + str(pid))
     print("Adapter information: " + str(adapter))
     print("No. of files selected is " + str(len(os.listdir(location))-2))
     print("Data located in: " + str(location))
     a = ("Selected Project is " +
-       str(proj) + "\n" +
+       str(projectdir) + "\n" +
        "Project ID is " +
        str(pid) + "\n" +
        "Data located in: "+
@@ -123,12 +127,12 @@ def cafadra():
         print("############ Running it all together ###########")
         print("################################")
         
-        temp1_path= location + "/" + "temp1.sh"
-        os.system("bash " + temp1_path)
+        cafq_script_path= location + "/" + "cafq_script.sh"
+        os.system("bash " + cafq_script_path)
         print("################################")
         print("############ Done ###########")
         print("################################")
         
     else:
-        rm_cmd=" rm "+ location + "/" + "temp1.sh"
+        rm_cmd=" rm "+ location + "/" + "cafq_script.sh"
         os.system(rm_cmd) 

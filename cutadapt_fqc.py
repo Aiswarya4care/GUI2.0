@@ -9,12 +9,15 @@ from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
 
+#current working directory
+global GUIpath
+GUIpath=os.getcwd()
 
 def cafa():
     reload(globalv)
-
+    dragen_bed=globalv.dragen_bed
+    sample_type=globalv.sample_type
     location= globalv.location
-    libkit=globalv.libkit
     proj=globalv.proj
 
     #fetching project id from config_gui file
@@ -37,66 +40,50 @@ def cafa():
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
     
-    if 'temp1.sh' in samples:
-        samples.remove('temp1.sh')
-    if 'panel' in samples:
-        samples.remove('panel')
-    if 'panellog.txt' in samples:
-        samples.remove('panellog.txt')
-    if 'cutadaptlog.txt' in samples:    
-        samples.remove('cutadaptlog.txt')
-    if 'FQlog.txt' in samples:    
-        samples.remove('FQlog.txt')
-    if 'MSI' in samples:
-        samples.remove('MSI')
-    if 'CNV' in samples:
-        samples.remove('CNV')
-    if 'cutadaptlog' in samples:
-        samples.remove('cutadaptlog') 
-
-#kit chosen and retrieving adapters 
-    
-    if libkit=="Roche":
-        adapter="AGATCGGAAGAGC"
-    elif libkit=="Illumina":
-        adapter="CTGTCTCTTATACACATCT"
-    else:
-        adapter="AGATCGGAAGAGC"
+#Removing default file names from the sample name list
+    default_files=config_gui.default_files
+    for s in default_files:
+        if s in samples:
+            samples.remove(s)
 
 #project selection and project id retrieval
     
-    if proj=="Somatic DNA":
+    if sample_type=="Somatic DNA":
         pid= proj_somatic_dna
+        adapter='AGATCGGAAGAGC'
         
-    elif proj=="Somatic RNA":
+    elif sample_type=="Somatic RNA":
         pid= proj_somatic_rna
+        adapter='CTGTCTCTTATACACATCT'
     else:
         pid= proj_germline
+        adapter='AGATCGGAAGAGC'
 
-    l1="for i in *_R1.fastq.gz"
-    l2="do"
-    l3="   SAMPLE=$(echo ${i} | sed \"s/_R1\.fastq\.gz//\") "
-    l4="   echo ${SAMPLE}_R1.fastq.gz ${SAMPLE}_R2.fastq.gz"
-    l5="   cutadapt -j 30 -m 35 -a "+ adapter +" -A " +adapter+" -o ${SAMPLE}_S1_L001_R1_001.fastq.gz -p ${SAMPLE}_S1_L001_R2_001.fastq.gz ${SAMPLE}_R1.fastq.gz ${SAMPLE}_R2.fastq.gz >" + location + "/cutadaptlog" + "/${SAMPLE}_cutadaptlog.txt"
-    l6="done"
-    l8="bs upload dataset --project="
-    l10="echo \"############ FQ and CA completed ###########\""
+    #Coping the shell script and modifying the content  
+    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq_dragen.sh'     
+    os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     
+    #giving the necessary permissions
+    os.chdir(location)
+    os.system('chmod 777 *')
+
+    #modifying the annotation_mod.sh file
+    cafqdrafile=location+'/ca_fq_dragen.sh'
+    # Read in the file
+    with open(cafqdrafile, 'r') as file :
+        filedata = file.read()
+
+    # Replace the project directory location, annotation_db. annotation_spk
+        filedata = filedata.replace('{{adapter}}', adapter)
+        filedata = filedata.replace('{{location}}', location)
+        filedata = filedata.replace('{{pid}}', pid)
+    
+    # Write the file out again
+    with open(cafqdrafile, 'w') as file:
+        file.write(filedata)
+
     os.system("mkdir "+ location+ "/cutadaptlog")
-    temp= location + "/temp1.sh"
-    f= open(temp,"x")
-    f.close()
-    f= open(temp,"w+")
-    f.write("cd " + location)
-    f.write('\n' + l1)
-    f.write('\n' + l2)
-    f.write('\n' + l3)
-    f.write('\n' + l4)
-    f.write('\n' + l5)
-    f.write('\n' + l6)
-    f.write('\n'+ l8 + str(pid) + " *R1_001.fastq.gz *R2_001.fastq.gz")
-    f.write('\n' + l10)
-    f.close()
+    
     
     ###location and info
     print("################################")
