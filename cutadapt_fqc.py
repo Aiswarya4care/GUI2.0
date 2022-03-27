@@ -15,11 +15,9 @@ GUIpath=os.getcwd()
 
 def cafa():
     reload(globalv)
-    dragen_bed=globalv.dragen_bed
     sample_type=globalv.sample_type
     location= globalv.location
-    proj=globalv.proj
-
+    
     #fetching project id from config_gui file
     proj_somatic_dna=config_gui.proj_somatic_dna
     proj_germline=config_gui.proj_germline
@@ -28,9 +26,9 @@ def cafa():
 #retrieving sample name 
     file_list=os.listdir(location)
     if 'cutadaptlog' in file_list:
-        os.system("rm " + location + "/cutadaptlog")
-    if 'temp1.sh' in file_list:
-        os.system("rm " + location + "/temp1.sh")
+        os.system("rmdir " + location + "/cutadaptlog")
+    if 'ca_fq.sh' in file_list:
+        os.system("rm " + location + "/ca_fq.sh")
    
     
     samples=[]
@@ -60,7 +58,7 @@ def cafa():
         adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq_dragen.sh'     
+    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     
     #giving the necessary permissions
@@ -68,9 +66,9 @@ def cafa():
     os.system('chmod 777 *')
 
     #modifying the annotation_mod.sh file
-    cafqdrafile=location+'/ca_fq_dragen.sh'
+    cafqfile=location+'/ca_fq.sh'
     # Read in the file
-    with open(cafqdrafile, 'r') as file :
+    with open(cafqfile, 'r') as file :
         filedata = file.read()
 
     # Replace the project directory location, annotation_db. annotation_spk
@@ -79,38 +77,30 @@ def cafa():
         filedata = filedata.replace('{{pid}}', pid)
     
     # Write the file out again
-    with open(cafqdrafile, 'w') as file:
+    with open(cafqfile, 'w') as file:
         file.write(filedata)
 
     os.system("mkdir "+ location+ "/cutadaptlog")
     
     
     ###location and info
-    print("################################")
-    print("######### INFORMATION ##########")
-    print("################################")
-    print("Selected Project is " + str(proj))
-    print("Project ID is " + str(pid))
-    print("Adapter information: " + str(adapter))
-    print("Data located in: " + str(location))
-    print("No. of files selected is " + str(len(os.listdir(location))-2))
-    a = ("Selected Project is " +
-       str(proj) + "\n" +
-       "Project ID is " +
+    a = ("Selected Project is: " +
+       str(sample_type) + "\n" +
+       "Project ID is: " +
        str(pid) + "\n" +
        "Data located in: "+
-       str(location))
-    answer = tk.messagebox.askyesnocancel("Confirmation", a)
+       str(location)+ "\n" +
+        "No. of files selected is: " + str(len(os.listdir(location))-2))
+    
+    answer = tk.messagebox.askyesno("Confirmation", a)
     if answer:
         print("################################")
         print("############ Running FQ and Cutadapt ###########")
         print("################################")
         
-        temp1_path= location + "/" + "temp1.sh"
-        os.system("sh " + temp1_path)
+        cafq_script_path= location + "/" + "ca_fq.sh"
+        os.system("sh " + cafq_script_path)
         print("################################")
         print("############ Done ###########")
         print("################################")
-    else:
-        rm_cmd=" rm "+ location + "/" + "temp1.sh"
-        os.system(rm_cmd) 
+   

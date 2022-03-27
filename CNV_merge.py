@@ -10,10 +10,10 @@ from importlib import reload
 import globalv
 
 path= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
 
-def cnvmerge():
+def cnv_merge():
+	reload(globalv)
+	path=globalv.location
 	files = glob.glob(os.path.join(path,"*_cnv_output.txt"))
 	
 	def concat_arrange(fp):

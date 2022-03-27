@@ -12,26 +12,15 @@ import globalv
 def panel():
     reload(globalv)
     location= globalv.location
-    libkit=globalv.libkit
-    proj=globalv.proj
+    sample_type=globalv.sample_type
+    projectdir=globalv.projectdir
+
     file_list=os.listdir(location)
+
     if 'panel' in file_list:
         os.system("rm -r " + location + "/panel")
- #kit chosen and retrieving adapters 
-    if libkit=="Roche":
-        bed_file_loc= "roche_hg19_panel.bed"
-    elif libkit=="Illumina":
-        bed_file_loc="CEX_illumina_nextera_panel.bed"
-    else:
-        bed_file_loc="New_agilent_panel.bed"
 
-#project selection and project id retrieval
-    if proj=="Somatic DNA":
-        proj_dest="Somatic_Patient_Samples_3"
-    elif proj=="Somatic RNA":
-        proj_dest="Somatic_Patient_RNA"
-    else:
-        proj_dest="Germline_Patient_Sample"
+    bed_file_loc=globalv.dragen_bed_file
     
     samples=[]
     for file in file_list:
@@ -58,15 +47,15 @@ def panel():
         
     mkdir="mkdir "+ location+ "/panel"
     os.system(mkdir)
-    temp2= location +  "/panel/temp2.sh"
-    f1= open(temp2,"x")
+    panelcreate= location +  "/panel/panelcreate.sh"
+    f1= open(panelcreate,"x")
     f1.close()
-    f1= open(temp2,"w+")
+    f1= open(panelcreate,"w+")
     f1.write("cd "+ location + "/panel" + '\n')
     
-    if proj=="Somatic DNA":
+    if sample_type=="Somatic DNA":
         for s in samples:
-            f1.write("cp /home/ubuntu/basespace/Projects/"+ str(proj_dest) + "/AppResults/" + s)
+            f1.write("cp "+ str(projectdir) + "/AppResults/" + s)
             f1.write("/Files/"+s+ ".hard-filtered.vcf.gz "+ location+ "/panel"+ '\n')
             f1.write('\n')
             f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
@@ -80,9 +69,9 @@ def panel():
         f1.write('\n' +"echo \"######################\"")
         f1.close()  
     
-    elif proj=="Germline":
+    elif sample_type=="Germline":
         for s in samples:
-            f1.write("cp /home/ubuntu/basespace/Projects/"+ str(proj_dest) + "/AppResults/" + s)
+            f1.write("cp "+ str(projectdir) + "/AppResults/" + s)
             f1.write("/Files/"+s+ ".hard-filtered.vcf.gz "+ location+ "/panel"+ '\n')
             f1.write('\n')
             f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
@@ -99,12 +88,12 @@ def panel():
         print("################################")
         print("############ Creating panel vcfs ###########")
         print("################################")
-        temp2_path= location + "/panel/" + "temp2.sh >" + location+ "/panel/panellog.txt"
-        os.system("bash " + temp2_path)
+        panelcreate_path= location + "/panel/" + "panelcreate.sh >" + location+ "/panel/panellog.txt"
+        os.system("bash " + panelcreate_path)
         print("################################")
         print("############ Panel Created ###########")
         print("################################")
         
     else:
-        rm_cmd=" rm "+ location + "/panel/" + "temp2.sh"
+        rm_cmd=" rm "+ location + "/panel/" + "panelcreate.sh"
         os.system(rm_cmd) 

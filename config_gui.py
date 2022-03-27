@@ -8,19 +8,24 @@ annotation_db= '/home/basecare/Programs/Annotation_db'
 annotation_spk= '/home/basecare/Annotation_SPK'
 simplifyvcf='/home/basecare/Programs/VCF-Simplify-master/VcfSimplify.py'
 fastqc= '/home/ubuntu/Programs/fastqc_v0.11.9/FastQC/fastqc'
+msisensor= '/home/ubuntu/Programs/msisensor2/msisensor2'
+msi_microlist= '/home/ubuntu/Programs/MSI_Mirco_List/micro.list'
 
 ############# Bed file ID for dragen #################
-bed_ids= {
+dra_bed_ids= {
 'Illumina':'Illumina',
-'TruSeq_Exome_TargetedRegions_v':'18815858077',
-'SureSelect_V7_Whole_Exome':'20024037150',
-'Roche_hg19.bed':'20977118310',
-'SureSelect_V8_Whole_Exome_HG19':'23683257154',
-'CE_Indiegene_Whole_Exome_HG19':'25985869859',
-'CT_Indiegene_Transcriptome_HG19':'25985863705'}
+'roche_hg19_whole.bed':'20977118310',
+'truseq_exome_targetedregions_v1.2.bed':'18815858077',
+'sureselectv7_covered.bed':'20024037150',
+'sureselectxt_v8_covered.bed':'23683257154',
+'ce_indiegene_target_1K_DNA_GRCh37.bed':'25985869859',
+'ce_indiegene_target_RNA_Fusion_GRCh37.bed':'25985863705'
+
+}
 
 ############ Developer Options ###############
-default_files=['temp1.sh','pane','cutadaptlog.txt','FQlog.txt','MSI','CNV','cutadaptlog', 'FE_merged','FE_filtered']
+default_files=['ca_fq_dragen.sh','ca_fq.sh','panel','cutadaptlog.txt','FQlog.txt','MSI','CNV','cutadaptlog', 'FE_merged','FE_filtered','FE_filtered.csv','tmbmerged','tmbfiltered','tmb_filtered.csv','sample_coverage'] #pre-existing file names to be removed from the sample name list
+
 
 
 

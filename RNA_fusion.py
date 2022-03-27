@@ -6,22 +6,22 @@ from importlib import reload
 import globalv
 
 
-def rna_fus():
+def rna_fusion():
 	reload(globalv)
 	path= globalv.location
-	libkit=globalv.libkit
-	proj=globalv.proj
+	projectdir=globalv.projectdir
+
 	#copying the files from basespace to local system
 	f = open(path+'/'+'list.txt')
 	for line in f:
 		line_1=line.replace('\n',"")
 		print(line_1)
 		os.system("echo '##########Starting copying preliminary, coverage and general stats files from basespace #################'")
-		command_n='cp /home/ubuntu/basespace/Projects/Somatic_Patient_RNA_Feb_22/AppResults/'+line_1+'_*/Files/'+line_1+'.fusion_candidates.preliminary '+path+'/'
+		command_n='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.fusion_candidates.preliminary '+path+'/'
 		#print(command_n)
-		command_m='cp /home/ubuntu/basespace/Projects/Somatic_Patient_RNA_Feb_22/AppResults/'+line_1+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/'
+		command_m='cp' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/'
 		rename1='mv '+path+'/multiqc_general_stats.txt '+path+'/'+line_1+'_multiqc_general_stats.txt'
-		command_o='cp /home/ubuntu/basespace/Projects/Somatic_Patient_RNA_Feb_22/AppResults/'+line_1+'_*/Files/'+line_1+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/'
+		command_o='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/'
 		os.system(command_n)
 		os.system(command_m)
 		os.system(rename1)

@@ -5,37 +5,39 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
+import config_gui
 
 import globalv
 
-location= globalv.location
-libkit=globalv.libkit
-proj=globalv.proj
 
+def cnv_analysis():
+    reload(globalv)
+    location= globalv.location
+    sample_type=globalv.sample_type
+    projectdir=globalv.projectdir
 
-def cnv():
     file_list=os.listdir(location)
     if 'CNV' in file_list:
         os.system("rm -r " + location + "/CNV")
+    mkdir="mkdir "+ location+ "/CNV"
+    os.system(mkdir)
     
     #kit chosen and retrieving adapters 
-    if libkit=="Roche":
-        cnv_loc= "/home/ubuntu/Patient_samples/bed_files/roche/KAPA HyperExome Design files hg19/KAPA HyperExome_hg19_capture_targets.bed"
-    elif libkit=="Illumina":
-        cnv_loc="/home/ubuntu/Patient_samples/bed_files/Illumina_CEX_bed/TruSeq_Exome_TargetedRegions_v1.2.bed"
-    else:
-        cnv_loc="/home/ubuntu/Patient_samples/bed_files/v7/SureSelectV7_covered.bed"
+    cnv_bed_loc=globalv.dragen_bed
+
+    # if libkit=="Roche":
+    #     cnv_loc= "/home/ubuntu/Patient_samples/bed_files/roche/KAPA HyperExome Design files hg19/KAPA HyperExome_hg19_capture_targets.bed"
+    # elif libkit=="Illumina":
+    #     cnv_loc="/home/ubuntu/Patient_samples/bed_files/Illumina_CEX_bed/TruSeq_Exome_TargetedRegions_v1.2.bed"
+    # else:
+    #     cnv_loc="/home/ubuntu/Patient_samples/bed_files/v7/SureSelectV7_covered.bed"
     
-    mkdir="mkdir "+ location+ "/CNV"
-    os.system(mkdir) 
+     
+
     #project selection and project id retrieval
-    if proj=="Somatic DNA":
-        proj_dest="Somatic_Patient_Samples_3"
-    elif proj=="Somatic RNA":
-        proj_dest="Somatic_Patient_RNA"
-    else:
-        proj_dest="Germline_Patient_Sample"
-    
+    projectdir=globalv.projectdir
+    sample_type=globalv.sample_type
+
     samples=[]
     for file in file_list:
         sample= file.split("_")
@@ -43,24 +45,13 @@ def cnv():
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
     
-    if 'temp1.sh' in samples:
-        samples.remove('temp1.sh')
-    if 'panel' in samples:
-        samples.remove('panel')
-    if 'panellog.txt' in samples:
-        samples.remove('panellog.txt')
-    if 'cutadaptlog.txt' in samples:    
-        samples.remove('cutadaptlog.txt')
-    if 'FQlog.txt' in samples:    
-        samples.remove('FQlog.txt')
-    if 'MSI' in samples:
-        samples.remove('MSI')
-    if 'CNV' in samples:
-        samples.remove('CNV')
-    if 'cutadaptlog' in samples:
-        samples.remove('cutadaptlog') 
+    #Removing default file names from the sample name list
+    default_files=config_gui.default_files
+    for s in default_files:
+        if s in samples:
+            samples.remove(s)
         
-    if proj=="Somatic DNA":
+    if sample_type=="Somatic DNA":
         for s in samples:
             os.system("mkdir "+ location+ "/CNV/" + s)
             cnvtxt= location +  "/CNV/" + s + "/" + s+"_cnv.txt"
@@ -77,7 +68,7 @@ def cnv():
             f1.write('\n' + "maxThreads = 30" + '\n' + "sambamba = /usr/bin/sambamba")
             f1.write('\n' + "SambambaThreads = 30" + '\n' + "noisyData = TRUE" + '\n'+ "printNA=FALSE")
             f1.write('\n' + '\n'+ "[sample]" +'\n')
-            f1.write('\n' + "mateFile = " + "/home/ubuntu/basespace/Projects/" + str(proj_dest))
+            f1.write('\n' + "mateFile = " + str(projectdir))
             f1.write("/AppResults/"+ s + "/Files/" + s + ".bam")
             f1.write('\n' + "inputFormat = BAM")
             f1.write('\n' + "mateOrientation = FR")
@@ -89,10 +80,10 @@ def cnv():
             f1.write('\n' + "minimalCoveragePerPosition = 5" +'\n')
             f1.write('\n' + "[target]"+ '\n')
             f1.write('\n' + "captureRegions =")
-            f1.write(str(cnv_loc)) 
+            f1.write(str(cnv_bed_loc)) 
         f1.close()  
         
-    elif proj=="Germline":
+    elif sample_type=="Germline":
         for s in samples:
             os.system("mkdir "+ location+ "/CNV/" + s)
             cnvtxt= location +  "/CNV/" + s + "/" + s+"_cnv.txt"
@@ -109,13 +100,13 @@ def cnv():
             f1.write('\n' + "maxThreads = 30" + '\n' + "sambamba = /usr/bin/sambamba")
             f1.write('\n' + "SambambaThreads = 30" + '\n' + "noisyData = TRUE" + '\n'+ "printNA=FALSE")
             f1.write('\n' + '\n'+ "[sample]" +'\n')
-            f1.write('\n' + "mateFile = " + "/home/ubuntu/basespace/Projects/" + str(proj_dest))
+            f1.write('\n' + "mateFile = " + str(projectdir))
             f1.write("/AppResults/"+ s + "/Files/" + s + ".bam")
             f1.write('\n' + "inputFormat = BAM")
             f1.write('\n' + "mateOrientation = FR")
             f1.write('\n' + "[target]"+ '\n')
             f1.write('\n' + "captureRegions =")
-            f1.write(str(cnv_loc)) 
+            f1.write(str(cnv_bed_loc)) 
         f1.close()
     
         

@@ -14,7 +14,7 @@ GUIpath=os.getcwd()
 # FOR WITHOUT ART SAMPLES #
 #Filtration: PASS filter, Af>= 0.05, MQ >=20, DP >= 30, Func. known gene, Exonic Func., Pop freq (combined), af (0.44 & 0.55), 4ubuntu cohort alone
 
-def tmb():
+def tmb_calculation():
     reload(globalv)
     dirpath= globalv.location
     
@@ -80,12 +80,7 @@ def tmb():
         merged_df['intervar_inhouse']=merged_df[list(merged_df.columns[30:57])].apply(lambda x: ', '.join(x[x.notnull()]), axis = 1)
         
         print(f + " : merged")
-            
-        #re-arranging the index
-        #cols=list(merged_df.columns)
-        #colind= list(collist['reindex_wo_art'][collist['reindex_wo_art'].notna()])
-        #colindex=list( [cols[int(i)] for i in colind] )
-                               
+                         
         final_df=merged_df          
         tot_var=len(final_df)
              
@@ -161,7 +156,6 @@ def tmb():
     
         
         ################## Final step of filtration ###############
-        df1=df
         
         ####################### Removing 4basecare cohort alone ###############
         cohort4=cohort4.rename(columns={'chr':'CHROM', 'start':'POS', 'ref':'REF_x', 'alt':'ALT_x'})

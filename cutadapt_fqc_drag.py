@@ -1,5 +1,4 @@
 import os
-from sqlite3 import adapters
 import globalv
 import config_gui
 import pandas as pd
@@ -9,7 +8,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
-from config_gui import bed_ids
+from config_gui import dra_bed_ids
 
 #current working directory
 global GUIpath
@@ -21,7 +20,7 @@ def cafadra():
     dragen_bed=globalv.dragen_bed
     sample_type=globalv.sample_type
     appsess=globalv.appsess
-    bed_id=bed_ids[dragen_bed]
+    bed_id=dra_bed_ids[dragen_bed]
     projectdir=globalv.projectdir
 
     #fetching project id from config_gui file
@@ -35,8 +34,8 @@ def cafadra():
     file_list=os.listdir(location)
     if 'cutadaptlog' in file_list:
         os.system("rm " + location + "/cutadaptlog")
-    if 'cafq_script.sh' in file_list:
-        os.system("rm " + location + "/cafq_script.sh")
+    if 'ca_fq_dragen.sh' in file_list:
+        os.system("rm " + location + "/ca_fq_dragen.sh")
    
     
     samples=[]
@@ -127,12 +126,12 @@ def cafadra():
         print("############ Running it all together ###########")
         print("################################")
         
-        cafq_script_path= location + "/" + "cafq_script.sh"
-        os.system("bash " + cafq_script_path)
+        cafqdra_script_path= location + "/" + "ca_fq_dragen.sh"
+        os.system("bash " + cafqdra_script_path)
         print("################################")
         print("############ Done ###########")
         print("################################")
         
     else:
-        rm_cmd=" rm "+ location + "/" + "cafq_script.sh"
+        rm_cmd=" rm "+ location + "/" + "ca_fq_dragen.sh"
         os.system(rm_cmd) 
