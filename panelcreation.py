@@ -1,10 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
-import warnings
-import re
+import config_gui
 import tkinter as tk
-from tkinter import filedialog
 from importlib import reload
 
 import globalv
@@ -14,13 +12,13 @@ def panel():
     location= globalv.location
     sample_type=globalv.sample_type
     projectdir=globalv.projectdir
+    panel_bed=globalv.panel_bed
 
     file_list=os.listdir(location)
 
     if 'panel' in file_list:
         os.system("rm -r " + location + "/panel")
 
-    bed_file_loc=globalv.dragen_bed_file
     
     samples=[]
     for file in file_list:
@@ -28,22 +26,12 @@ def panel():
         samples.append(sample[0])
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
-    if 'temp1.sh' in samples:
-        samples.remove('temp1.sh')
-    if 'panel' in samples:
-        samples.remove('panel')
-    if 'panellog.txt' in samples:
-        samples.remove('panellog.txt')
-    if 'cutadaptlog.txt' in samples:    
-        samples.remove('cutadaptlog.txt')
-    if 'FQlog.txt' in samples:    
-        samples.remove('FQlog.txt')
-    if 'MSI' in samples:
-        samples.remove('MSI')
-    if 'CNV' in samples:
-        samples.remove('CNV')
-    if 'cutadaptlog' in samples:
-        samples.remove('cutadaptlog') 
+    
+    #Removing default file names from the sample name list
+    default_files=config_gui.default_files
+    for s in default_files:
+        if s in samples:
+            samples.remove(s)
         
     mkdir="mkdir "+ location+ "/panel"
     os.system(mkdir)
@@ -61,7 +49,7 @@ def panel():
             f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
             f1.write('\n')
             f1.write("/home/ubuntu/Programs/./bedtools.static.binary intersect -header -a " + s+".hard-filtered.vcf -b /home/ubuntu/Patient_samples/bed_files/panel_bed_files/")
-            f1.write(str(bed_file_loc)+ " > " + s + ".hard-filtered_panel.vcf")
+            f1.write(str(panel_bed)+ " > " + s + ".hard-filtered_panel.vcf")
             f1.write('\n'+ "rm -rf "+ s + ".hard-filtered.vcf")
             f1.write('\n' + "############" +'\n')
         f1.write('\n' +"echo \"######################\"")
@@ -95,5 +83,4 @@ def panel():
         print("################################")
         
     else:
-        rm_cmd=" rm "+ location + "/panel/" + "panelcreate.sh"
-        os.system(rm_cmd) 
+        print("###### Panel Creation Aborted #####")

@@ -8,8 +8,17 @@ annotation_db= '/home/basecare/Programs/Annotation_db'
 annotation_spk= '/home/basecare/Annotation_SPK'
 simplifyvcf='/home/basecare/Programs/VCF-Simplify-master/VcfSimplify.py'
 fastqc= '/home/ubuntu/Programs/fastqc_v0.11.9/FastQC/fastqc'
+
+#MSI
 msisensor= '/home/ubuntu/Programs/msisensor2/msisensor2'
 msi_microlist= '/home/ubuntu/Programs/MSI_Mirco_List/micro.list'
+
+#CNV
+chrLenFile = '/home/ubuntu/Programs/files_for_control_freec/fai_file/my_genome.fa.fai'
+chrFiles = '/home/ubuntu/Programs/files_for_control_freec/chromFa/'
+sambamba = '/usr/bin/sambamba'
+controlfreec= '/home/ubuntu/Programs/FREEC-11.6/src/freec'
+bedtools= '/home/ubuntu/Programs/./bedtools.static.binary intersect'
 
 ############# Bed file ID for dragen #################
 dra_bed_ids= {
