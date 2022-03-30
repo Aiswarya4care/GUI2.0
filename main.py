@@ -3,18 +3,18 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import *
-from cutadapt_fqc import cafa
-from cutadapt_fqc_drag import cafadra
-from annotation import anno
-from panelcreation import panel
-from filter_somatic import filtereng_som
-from filter_germline import filtereng_germ
-from CNV import cnv_analysis
-from CNV_merge import cnv_merge
-from MSI import msi_analysis
-from TMB import tmb_calculation
-from gene_coverage import gene_cov
-from RNA_fusion import rna_fusion
+from codes.cutadapt_fqc import cafa
+from codes.cutadapt_fqc_drag import cafadra
+from codes.annotation import anno
+from codes.panelcreation import panel
+from codes.filter_somatic import filtereng_som
+from codes.filter_germline import filtereng_germ
+from codes.CNV import cnv_analysis
+from codes.CNV_merge import cnv_merge
+from codes.MSI import msi_analysis
+from codes.TMB import tmb_calculation
+from codes.gene_coverage import gene_cov
+from codes.RNA_fusion import rna_fusion
 
 window=tk.Tk()
 

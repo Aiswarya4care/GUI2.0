@@ -58,7 +58,7 @@ def cafa():
         adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq.sh'     
+    loc_cafqdra_file= GUIpath + '/ca_fq_dragen/ca_fq.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     
     #giving the necessary permissions

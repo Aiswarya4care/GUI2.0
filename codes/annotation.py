@@ -21,8 +21,8 @@ def anno():
     simplifyvcf= config_gui.simplifyvcf
 
     #copying annotation.sh and config.pl to the selected location
-    loc_ann_file= GUIpath + '/Annotation/annotation_mod.sh'
-    loc_confi_file= GUIpath + '/Annotation/config.pl'
+    loc_ann_file= GUIpath + '/annotation/annotation_mod.sh'
+    loc_confi_file= GUIpath + '/annotation/config.pl'
     os.system('cp '+ loc_ann_file + ' ' + location)
     os.system('cp '+ loc_confi_file + ' ' + location)
 

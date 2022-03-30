@@ -76,7 +76,7 @@ def cafadra():
         adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath + '/CA_FQ_Dragen/ca_fq_dragen.sh'     
+    loc_cafqdra_file= GUIpath + '/ca_fq_dragen/ca_fq_dragen.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     
     #giving the necessary permissions
@@ -118,7 +118,7 @@ def cafadra():
        str(pid) + "\n" +
        "Data located in: "+
        str(location))
-    answer = tk.messagebox.askyesnocancel("Confirmation", a)    
+    answer = tk.messagebox.askyesno("Confirmation", a)    
    
     if answer:
         

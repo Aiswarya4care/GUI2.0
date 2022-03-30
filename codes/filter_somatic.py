@@ -14,9 +14,9 @@ def filtereng_som():
     dirpath= globalv.location
     
     #importing external files for filter engine
-    collist= pd.read_csv(GUIpath+ "/Filter/columns.csv")
-    genes= pd.read_csv(GUIpath+ "/Filter/som_genes.csv")
-    canonical = pd.read_excel(GUIpath+ "/Filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
+    collist= pd.read_csv(GUIpath+ "/filter/columns.csv")
+    genes= pd.read_csv(GUIpath+ "/filter/som_genes.csv")
+    canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
        
     folders= os.listdir(dirpath)
     #making FE_merged and FE_filtered folders in the destination dir
