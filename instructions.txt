@@ -1,0 +1,9 @@
+#------LIBRARIES to be installed before running the app------#
+#pip3 install pandas
+#pip3 install numpy
+#pip3 install tabletext
+#pip3 install os
+#pip3 install glob
+#pip3 install pyfiglet
+#pip3 install alive-progress
+#pip3 install openpyxl
