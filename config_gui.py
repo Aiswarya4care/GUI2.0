@@ -1,3 +1,7 @@
+################### GUI Path #################
+
+GUIpath='/home/ash/Documents/GitHub/GUI2.0'
+
 ############# Project ID for dragen ###########
 proj_somatic_dna= '175429254'
 proj_germline= '166558401'
@@ -30,6 +34,28 @@ dra_bed_ids= {
 'ce_indiegene_target_1K_DNA_GRCh37.bed':'25985869859',
 'ce_indiegene_target_RNA_Fusion_GRCh37.bed':'25985863705'
 
+}
+
+########### test name and panel bed prefix #############
+
+########### capturing kit and panel bed prefix/suffix ###########
+testprefix={
+    'TarGT Absolute' : 'T_Absolute-',
+'TarGT Core' : 'T_Core-',
+'TarGT Indigene' : 'T_Indie-',
+'TarGT Focus' : 'T_Focus-',
+'TarGT Absolute Germline' : 'T_Absolute-',
+'Germline Plus' : 'T_Germlineplus-',
+'Germline ++' : 'T_Germlineplusplus-',
+'HRR' : 'T_HRR-'
+}
+
+capkitsuffix={
+    'SureSelectV7_covered.bed' : 'SSE.bed',
+'SureSelectXT_V8_Covered.bed' : 'SE8.bed',
+'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_sorted.bed' : 'Indie.bed',
+'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',
+'Roche_hg19.bed' : 'Roche.bed'
 }
 
 ############ Developer Options ###############

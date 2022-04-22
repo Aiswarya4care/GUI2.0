@@ -4,6 +4,8 @@ import numpy as np
 import config_gui
 import tkinter as tk
 from importlib import reload
+from config_gui import GUIpath, testprefix
+from config_gui import capkitsuffix
 
 import globalv
 
@@ -12,7 +14,14 @@ def panel():
     location= globalv.location
     sample_type=globalv.sample_type
     projectdir=globalv.projectdir
-    panel_bed=globalv.panel_bed
+    capturing_kit=globalv.capturing_kit
+    test=globalv.test
+
+    ########### selecting the panel bed file #############
+    prefix=testprefix[test]
+    suffix=capkitsuffix[capturing_kit]
+
+    panel_bed= GUIpath + 'bed_files/panel_bed_files' + str(test)+ "/" + prefix + suffix
 
     file_list=os.listdir(location)
 
@@ -41,7 +50,20 @@ def panel():
     f1= open(panelcreate,"w+")
     f1.write("cd "+ location + "/panel" + '\n')
     
-    if sample_type=="Somatic DNA":
+    if sample_type=="DNA [Blood]":
+        for s in samples:
+            f1.write("cp "+ str(projectdir) + "/AppResults/" + s)
+            f1.write("/Files/"+s+ ".hard-filtered.vcf.gz "+ location+ "/panel"+ '\n')
+            f1.write('\n')
+            f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
+            f1.write('\n')
+            f1.write('\n' + "############" +'\n')
+        f1.write('\n' +"echo \"######################\"")
+        f1.write('\n' +"echo \"######### DONE #########\"")
+        f1.write('\n' +"echo \"######################\"")
+        f1.close()
+            
+    else:        
         for s in samples:
             f1.write("cp "+ str(projectdir) + "/AppResults/" + s)
             f1.write("/Files/"+s+ ".hard-filtered.vcf.gz "+ location+ "/panel"+ '\n')
@@ -56,19 +78,6 @@ def panel():
         f1.write('\n' +"echo \"######### DONE #########\"")
         f1.write('\n' +"echo \"######################\"")
         f1.close()  
-    
-    elif sample_type=="Germline":
-        for s in samples:
-            f1.write("cp "+ str(projectdir) + "/AppResults/" + s)
-            f1.write("/Files/"+s+ ".hard-filtered.vcf.gz "+ location+ "/panel"+ '\n')
-            f1.write('\n')
-            f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
-            f1.write('\n')
-            f1.write('\n' + "############" +'\n')
-        f1.write('\n' +"echo \"######################\"")
-        f1.write('\n' +"echo \"######### DONE #########\"")
-        f1.write('\n' +"echo \"######################\"")
-        f1.close()
     
     answer = tk.messagebox.askyesnocancel("Confirmation", "Run panel creation process?")    
    

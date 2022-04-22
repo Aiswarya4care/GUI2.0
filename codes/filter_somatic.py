@@ -7,7 +7,7 @@ from importlib import reload
 import globalv
 
 global GUIpath
-GUIpath=os.getcwd()
+GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 def filtereng_som():
     reload(globalv)

@@ -1,5 +1,5 @@
 location=''
-dragen_bed_file=''
+capturingkit=''
 sample_type=''
 appsess=''
 projectdir=''

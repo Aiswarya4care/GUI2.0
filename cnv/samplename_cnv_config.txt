@@ -1,0 +1,32 @@
+[general]
+chrLenFile = {{chrLenFile}}
+chrFiles = {{chrFiles}}
+window = 0
+ploidy = 2
+intercept=1
+minMappabilityPerWindow = 0.7
+outputDir = {{outputDir}} 
+sex=XY
+breakPointType=2
+degree=3
+coefficientOfVariation = 0.05
+breakPointThreshold = 0.6
+maxThreads = 30
+sambamba = {{sambamba}}
+SambambaThreads = 30
+noisyData = TRUE
+printNA=FALSE
+
+[sample]
+
+mateFile = {{mateFile}}
+inputFormat = BAM
+mateOrientation = FR
+
+[BAF]
+
+minimalCoveragePerPosition = 5
+
+[target]
+
+captureRegions = {{captureRegions}}

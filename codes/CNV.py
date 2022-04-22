@@ -9,7 +9,7 @@ import config_gui
 import globalv
 
 global GUIpath
-GUIpath=os.getcwd()
+GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 def cnv_analysis():
     reload(globalv)
@@ -23,6 +23,7 @@ def cnv_analysis():
     cnv_ref_bed=globalv.cnv_ref_bed
     cnv_annot_bed=globalv.cnv_annot_bed
     projectdir=globalv.projectdir
+    capturingkit=globalv.capturingkit
 
     file_list=os.listdir(location)
     if 'CNV' in file_list:
@@ -43,8 +44,38 @@ def cnv_analysis():
     for s in default_files:
         if s in samples:
             samples.remove(s)
-        
+
+    ########################################   
+    #generating config files for each sample#
+    for s in samples:
+        os.system("mkdir "+ location+ "/CNV/" + s)
+
+    #Coping the shell script and modifying the content  
+    loc_cnvconfig_file= GUIpath + '/cnv/samplename_cnv_config.txt'     
+    os.system('cp '+ loc_cnvconfig_file + ' ' + location+ "/CNV/" + s) 
     
+    #giving the necessary permissions
+    os.chdir(location)
+    os.system('chmod 777 *')
+
+    #modifying the annotation_mod.sh file
+    cnvconfigfile=location+'/samplename_cnv_config.txt'
+    # Read in the file
+    with open(cnvconfigfile, 'r') as file :
+        filedata = file.read()
+
+    # Replace the project directory location, annotation_db. annotation_spk
+        filedata = filedata.replace('{{chrLenFile}}', chrLenFile)
+        filedata = filedata.replace('{{chrFiles}}', chrFiles)
+        filedata = filedata.replace('{{outputDir}}', location+ "/CNV/" + s)
+        filedata = filedata.replace('{{sambamba}}', sambamba)
+        filedata = filedata.replace('{{mateFile}}', projectdir + "/AppResults/" + s + "/Files/"+ s + ".bam")
+        filedata = filedata.replace('{{captureRegions}}', capturingkit)
+
+    # Write the file out again
+    with open(cnvconfigfile, 'w') as file:
+        file.write(filedata)
+
     for s in samples:
         os.system("mkdir "+ location+ "/CNV/" + s)
         cnvtxt= location +  "/CNV/" + s + "/" + s+"_cnv.txt"

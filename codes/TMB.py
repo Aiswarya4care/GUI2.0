@@ -4,11 +4,12 @@ import pandas as pd
 import tkinter as tk
 import warnings
 from importlib import reload
+import config_gui
 
 import globalv
 
 global GUIpath
-GUIpath=os.getcwd()
+GUIpath=config_gui.GUIpath
     
 
 # FOR WITHOUT ART SAMPLES #

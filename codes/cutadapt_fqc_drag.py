@@ -12,7 +12,7 @@ from config_gui import dra_bed_ids
 
 #current working directory
 global GUIpath
-GUIpath=os.getcwd()
+GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 def cafadra():
     reload(globalv)

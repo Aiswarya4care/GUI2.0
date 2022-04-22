@@ -3,11 +3,11 @@ import pandas as pd
 import warnings
 import re
 from importlib import reload
-
+import config_gui
 import globalv
 
 global GUIpath
-GUIpath=os.getcwd()
+GUIpath=config_gui.GUIpath
 
 def filtereng_germ():
 	reload(globalv)
