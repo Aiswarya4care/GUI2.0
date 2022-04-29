@@ -3,11 +3,11 @@ import pandas as pd
 import warnings
 import re
 from importlib import reload
-
+import config_gui
 import globalv
 
 global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
+GUIpath=config_gui.GUIpath
 
 def filtereng_som():
     reload(globalv)
@@ -213,6 +213,7 @@ def filtereng_som():
         df3['ExonicFunc.ensGene'] = df3['ExonicFunc.ensGene'].str.upper()
         df3['InterVar_automated'] = df3['InterVar_automated'].str.upper()
         df3[' CancerVar: CancerVar and Evidence '] = df3[' CancerVar: CancerVar and Evidence '].str.upper()
+        
         #redundant code for clinvar data
         for p in popfreqs:
             df3[p]=df3[p].replace('.',0).fillna(0) 

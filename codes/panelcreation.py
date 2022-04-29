@@ -4,8 +4,7 @@ import numpy as np
 import config_gui
 import tkinter as tk
 from importlib import reload
-from config_gui import GUIpath, testprefix
-from config_gui import capkitsuffix
+from config_gui import GUIpath, testprefix, capkitsuffix, bedtools
 
 import globalv
 
@@ -21,7 +20,7 @@ def panel():
     prefix=testprefix[test]
     suffix=capkitsuffix[capturing_kit]
 
-    panel_bed= GUIpath + 'bed_files/panel_bed_files' + str(test)+ "/" + prefix + suffix
+    panel_bed= GUIpath.split('codes')[0] + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
 
     file_list=os.listdir(location)
 
@@ -35,7 +34,7 @@ def panel():
         samples.append(sample[0])
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
-    
+    print(samples)
     #Removing default file names from the sample name list
     default_files=config_gui.default_files
     for s in default_files:
@@ -70,8 +69,8 @@ def panel():
             f1.write('\n')
             f1.write("gzip -dk "+ s+ ".hard-filtered.vcf.gz" + '\n')
             f1.write('\n')
-            f1.write("/home/ubuntu/Programs/./bedtools.static.binary intersect -header -a " + s+".hard-filtered.vcf -b /home/ubuntu/Patient_samples/bed_files/panel_bed_files/")
-            f1.write(str(panel_bed)+ " > " + s + ".hard-filtered_panel.vcf")
+            f1.write(bedtools + " -header -a " + s+".hard-filtered.vcf -b ")
+            f1.write(str(panel_bed)+ " > " + s + ".hard-filtered_" + str(test) +"_panel.vcf")
             f1.write('\n'+ "rm -rf "+ s + ".hard-filtered.vcf")
             f1.write('\n' + "############" +'\n')
         f1.write('\n' +"echo \"######################\"")

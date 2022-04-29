@@ -13,17 +13,20 @@ def filtereng_germ():
 	reload(globalv)
 	dirpath= globalv.location
 
+	#importing external files for filter engine
 	collist= pd.read_csv(GUIpath+ "/filter/columns.csv")
 	genes= pd.read_csv(GUIpath+ "/filter/som_genes.csv")
 	canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
         
 	folders= os.listdir(dirpath)
+	#making FE_merged and FE_filtered folders in the destination dir
 	os.system("mkdir " + dirpath + "/FE_merged")
 	os.system("mkdir " + dirpath + "/FE_filtered")
 	warnings.filterwarnings("ignore")
     
 	filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
     
+	#processing every sample in folder one by one
 	for f in folders:
 		num=folders.index(f)
 		f_path= dirpath + "/" + f
@@ -136,6 +139,8 @@ def filtereng_germ():
         #writing merged file
 		output_path= dirpath + "/FE_merged/" + f + '_merged_output.csv'        
 		final_df.to_csv(output_path, index=False)
+        
+		############## Filtration ##########
         
         ##Filtering for Clinvar pathogenic variants 
 		clinvar= final_df[final_df['clinvar: Clinvar '].str.contains('pathogen', case=False, regex=True)]

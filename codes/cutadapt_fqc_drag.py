@@ -12,15 +12,15 @@ from config_gui import dra_bed_ids
 
 #current working directory
 global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
+GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 def cafadra():
     reload(globalv)
     location= globalv.location
-    dragen_bed=globalv.dragen_bed
+    capturingkit=globalv.capturing_kit
     sample_type=globalv.sample_type
     appsess=globalv.appsess
-    bed_id=dra_bed_ids[dragen_bed]
+    bed_id=dra_bed_ids[capturingkit]
     projectdir=globalv.projectdir
 
     #fetching project id from config_gui file
@@ -32,12 +32,7 @@ def cafadra():
 
     #retrieving sample names 
     file_list=os.listdir(location)
-    if 'cutadaptlog' in file_list:
-        os.system("rm " + location + "/cutadaptlog")
-    if 'ca_fq_dragen.sh' in file_list:
-        os.system("rm " + location + "/ca_fq_dragen.sh")
-   
-    
+       
     samples=[]
     for file in file_list:
         sample= file.split("_")
@@ -51,34 +46,34 @@ def cafadra():
         if s in samples:
             samples.remove(s)
     
-    #kit chosen and retrieving adapters 
-    
-    if dragen_bed=="Illumina":
-        bed_file_info= "fixed-bed:Illumina_Exome_TargetedRegions_v1.2"
-             
-    else:
-        bed_file_info= "fixed-bed:custom -o target_bed_id:"+ str(bed_id)
-        
 #project selection and project id retrieval
     
-    if sample_type=="Somatic DNA":
+    if sample_type=="DNA [Blood]":
         pid= proj_somatic_dna
         adapter='AGATCGGAAGAGC'
-        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l " + appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
         
-    elif sample_type=="Somatic RNA":
+    elif sample_type=="RNA":
         pid= proj_somatic_rna
-        bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+        bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " output_format:BAM -o coverage_list.coverage_bed_id:Numeric-ID -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
         adapter='CTGTCTCTTATACACATCT'
+    
+    elif sample_type=="DNA [cf]":
+        pid= proj_somatic_rna
+        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o liquid_tumor:1 -o vc-af-call-threshold:1 -o vc-af-filter-threshold:5 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        adapter='CTGTCTCTTATACACATCT'
+
     else:
         pid= proj_germline
-        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o " + bed_file_info + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
         adapter='AGATCGGAAGAGC'
+        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
+        
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath + '/ca_fq_dragen/ca_fq_dragen.sh'     
+    loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/ca_fq_dragen.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
-    
+    print(loc_cafqdra_file)
+    print(location)
     #giving the necessary permissions
     os.chdir(location)
     os.system('chmod 777 *')

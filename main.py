@@ -5,20 +5,22 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import *
-import tkinter.font
 
 from codes.cutadapt_fqc import cafa
 from codes.cutadapt_fqc_drag import cafadra
 from codes.annotation import anno
 from codes.panelcreation import panel
-from codes.filter_somatic import filtereng_som
-from codes.filter_germline import filtereng_germ
+from codes.filter_engine import filtereng
+from codes.filter_engine_tmb import filtereng_tmb
 from codes.CNV import cnv_analysis
 from codes.CNV_merge import cnv_merge
 from codes.MSI import msi_analysis
 from codes.TMB import tmb_calculation
 from codes.gene_coverage import gene_cov
 from codes.RNA_fusion import rna_fusion
+from codes.RNA_QC import rna_qc
+from codes.DNA_QC import dna_qc
+from codes.Dragen39 import dragen39
 
 window=tk.Tk()
 
@@ -26,8 +28,8 @@ global GUIpath
 GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 # declaring string variables for tkinter
-capturing_kit=tk.StringVar()
-cnv_ref=tk.StringVar()
+cap_kit=tk.StringVar()
+# cnv_ref=tk.StringVar()
 cnv_annot=tk.StringVar()
 panelbed=tk.StringVar()
 location_name=tk.StringVar()
@@ -38,7 +40,7 @@ appsession=tk.StringVar()
 projectdirPath=tk.StringVar()
 
 #setting the windows size
-window.geometry("1000x850")
+window.geometry("1200x850")
 window.title("Patient Data Processing")  
 
 #Browsing the folder with samples or to perform analysis
@@ -56,10 +58,9 @@ def projectdir_browse():
 #saving all the global and cross file variables in globalv.py file
 def globalva_update():
     Output.delete('1.0',END)
-    capturingkit=capturing_kit.get()
-    cnv_ref_bed=cnv_ref.get()
-    cnv_annot_bed=cnv_annot.get()
-    panel_bed=panelbed.get()
+    capturingkit=cap_kit.get()
+    # cnv_ref_bed=cnv_ref.get()
+    # cnv_annot_bed=cnv_annot.get()
     stype= sampletype.get()
     ttype=testtype.get()
     location = folderPath.get()
@@ -68,13 +69,13 @@ def globalva_update():
     file1 = open(GUIpath + '/globalv.py',"w+")
     l1= 'test=' + "'" + ttype + "'"
     l2= 'location=' + "'" + location + "'"
-    l2= 'capturing_kit=' + "'" + capturingkit + "'"
-    l3= 'sample_type=' + "'" + stype + "'"
-    l4='appsess=' + "'" + appsess + "'"
-    l5='projectdir=' + "'" + projectdir + "'"
-    l6= 'cnv_ref_bed=' + "'"  + cnv_ref_bed + "'"
-    l7= 'cnv_annot_bed=' + "'" + cnv_annot_bed + "'"
-    file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5,'\n',l6,'\n',l7,'\n'])
+    l3= 'capturing_kit=' + "'" + capturingkit + "'"
+    l4= 'sample_type=' + "'" + stype + "'"
+    l5='appsess=' + "'" + appsess + "'"
+    l6='projectdir=' + "'" + projectdir + "'"
+    # l7= 'cnv_ref_bed=' + "'"  + cnv_ref_bed + "'"
+    # l8= 'cnv_annot_bed=' + "'" + cnv_annot_bed + "'"
+    file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5,'\n',l6])
     file1.close()
     file1 = open(GUIpath + '/globalv.py',"r")
     data=file1.read()
@@ -91,7 +92,7 @@ def bsrefresh():
 def quit():
     file1 = open(GUIpath + '/globalv.py',"w+")
     file1.write('test=' + "'"+ "'")
-    file1.write('location=' + "'" + "'")
+    file1.write('\n'+'location=' + "'" + "'")
     file1.write('\n' + 'capturingkit=' + "'"  + "'")
     file1.write('\n' +'sample_type=' + "'" + "'")
     file1.write('\n' +'appsess=' + "'"  + "'")
@@ -121,15 +122,14 @@ rnalabel=tk.Label(window, text= 'RNA Data Analysis',**font_options)
 
 #dropdown for capturing_kit
 capturingkit= os.listdir(GUIpath+'/bed_files/capturing_kits')
-capturingkit.insert(0, 'Illumina')
 capturingkitlabel= tk.Label(window, text= 'Select capturing kit',**font_options)
-capturingkitchosen = ttk.Combobox(window, width = 28, textvariable = capturing_kit)
+capturingkitchosen = ttk.Combobox(window, width = 28, textvariable = cap_kit)
 capturingkitchosen['values'] = (capturingkit)
 
 #selecting test name
 testlabel=tk.Label(window, text= 'Select the Test name',**font_options)
 testchosen=ttk.Combobox(window, width = 28, textvariable = testtype)
-testchosen['values'] = ( 'TarGT Absolute','TarGT Core', 'TarGT Indigene', 'TarGT Focus', 'TarGT Absolute Germline',  'Germline +', 'Germline ++','HRR')
+testchosen['values'] = ( 'TarGT_Absolute','TarGT_Core', 'TarGT_Indigene', 'TarGT_Focus', 'TarGT_Absolute_Germline',  'Germline_Plus +', 'Germline_++','HRR')
 
 #selecting projects and retrieving project IDs
 sampletypelabel= tk.Label(window, text= 'Select the sample type',**font_options)
@@ -157,26 +157,9 @@ cutad_fqc_btn=tk.Button(window,text = 'Cutadapt & FastQ', command = cafa, height
 cutad_fqc_dra_btn=tk.Button(window,text = 'Run CA, FQ and Dragen', command = cafadra, height = 1, width = 18)
 
 #Dragen alone
-dna_drag_btn= tk.Button(window,text = 'SNV/Indels Var call', command = cafadra, height = 1, width = 18)
+dna_drag36_btn= tk.Button(window,text = 'Dragen 3.6', command = cafadra, height = 1, width = 18)
+dna_drag39_btn= tk.Button(window,text = 'Dragen 3.9', command = dragen39, height = 1, width = 18)
 rna_drag_btn= tk.Button(window,text = 'Gene fusion Var call', command = cafadra, height = 1, width = 18)
-
-#Panel chosen info
-
-# panelbedfiles= os.listdir(GUIpath+'/bed_files/panel_bed_files/')
-# panelbedchosen = ttk.Combobox(window, width = 28, textvariable = panelbed)
-# panelbedchosen['values'] = (panelbedfiles)
-
-#CNV reference bed file dropdown
-cnvrefbedfiles= os.listdir(GUIpath+'/bed_files/cnv_bed_files/cnv_reference_bedfiles/')
-cnvrefbedlabel= tk.Label(window, text= 'Select CNV Reference bed file',**font_options)
-cnvrefbedchosen = ttk.Combobox(window, width = 28, textvariable = cnv_ref)
-cnvrefbedchosen['values'] = (cnvrefbedfiles)
-
-#CNV Annotation bed file dropdown
-cnvannobedfiles= os.listdir(GUIpath+'/bed_files/cnv_bed_files/cnv_annotation_bedfiles/')
-cnvannobedlabel= tk.Label(window, text= 'Select CNV Annotation bed file',**font_options)
-cnvannobedchosen = ttk.Combobox(window, width = 28, textvariable = cnv_annot)
-cnvannobedchosen['values'] = (cnvannobedfiles)
 
 #Zip files for email
 zip_btn=tk.Button(window, text = 'Zip files for Mail', command = panel ,height = 1, width = 18)
@@ -191,10 +174,10 @@ annofiltertmb_btn=tk.Button(window, text = 'Annot + Filter + TMB', command = ann
 panel_btn=tk.Button(window, text = 'Panel Creation', command = panel ,height = 1, width = 18) 
 
 #Filter Engine Somatic
-filtersom_btn=tk.Button(window, text = 'Filter Engine Somatic', command = filtereng_som,height = 1, width = 18) 
+filtereng_btn=tk.Button(window, text = 'Filter Engine', command = filtereng,height = 1, width = 18) 
 
 #Filter Engine Somatic
-filtergerm_btn=tk.Button(window, text = 'Filter Engine Germline', command = filtereng_germ,height = 1, width = 18) 
+filterengtmb_btn=tk.Button(window, text = 'Filter Engine + TMB', command = filtereng_tmb,height = 1, width = 18) 
 
 #CNV Analysis
 cnv_btn=tk.Button(window, text = 'Run CNV', command = cnv_analysis, height = 1, width = 18) 
@@ -218,10 +201,16 @@ genecov_btn= tk.Button(window, text = 'Gene Coverage', command = gene_cov ,heigh
 rnafus_btn=tk.Button(window, text = 'RNA Fusion', command = rna_fusion ,height = 1, width = 18) 
 
 #RNA QC
-rnaqc_btn= tk.Button(window, text = 'RNA QC', command = rna_fusion ,height = 1, width = 18) 
+rnaqc_btn= tk.Button(window, text = 'RNA QC', command = rna_qc ,height = 1, width = 18) 
 
 #DNA QC
-dnaqc_btn= tk.Button(window, text = 'DNA QC', command = rna_fusion ,height = 1, width = 18
+dnaqc_btn= tk.Button(window, text = 'DNA QC', command = dna_qc ,height = 1, width = 18
+)
+#Complete DNA data analysis
+completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_qc ,height = 1, width = 18,bg='#ff0000'
+)
+#Complete RNA data analysis
+completerna_btn=tk.Button(window, text = 'RNA Data Analysis', command = dna_qc ,height = 1, width = 18, bg='#ff0000'
 )
 #Quit button
 close_btn=tk.Button(window, text="Quit", command=quit, height = 1, width = 18)
@@ -235,59 +224,45 @@ testlabel.grid(row=1, column=0,pady=6)
 testchosen.grid( row = 1,column = 1,pady=6)
 capturingkitlabel.grid(row=2, column=0,pady=6)
 capturingkitchosen.grid( row = 2,column = 1,pady=6)
-browse_btn.grid(row=3, column=0,pady=6, padx=30)
-projbrowse_btn.grid(row=3, column=1,pady=6,padx=30)
+
+appsessionlabel.grid(row=3,column=0,pady=8)
+appsession.grid(row=3,column=1,pady=8)
+
+browse_btn.grid(row=4, column=0,pady=6, padx=30)
+projbrowse_btn.grid(row=4, column=1,pady=6,padx=30)
 
 ##### DNA Data analysis ####
-#dnalabel.grid(row=2,column=0,pady=15)
-# dna_drag_btn.grid(row=3,column=0,pady=6)
-# dnaqc_btn.grid(row=4,column=0,pady=6)
-# annotate_btn.grid(row=5,column=0,pady=6) 
-# cnv_btn.grid(row=6,column=0,pady=6)
-# msi_btn.grid(row=7,column=0,pady=6)
-# tmb_btn.grid(row=8,column=0,pady=6)
-# zip_btn.grid(row=9,column=0,pady=8)
+dnalabel.grid(row=0,column=3,pady=15)
+dna_drag36_btn.grid(row=1,column=3,pady=6)
+cutad_fqc_btn.grid(row=2, column=3,pady=8, padx=50)
+dna_drag39_btn.grid(row=3,column=3,pady=6)
+dnaqc_btn.grid(row=4,column=3,pady=6)
+panel_btn.grid(row=5,column=3,pady=8) 
+annotate_btn.grid(row=6,column=3,pady=6)
+filtereng_btn.grid(row=7,column=3,pady=8)
+filterengtmb_btn.grid(row=8,column=3,pady=8)
+cnv_btn.grid(row=9,column=3,pady=6)
+cnvmerge_btn.grid(row=10,column=3,pady=8)
+msi_btn.grid(row=11,column=3,pady=6)
+cnvmsi_btn.grid(row=12,column=3,pady=8)
+tmb_btn.grid(row=13,column=3,pady=6)
+zip_btn.grid(row=14,column=3,pady=8)
 
 ##### RNA Analysis ####
-# rnalabel.grid(row=2,column=1,pady=15)
-# rna_drag_btn.grid(row=3,column=1,pady=6)
-# rnaqc_btn.grid(row=4,column=1,pady=6)
-# zip_btn.grid(row=5,column=1,pady=6)
+rnalabel.grid(row=0,column=4,pady=15)
+rna_drag_btn.grid(row=1,column=4,pady=6)
+rnaqc_btn.grid(row=2,column=4,pady=6)
+genecov_btn.grid(row=3,column=4,pady=8)
+rnafus_btn.grid(row=4,column=4,pady=8)
+zip_btn.grid(row=5,column=4,pady=6)
 
 #mandatory buttons
-Output.grid(row=5,column=0,columnspan=2)
-globalv_btn.grid(row=6,column=0,pady=6)
-bsrefresh_btn.grid(row=6,column=1,pady=6)
-close_btn.grid(row=7,column=0,pady=6)
-
-# appsessionlabel.grid(row=3,column=0,pady=8)
-# appsession.grid(row=3,column=1,pady=8)
-
-
-# cnvrefbedlabel.grid(row=5, column=0,pady=8)
-# cnvrefbedchosen.grid( row = 5,column = 1,pady=8)
-# cnvannobedlabel.grid(row=6, column=0,pady=8)
-# cnvannobedchosen.grid( row = 6,column = 1,pady=8)
-# panelbedlabel.grid(row=7, column=0,pady=8)
-# panelbedchosen.grid( row = 7,column = 1,pady=8)
-
-
-# cutad_fqc_btn.grid(row=0, column=3,pady=8, padx=50)
-# cutad_fqc_dra_btn.grid(row=1,column=3,pady=8)
-
-
-panel_btn.grid(row=4,column=3,pady=8) 
-
-# filtersom_btn.grid(row=6,column=3,pady=8)
-# filtergerm_btn.grid(row=7,column=3,pady=8)
-# annofiltertmb_btn.grid(row=8,column=3,pady=8)
-
-# cnvmerge_btn.grid(row=12,column=3,pady=8)
-
-# cnvmsi_btn.grid(row=14,column=3,pady=8)
-
-# genecov_btn.grid(row=18,column=3,pady=8)
-# rnafus_btn.grid(row=19,column=3,pady=8)
+Output.grid(row=5,column=0,columnspan=2, rowspan=5)
+globalv_btn.grid(row=10,column=0,pady=6)
+bsrefresh_btn.grid(row=10,column=1,pady=6)
+completedna_btn.grid(row=11,column=0,pady=6)
+completerna_btn.grid(row=12,column=0,pady=6)
+close_btn.grid(row=13,column=0,pady=6)
 
 window.mainloop()        
   

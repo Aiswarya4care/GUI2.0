@@ -3,9 +3,12 @@
 GUIpath='/home/ash/Documents/GitHub/GUI2.0'
 
 ############# Project ID for dragen ###########
-proj_somatic_dna= '175429254'
-proj_germline= '166558401'
-proj_somatic_rna= '148206064'
+projectid={
+    'DNA [FFPE, FF]':'175429254',
+    'DNA [cf]':'175429254',
+    'DNA [Blood]':'166558401',
+    'RNA':'148206064'
+}
 
 ############# Path of tools/software ###########
 annotation_db= '/home/basecare/Programs/Annotation_db'
@@ -40,26 +43,26 @@ dra_bed_ids= {
 
 ########### capturing kit and panel bed prefix/suffix ###########
 testprefix={
-    'TarGT Absolute' : 'T_Absolute-',
-'TarGT Core' : 'T_Core-',
-'TarGT Indigene' : 'T_Indie-',
-'TarGT Focus' : 'T_Focus-',
-'TarGT Absolute Germline' : 'T_Absolute-',
-'Germline Plus' : 'T_Germlineplus-',
-'Germline ++' : 'T_Germlineplusplus-',
+    'TarGT_Absolute' : 'T_Absolute-',
+'TarGT_Core' : 'T_Core-',
+'TarGT_Indigene' : 'T_Indie-',
+'TarGT_Focus' : 'T_Focus-',
+'TarGT_Absolute_Germline' : 'T_Absolute-',
+'Germline_Plus' : 'T_Germlineplus-',
+'Germline_++' : 'T_Germlineplusplus-',
 'HRR' : 'T_HRR-'
 }
 
 capkitsuffix={
     'SureSelectV7_covered.bed' : 'SSE.bed',
-'SureSelectXT_V8_Covered.bed' : 'SE8.bed',
+'sureselectxt_v8_covered.bed' : 'SE8.bed',
 'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_sorted.bed' : 'Indie.bed',
 'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',
 'Roche_hg19.bed' : 'Roche.bed'
 }
 
 ############ Developer Options ###############
-default_files=['ca_fq_dragen.sh','ca_fq.sh','panel','cutadaptlog.txt','FQlog.txt','MSI','CNV','cutadaptlog', 'FE_merged','FE_filtered','FE_filtered.csv','tmbmerged','tmbfiltered','tmb_filtered.csv','sample_coverage'] #pre-existing file names to be removed from the sample name list
+default_files=['ca','panel','cutadaptlog.txt','FQlog.txt','MSI','CNV','cutadaptlog', 'FE','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
 
 
 

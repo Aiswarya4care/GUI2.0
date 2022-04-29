@@ -6,7 +6,7 @@ from importlib import reload
 
 #current working directory
 global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
+GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 
 def anno():
@@ -21,8 +21,8 @@ def anno():
     simplifyvcf= config_gui.simplifyvcf
 
     #copying annotation.sh and config.pl to the selected location
-    loc_ann_file= GUIpath + '/annotation/annotation_mod.sh'
-    loc_confi_file= GUIpath + '/annotation/config.pl'
+    loc_ann_file= GUIpath.split('/codes/')[0] + '/annotation/annotation_mod.sh'
+    loc_confi_file= GUIpath.split('/codes/')[0] + '/annotation/config.pl'
     os.system('cp '+ loc_ann_file + ' ' + location)
     os.system('cp '+ loc_confi_file + ' ' + location)
 

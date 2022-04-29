@@ -11,7 +11,7 @@ from importlib import reload
 
 #current working directory
 global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
+GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 def cafa():
     reload(globalv)
@@ -46,7 +46,7 @@ def cafa():
 
 #project selection and project id retrieval
     
-    if sample_type=="Somatic DNA":
+    if sample_type=="DNA [Blood]":
         pid= proj_somatic_dna
         adapter='AGATCGGAAGAGC'
         
@@ -58,8 +58,8 @@ def cafa():
         adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath + '/ca_fq_dragen/ca_fq.sh'     
-    os.system('cp '+ loc_cafqdra_file + ' ' + location) 
+    loc_cafq_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/ca_fq.sh'     
+    os.system('cp '+ loc_cafq_file + ' ' + location) 
     
     #giving the necessary permissions
     os.chdir(location)
