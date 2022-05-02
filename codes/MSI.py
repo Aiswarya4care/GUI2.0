@@ -15,6 +15,7 @@ def msi_analysis():
     msi_microlist= config_gui.msi_microlist
 
     file_list=os.listdir(location)
+
     if 'MSI' in file_list:
         os.system("rm -r " + location + "/MSI")   
 
@@ -63,4 +64,4 @@ def msi_analysis():
         print("############ MSI completed ###########")
         print("################################")
     else:
-        rm_cmd=" rm "+ location + "/MSI/" + "msi.sh"
+        print('##### MSI Analysis Aborted #####')

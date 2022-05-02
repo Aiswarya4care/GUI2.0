@@ -8,11 +8,8 @@ from importlib import reload
 from config_gui import dra_bed_ids
 from config_gui import projectid
 
-#current working directory
-global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
-
 def dragen39():
+
     reload(globalv)
     location= globalv.location
     capturingkit=globalv.capturing_kit

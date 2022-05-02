@@ -4,14 +4,11 @@ import config_gui
 import re
 from importlib import reload
 
-#current working directory
-global GUIpath
-GUIpath=os.path.realpath(__file__).split('main.py')[0]
-
 
 def anno():
     #fetching the location for annotation (should contain list.txt) and the project dir
     reload(globalv)
+    GUIpath=config_gui.GUIpath
     location= globalv.location
     projectdir= globalv.projectdir
     
@@ -30,9 +27,22 @@ def anno():
     os.chdir(location)
     os.system('chmod 777 *')
 
+
+    #modifying the annotation_mod.sh file
+    annoconfigfile=location+'/config.pl'
+   
+    # Reading annotation_mod script for modification
+    with open(annoconfigfile, 'r') as file :
+        annoconfigdata = file.read()
+
+    # Replace the project directory location, annotation_db. annotation_spk
+        annoconfigdata = annoconfigdata.replace('{{annotation_db}}', annotation_db)
+        
+
     #modifying the annotation_mod.sh file
     annofile=location+'/annotation_mod.sh'
-    # Read in the file
+   
+    # Reading annotation_mod script for modification
     with open(annofile, 'r') as file :
         filedata = file.read()
 

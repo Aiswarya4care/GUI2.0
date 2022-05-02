@@ -6,19 +6,22 @@ from importlib import reload
 import config_gui
 import globalv
 
-global GUIpath
-GUIpath=config_gui.GUIpath
-
 def filtereng():
+    GUIpath=config_gui.GUIpath
     reload(globalv)
     dirpath= globalv.location
     sample_type=globalv.sample_type
-    
+    test=globalv.test
+
     #importing external files for filter engine
     collist= pd.read_csv(GUIpath+ "/filter/columns.csv")
-    genes= pd.read_csv(GUIpath+ "/filter/som_genes.csv")
     canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
-       
+    
+    ######### selecting gene list #############
+    genes= pd.read_csv(GUIpath+ "/filter/genelist.csv")
+    testgenes= list(genes[test])
+    testgenes=[g.upper() for g in testgenes]
+
     folders= os.listdir(dirpath)
     #making FE_merged and FE_filtered folders in the destination dir
     os.system("mkdir " + dirpath + "/FE_merged")
@@ -197,10 +200,8 @@ def filtereng():
         
            
         ###### Gene filtering
-        genes1= list(genes['genes'])
-        genes1=[g.upper() for g in genes1]
         df['Ref.Gene']= [x.upper() for x in df['Ref.Gene']]
-        df2=df[df['Ref.Gene'].str.contains('|'.join(genes1))]
+        df2=df[df['Ref.Gene'].str.contains('|'.join(testgenes))]
         df3= pd.DataFrame()
         for g in range(len(df2)):
             if ";" in df2['Ref.Gene'].iloc[g]:
@@ -208,7 +209,7 @@ def filtereng():
             else:
                 gene= df2['Ref.Gene'].iloc[g]
                 
-                if gene in genes1:
+                if gene in testgenes:
                     df3=df3.append(df2.iloc[g])
             
         df3=df3[colindex] 

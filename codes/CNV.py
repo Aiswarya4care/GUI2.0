@@ -8,9 +8,6 @@ import config_gui
 
 import globalv
 
-global GUIpath
-GUIpath=os.path.realpath(__file__).split('main.py')[0]
-
 def cnv_analysis():
     reload(globalv)
     location= globalv.location
@@ -23,6 +20,7 @@ def cnv_analysis():
     projectdir=globalv.projectdir
     capturingkit=globalv.capturing_kit
     test=globalv.test
+    GUIpath=config_gui.GUIpath
 
     file_list=os.listdir(location)
     if 'CNV' in file_list:

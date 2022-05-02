@@ -10,12 +10,9 @@ from tkinter import messagebox
 from importlib import reload
 from config_gui import dra_bed_ids
 
-#current working directory
-global GUIpath
-GUIpath=os.path.realpath(__file__).split('main.py')[0]
-
 def cafadra():
     reload(globalv)
+    GUIpath=config_gui.GUIpath
     location= globalv.location
     capturingkit=globalv.capturing_kit
     sample_type=globalv.sample_type

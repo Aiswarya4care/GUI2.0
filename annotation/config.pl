@@ -11,7 +11,7 @@ inputfile_type = AVinput
 # the input file type VCF(vcf file with single sample) AVinput VCF_m(vcf file with multiple samples)
 outfile = $path.cancervar
 # the output file location and prefix of output file
-database_cancervar = /home/ubuntu/Programs/Annotation_db/cancervardb
+database_cancervar = {{annotation_db}}/cancervardb
 # the database location/dir for Intervar
 lof_genes = %(database_cancervar)s/LOF.genes.exac_me_cancers
 mim2gene = %(database_cancervar)s/mim2gene.txt
@@ -39,13 +39,13 @@ otherinfo = TRUE
 # this option only perform well with AVinput file and the other information only can be put in the fifth column.  The information in >5th column will be lost.
 # When input as  VCF or VCF_m files with otherinfo option  only het/hom will be kept  depth and qual will be lost  the cancer type should be provide by command option.
 [Annovar]
-convert2annovar = /home/ubuntu/Programs/Annotation_db/convert2annovar.pl
+convert2annovar = {{annotation_db}}/convert2annovar.pl
 #convert input file to annovar format
-table_annovar = /home/ubuntu/Programs/Annotation_db/table_annovar.pl
+table_annovar = {{annotation_db}}/table_annovar.pl
 #
-annotate_variation=  /home/ubuntu/Programs/Annotation_db/annotate_variation.pl
+annotate_variation=  {{annotation_db}}/annotate_variation.pl
 #
-database_locat = /home/ubuntu/Programs/Annotation_db/humandb
+database_locat = {{annotation_db}}/humandb
 # the database location/dir from annnovar   check if database file exists
 database_names = ensGene avsnp150 clinvar_20190305 icgc21 introgen cadd13gt20 esp6500siv2_all exac03 gnomad211_exome 1000g2015aug_all 1000g2015aug_SAS dbnsfp35a dbscsnv11 dbnsfp31a_interpro rmsk
 # specify the database_names from ANNOVAR or UCSC

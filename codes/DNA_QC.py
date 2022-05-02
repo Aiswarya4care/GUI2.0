@@ -4,10 +4,8 @@ from importlib import reload
 import config_gui
 import globalv
 
-global GUIpath
-GUIpath=config_gui.GUIpath
-
 def dna_qc():
+    GUIpath=config_gui.GUIpath
     reload(globalv)
     sample_type=globalv.sample_type
     
