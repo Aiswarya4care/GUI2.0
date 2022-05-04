@@ -15,7 +15,7 @@ annotation_db= '/home/basecare/Programs/Annotation_db'
 annotation_spk= '/home/basecare/Annotation_SPK'
 simplifyvcf='/home/basecare/Programs/VCF-Simplify-master/VcfSimplify.py'
 fastqc= '/home/ubuntu/Programs/fastqc_v0.11.9/FastQC/fastqc'
-
+cgi_data='/home/basecare/cgi_commercial1/datasets'
 #MSI
 msisensor= '/home/ubuntu/Programs/msisensor2/msisensor2'
 msi_microlist= '/home/ubuntu/Programs/MSI_Mirco_List/micro.list'
@@ -29,13 +29,13 @@ bedtools= '/home/ubuntu/Programs/./bedtools.static.binary intersect'
 
 ############# Bed file ID for dragen #################
 dra_bed_ids= {
-'Illumina':'Illumina',
-'roche_hg19_whole.bed':'20977118310',
-'truseq_exome_targetedregions_v1.2.bed':'18815858077',
-'sureselectv7_covered.bed':'20024037150',
-'sureselectxt_v8_covered.bed':'23683257154',
-'ce_indiegene_target_1K_DNA_GRCh37.bed':'25985869859',
-'ce_indiegene_target_RNA_Fusion_GRCh37.bed':'25985863705'
+
+'Illumina_Exome_TargetedRegions_v1.2.hg19.bed':'0000000000000',
+'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed':'000000000000000',
+'Indiegene_Target_2109PD008-V1_4BaseCare_RNA_Fusion_GRCh37.bed':'000000000000',
+'Roche_hg19.bed':'20977118310',
+'SureSelectV7_covered.bed':'20024037150',
+'SureSelectXT_V8_Covered.bed':'23683257154'
 
 }
 

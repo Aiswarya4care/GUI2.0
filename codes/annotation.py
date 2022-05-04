@@ -1,7 +1,6 @@
 import os
 import globalv
 import config_gui
-import re
 from importlib import reload
 
 
