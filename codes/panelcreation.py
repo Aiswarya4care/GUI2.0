@@ -13,7 +13,7 @@ def panel():
     location= globalv.location
     sample_type=globalv.sample_type
     projectdir=globalv.projectdir
-    capturing_kit=globalv.capturing_kit
+    capturing_kit=globalv.capturingkit
     test=globalv.test
 
     ########### selecting the panel bed file #############

@@ -129,7 +129,7 @@ capturingkitchosen['values'] = (capturingkit)
 #selecting test name
 testlabel=tk.Label(window, text= 'Select the Test name',**font_options)
 testchosen=ttk.Combobox(window, width = 28, textvariable = testtype)
-testchosen['values'] = ( 'TarGT_Absolute','TarGT_Core', 'TarGT_Indigene', 'TarGT_Focus', 'TarGT_Absolute_Germline',  'Germline_Plus', 'Germline_++','HRR')
+testchosen['values'] = ( 'TarGT_Absolute','TarGT_Core', 'TarGT_Indigene', 'TarGT_Focus', 'TarGT_First', 'TarGT_Absolute_Germline',  'Germline_Plus', 'Germline_++','HRR')
 
 #selecting projects and retrieving project IDs
 sampletypelabel= tk.Label(window, text= 'Select the sample type',**font_options)

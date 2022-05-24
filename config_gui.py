@@ -43,14 +43,15 @@ dra_bed_ids= {
 
 ########### capturing kit and panel bed prefix/suffix ###########
 testprefix={
-    'TarGT_Absolute' : 'T_Absolute-',
+'TarGT_Absolute' : 'T_Absolute-',
 'TarGT_Core' : 'T_Core-',
 'TarGT_Indigene' : 'T_Indie-',
 'TarGT_Focus' : 'T_Focus-',
 'TarGT_Absolute_Germline' : 'T_Absolute-',
 'Germline_Plus' : 'T_Germlineplus-',
 'Germline_++' : 'T_Germlineplusplus-',
-'HRR' : 'T_HRR-'
+'HRR' : 'T_HRR-',
+'TarGT_First':'T_First-'
 }
 
 capkitsuffix={
