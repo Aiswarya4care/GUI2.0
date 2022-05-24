@@ -19,7 +19,7 @@ def filtereng():
     
     ######### selecting gene list #############
     genes= pd.read_csv(GUIpath+ "/filter/genelist.csv")
-    testgenes= list(genes[test])
+    testgenes= list(genes[test].dropna())
     testgenes=[g.upper() for g in testgenes]
 
     folders= os.listdir(dirpath)

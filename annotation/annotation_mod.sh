@@ -5,7 +5,7 @@ mkdir ${line}
 echo "Starting ${line}"
 #copying.hard-filtered.vcf from basespace and unzipping
 echo "##########Starting copying.hard-filtered.vcf from basespace and unzipping#################"
-cp {{projectdir}}/AppResults/${line}/Files/${line}.hard-filtered.vcf.gz {{annotation_spk}}
+cp {{projectdir}}/AppResults/${line}/Files/${line}.hard-filtered.vcf.gz {{location}}
 gunzip ${line}.hard-filtered.vcf.gz
 echo "##########Ending copying.hard-filtered.vcf from basespace and unzipping#################"
 

@@ -50,7 +50,7 @@ def anno():
         filedata = filedata.replace('{{annotation_db}}', annotation_db)
         filedata = filedata.replace('{{annotation_spk}}', annotation_spk)
         filedata = filedata.replace('{{simplifyvcf}}', simplifyvcf)
-
+        filedata = filedata.replace('{{location}}', location)
     # Write the file out again
     with open(annofile, 'w') as file:
         file.write(filedata)

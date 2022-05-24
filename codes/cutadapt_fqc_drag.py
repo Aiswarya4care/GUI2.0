@@ -9,6 +9,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
 from config_gui import dra_bed_ids
+from config_gui import projectid
 
 def cafadra():
     reload(globalv)
@@ -21,9 +22,7 @@ def cafadra():
     projectdir=globalv.projectdir
 
     #fetching project id from config_gui file
-    proj_somatic_dna=config_gui.proj_somatic_dna
-    proj_germline=config_gui.proj_germline
-    proj_somatic_rna=config_gui.proj_somatic_rna
+    pid= projectid[sample_type]
     fastqc= config_gui.fastqc
     
 
@@ -46,22 +45,18 @@ def cafadra():
 #project selection and project id retrieval
     
     if sample_type=="DNA [Blood]":
-        pid= proj_somatic_dna
         adapter='AGATCGGAAGAGC'
         bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
         
     elif sample_type=="RNA":
-        pid= proj_somatic_rna
         bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " output_format:BAM -o coverage_list.coverage_bed_id:Numeric-ID -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
         adapter='CTGTCTCTTATACACATCT'
     
     elif sample_type=="DNA [cf]":
-        pid= proj_somatic_rna
         bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o liquid_tumor:1 -o vc-af-call-threshold:1 -o vc-af-filter-threshold:5 -o sv_checkbox:1 -o commandline-disclaimer:true"
         adapter='CTGTCTCTTATACACATCT'
 
     else:
-        pid= proj_germline
         adapter='AGATCGGAAGAGC'
         bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
         

@@ -11,17 +11,21 @@ from config_gui import projectid
 def dragen39():
 
     reload(globalv)
+    GUIpath=config_gui.GUIpath
     location= globalv.location
     capturingkit=globalv.capturing_kit
     sample_type=globalv.sample_type
     appsess=globalv.appsess
     bed_id=dra_bed_ids[capturingkit]
-    pid=projectid[sample_type]
     projectdir=globalv.projectdir
 
-    file_list=os.listdir(location)
     
+    #fetching project id from config_gui file
+    pid= projectid[sample_type]
 
+    #retrieving sample names 
+    file_list=os.listdir(location)
+       
     samples=[]
     for file in file_list:
         sample= file.split("_")
@@ -29,19 +33,48 @@ def dragen39():
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
     
-
     #Removing default file names from the sample name list
     default_files=config_gui.default_files
     for s in default_files:
         if s in samples:
             samples.remove(s)
-  
-    if capturingkit=="sureselectxt_v8_covered.bed":
-        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.9.5 -o project-id:" + pid + " -o app-session-name:"+ appsess +"  -l "+ appsess +"  -o vc-type:1 -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + "-o input_list.sample-id:biosamples/526165645 -o picard_checkbox:1 -o af-filtering:1  -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:26309592242 -o baseline-noise-bed:25849773923 -o vcf-site-filter:1 -o cnv_checkbox:1 -o cnv_ref:1 -o cnv_segmentation_mode:cbs -o cnv-filter-qual:50.0 -o cnv-baseline-id:25791243964,25791291016,25791291033,25791291050,25791406163,25791440084,25791528878,25791528895,25791582119,25791582931,25791595964,25791595981,25791598767,25791637964,25791670919,25791679146,25791679164,25791681916,25791681933 -o cnv_gcbias_checkbox:1 -o hla:1 -o commandline-disclaimer:true -o arbitrary:\"--read-trimmers:adapter --trim-adapter-read1\" -o additional-file:25600057590 -o automation-sex:unkown"
+    
+      
+#project selection and project id retrieval
+    
+    if sample_type=="DNA [FFPE, FF]":
+        adapter='AGATCGGAAGAGC'
+        bscmd= "bs launch application -n \"DRAGEN Enrichment\" --app-version 3.9.5 -o project-id:" + pid + " -o app-session-name:"+ appsess +"  -l "+ appsess +"  -o vc-type:1 -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o input_list.sample-id:$bsids -o picard_checkbox:1 -o af-filtering:1  -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:26309592242 -o baseline-noise-bed:25849773923 -o vcf-site-filter:1 -o cnv_checkbox:1 -o cnv_ref:1 -o cnv_segmentation_mode:cbs -o cnv-filter-qual:50.0 -o cnv-baseline-id:25791243964,25791291016,25791291033,25791291050,25791406163,25791440084,25791528878,25791528895,25791582119,25791582931,25791595964,25791595981,25791598767,25791637964,25791670919,25791679146,25791679164,25791681916,25791681933 -o cnv_gcbias_checkbox:1 -o hla:1 -o commandline-disclaimer:true -o arbitrary:\"--read-trimmers:adapter --trim-adapter-read1\" -o additional-file:25600057590 -o automation-sex:unkown"
 
-    elif capturingkit=="Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_sorted.bed":
-        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.9.5 -o project-id:" + pid + "  -o app-session-name:"+ appsess +" -l "+ appsess +" -o vc-type:1 -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + "-o input_list.sample-id:biosamples/526193668 -o picard_checkbox:1 -o af-filtering:1  -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:26309592242 -o baseline-noise-bed:26693875133 -o vcf-site-filter:1 -o cnv_checkbox:1 -o cnv_ref:1 -o cnv_segmentation_mode:cbs -o cnv-filter-qual:50.0 -o cnv-baseline-id:26595964844,26596768352,26596768352,26597000441,26596302077,26596768331,26596296009,26596677367,26596984439,26596440110,26596089873,26596890400,26596199853,26595963870,26597226773,26596302095,26597235779,26596296030,26595984910,26595972945,26596669273,26596477171,26596089892,26595984889,26596677388,26596477187,26596861347,26596268048,26596565254,26596669289,26596247018,26595984929,26596477204,26596302112,26596199870,26596302128,26596477221,26595972961,26596302145,26595984953,26595991950,26595972980,26596199887,26596049977,26596565272,26596669311,26609829389,26596565288,26596302164 -o cnv_gcbias_checkbox:1 -o hla:1 -o commandline-disclaimer:true -o arbitrary:\"--read-trimmers:adapter --trim-adapter-read1\" -o additional-file:25600057590 -o automation-sex:unkown"
 
+    #Coping the shell script and modifying the content  
+    loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/dragen39.sh'     
+    os.system('cp '+ loc_cafqdra_file + ' ' + location) 
+    print(loc_cafqdra_file)
+    print(location)
+    #giving the necessary permissions
+    os.chdir(location)
+    os.system('chmod 777 *')
+
+    #modifying the annotation_mod.sh file
+    dragen39file=location+'/dragen39.sh'
+    # Read in the file
+    with open(dragen39file, 'r') as file :
+        filedata = file.read()
+
+    # Replace the project directory location, annotation_db. annotation_spk
+        filedata = filedata.replace('{{samplenames}}', str(samples).strip("[]").replace("'","").replace(",",""))
+        filedata = filedata.replace('{{adapter}}', adapter)
+        filedata = filedata.replace('{{location}}', location)
+        filedata = filedata.replace('{{bscmd}}', bscmd)
+        filedata = filedata.replace('{{pid}}', pid)
+    
+    # Write the file out again
+    with open(dragen39file, 'w') as file:
+        file.write(filedata)
+
+    os.system("mkdir "+ location+ "/cutadaptlog")
+    
 
 
     dragen39file=location+'/dragen39.sh'
