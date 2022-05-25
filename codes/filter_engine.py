@@ -14,7 +14,7 @@ def filtereng():
     test=globalv.test
 
     #importing external files for filter engine
-    collist= pd.read_csv(GUIpath+ "/filter/columns.csv")
+    
     canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
     
     ######### selecting gene list #############
@@ -39,7 +39,14 @@ def filtereng():
         annovar= [obj for obj in files if '_out.hg19_multianno' in obj]
         vcf= [obj for obj in files if 'final.tab' in obj]
         print(f)
+
+        #Detecting dragen 3.6 or 3.9 & reading columns file
+        if 'INFO:hotspot' in vcf.columns:
+            collist= pd.read_csv(GUIpath+ "/filter/columns39.csv")
+        else:
+            collist= pd.read_csv(GUIpath+ "/filter/columns36.csv")        
     
+
         #locations of different files
         cancerloc= dirpath + "/" + f + "/" + cancer[0]
         vcfloc= dirpath + "/" + f + "/" + vcf[0]
