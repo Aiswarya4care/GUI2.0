@@ -62,7 +62,7 @@ def cafadra():
         
 
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/ca_fq_dragen.sh'     
+    loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/ca_fq_dragen36.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     print(loc_cafqdra_file)
     print(location)
@@ -71,7 +71,7 @@ def cafadra():
     os.system('chmod 777 *')
 
     #modifying the annotation_mod.sh file
-    cafqdrafile=location+'/ca_fq_dragen.sh'
+    cafqdrafile=location+'/ca_fq_dragen36.sh'
     # Read in the file
     with open(cafqdrafile, 'r') as file :
         filedata = file.read()
@@ -113,12 +113,12 @@ def cafadra():
         print("############ Running it all together ###########")
         print("################################")
         
-        cafqdra_script_path= location + "/" + "ca_fq_dragen.sh"
+        cafqdra_script_path= location + "/" + "ca_fq_dragen36.sh"
         os.system("bash " + cafqdra_script_path)
         print("################################")
         print("############ Done ###########")
         print("################################")
         
     else:
-        rm_cmd=" rm "+ location + "/" + "ca_fq_dragen.sh"
+        rm_cmd=" rm "+ location + "/" + "ca_fq_dragen36.sh"
         os.system(rm_cmd) 

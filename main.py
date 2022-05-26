@@ -207,10 +207,10 @@ rnaqc_btn= tk.Button(window, text = 'RNA QC', command = rna_qc ,height = 1, widt
 dnaqc_btn= tk.Button(window, text = 'DNA QC', command = dna_qc ,height = 1, width = 18
 )
 #Complete DNA data analysis
-completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_qc ,height = 1, width = 18,bg='#ff0000'
+completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_qc ,height = 1, width = 18
 )
 #Complete RNA data analysis
-completerna_btn=tk.Button(window, text = 'RNA Data Analysis', command = dna_qc ,height = 1, width = 18, bg='#ff0000'
+completerna_btn=tk.Button(window, text = 'RNA Data Analysis', command = dna_qc ,height = 1, width = 18
 )
 #Quit button
 close_btn=tk.Button(window, text="Quit", command=quit, height = 1, width = 18)
