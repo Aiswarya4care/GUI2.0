@@ -12,9 +12,6 @@ global GUIpath
 GUIpath=config_gui.GUIpath
     
 
-# FOR WITHOUT ART SAMPLES #
-#Filtration: PASS filter, Af>= 0.05, MQ >=20, DP >= 30, Func. known gene, Exonic Func., Pop freq (combined), af (0.44 & 0.55), 4ubuntu cohort alone
-
 def tmb_calculation():
     reload(globalv)
     dirpath= globalv.location
