@@ -12,6 +12,8 @@ def dna_qc():
     reload(globalv)
     location= globalv.location
     os.chdir(location)
+    if 'QC' in samples:
+        os.system('rm -r '+ location + '/QC')
     os.system('mkdir '+ location + '/QC')
     ###### segregating files into lists #########3
     samples=glob.glob("*.html")

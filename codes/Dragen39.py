@@ -47,6 +47,7 @@ def dragen39():
 
     if ("-SE8-" in ':'.join(samples))*("-CE-" in ':'.join(samples)) ==1:
         print("Both SE8 and CE samples are present")
+        tk.messagebox.showwarning(title=None, message="Selected directory contains both SE8 and CE samples")
 
     elif ("-SE8-" in ':'.join(samples))*("-CE-" not in ':'.join(samples)) ==1:
         print("SE8 samples present in the folder")
@@ -97,15 +98,6 @@ def dragen39():
     with open(dragen39file, 'w') as file:
         file.write(filedata)
 
-    os.system("mkdir "+ location+ "/cutadaptlog")
-    
-
-
-    dragen39file=location+'/dragen39.sh'
-    with open(dragen39file, 'w') as file:
-        file.write(bscmd)
-
-   
  ###location and info
     print("################################")
     print("######### INFORMATION ##########")
