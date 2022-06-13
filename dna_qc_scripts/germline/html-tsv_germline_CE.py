@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[38]:
-
 # Importing the required modules
 from bs4 import BeautifulSoup
 import glob, os
@@ -12,7 +7,7 @@ import pandas as pd
 df = pd.DataFrame(columns = ['Sample Name', "Sequence_length", "Total_Sequences"], dtype=object)
 
 print(df)
-for file in glob.glob("*.html"):
+for file in glob.glob("*_fastqc.html"):
     
     with open(file) as fp:
         soup = BeautifulSoup(fp, 'html.parser')
@@ -34,22 +29,5 @@ df['Total_size'] = 2 * df['Sequence_length'] * df['Total_Sequences'].div(1e9)
 df['qual_Total_size(GB)'] = [0 if i <= 1.5 else 2 if i >= 2 else 1 for i in list(df['Total_size'])]
 
 df.to_csv('multiqc.txt')
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
 
 

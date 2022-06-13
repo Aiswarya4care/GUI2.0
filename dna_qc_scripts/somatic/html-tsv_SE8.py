@@ -7,7 +7,7 @@ import pandas as pd
 df = pd.DataFrame(columns = ['Sample Name', "Sequence_length", "Total_Sequences"], dtype=object)
 
 print(df)
-for file in glob.glob("*.html"):
+for file in glob.glob("*_fastqc.html"):
     
     with open(file) as fp:
         soup = BeautifulSoup(fp, 'html.parser')
