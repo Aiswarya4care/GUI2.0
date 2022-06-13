@@ -294,7 +294,7 @@ def filtereng():
                     
                     n_al=n_al.replace(prot, nprot)
                     
-                    #making a lost of aachange
+                    #making a list of aachange
                     aa=list(map(lambda st: str.replace(st, al, n_al), aa))   
         
         #replacing the modified values in the original dataframe

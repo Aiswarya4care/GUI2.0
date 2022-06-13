@@ -13,12 +13,12 @@ def panel():
     location= globalv.location
     sample_type=globalv.sample_type
     projectdir=globalv.projectdir
-    capturing_kit=globalv.capturingkit
+    capturingkit=globalv.capturingkit
     test=globalv.test
 
     ########### selecting the panel bed file #############
     prefix=testprefix[test]
-    suffix=capkitsuffix[capturing_kit]
+    suffix=capkitsuffix[capturingkit]
 
     panel_bed= GUIpath.split('codes')[0] + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
 

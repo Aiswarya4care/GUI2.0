@@ -30,9 +30,9 @@ bedtools= '/home/ubuntu/Programs/./bedtools.static.binary intersect'
 ############# Bed file ID for dragen #################
 dra_bed_ids= {
 
-'Illumina_Exome_TargetedRegions_v1.2.hg19.bed':'0000000000000',
-'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed':'000000000000000',
-'Indiegene_Target_2109PD008-V1_4BaseCare_RNA_Fusion_GRCh37.bed':'000000000000',
+'Illumina_Exome_TargetedRegions_v1.2.hg19.bed':'27352929868',
+'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed':'25985869859',
+'Indiegene_Target_2109PD008-V1_4BaseCare_RNA_Fusion_GRCh37.bed':'25985863705',
 'Roche_hg19.bed':'20977118310',
 'SureSelectV7_covered.bed':'20024037150',
 'SureSelectXT_V8_Covered.bed':'23683257154'
@@ -55,7 +55,7 @@ testprefix={
 }
 
 capkitsuffix={
-    'SureSelectV7_covered.bed' : 'SSE.bed',
+'SureSelectV7_covered.bed' : 'SSE.bed',
 'sureselectxt_v8_covered.bed' : 'SE8.bed',
 'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_sorted.bed' : 'Indie.bed',
 'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',

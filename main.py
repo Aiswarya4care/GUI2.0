@@ -29,7 +29,6 @@ GUIpath=os.path.realpath(__file__).split('main.py')[0]
 
 # declaring string variables for tkinter
 cap_kit=tk.StringVar()
-# cnv_ref=tk.StringVar()
 cnv_annot=tk.StringVar()
 panelbed=tk.StringVar()
 location_name=tk.StringVar()
@@ -59,8 +58,6 @@ def projectdir_browse():
 def globalva_update():
     Output.delete('1.0',END)
     capturingkit=cap_kit.get()
-    # cnv_ref_bed=cnv_ref.get()
-    # cnv_annot_bed=cnv_annot.get()
     stype= sampletype.get()
     ttype=testtype.get()
     location = folderPath.get()
@@ -69,12 +66,10 @@ def globalva_update():
     file1 = open(GUIpath + '/globalv.py',"w+")
     l1= 'test=' + "'" + ttype + "'"
     l2= 'location=' + "'" + location + "'"
-    l3= 'capturing_kit=' + "'" + capturingkit + "'"
+    l3= 'capturingkit=' + "'" + capturingkit + "'"
     l4= 'sample_type=' + "'" + stype + "'"
     l5='appsess=' + "'" + appsess + "'"
     l6='projectdir=' + "'" + projectdir + "'"
-    # l7= 'cnv_ref_bed=' + "'"  + cnv_ref_bed + "'"
-    # l8= 'cnv_annot_bed=' + "'" + cnv_annot_bed + "'"
     file1.writelines([l1,'\n',l2,'\n',l3,'\n',l4,'\n',l5,'\n',l6])
     file1.close()
     file1 = open(GUIpath + '/globalv.py',"r")
@@ -97,8 +92,6 @@ def quit():
     file1.write('\n' +'sample_type=' + "'" + "'")
     file1.write('\n' +'appsess=' + "'"  + "'")
     file1.write('\n' +'projectdir=' + "'"  + "'")
-    file1.write('\n' +'cnv_ref_bed=' + "'"  + "'")
-    file1.write('\n' +'cnv_annot_bed=' + "'"  + "'")
     file1.close()
     window.destroy()
 

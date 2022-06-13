@@ -8,6 +8,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from importlib import reload
+from config_gui import projectid
 
 def cafa():
     GUIpath=config_gui.GUIpath
@@ -16,9 +17,8 @@ def cafa():
     location= globalv.location
     
     #fetching project id from config_gui file
-    proj_somatic_dna=config_gui.proj_somatic_dna
-    proj_germline=config_gui.proj_germline
-    proj_somatic_rna=config_gui.proj_somatic_rna
+    pid= projectid[sample_type]
+    fastqc= config_gui.fastqc
 
 #retrieving sample name 
     file_list=os.listdir(location)
@@ -44,14 +44,11 @@ def cafa():
 #project selection and project id retrieval
     
     if sample_type=="DNA [Blood]":
-        pid= proj_somatic_dna
         adapter='AGATCGGAAGAGC'
         
     elif sample_type=="Somatic RNA":
-        pid= proj_somatic_rna
-        adapter='CTGTCTCTTATACACATCT'
+       adapter='CTGTCTCTTATACACATCT'
     else:
-        pid= proj_germline
         adapter='AGATCGGAAGAGC'
 
     #Coping the shell script and modifying the content  
