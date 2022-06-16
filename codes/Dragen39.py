@@ -13,7 +13,7 @@ def dragen39():
     reload(globalv)
     GUIpath=config_gui.GUIpath
     location= globalv.location
-    capturingkit=globalv.capturing_kit
+    capturingkit=globalv.capturingkit
     sample_type=globalv.sample_type
     appsess=globalv.appsess
     bed_id=dra_bed_ids[capturingkit]

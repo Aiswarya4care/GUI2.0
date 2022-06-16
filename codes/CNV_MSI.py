@@ -21,7 +21,7 @@ def cnvmsi():
     controlfreec=config_gui.controlfreec
     bedtools= config_gui.bedtools
     projectdir=globalv.projectdir
-    capturingkit=globalv.capturing_kit
+    capturingkit=globalv.capturingkit
     test=globalv.test
     msisensor=config_gui.msisensor
     msi_microlist= config_gui.msi_microlist

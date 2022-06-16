@@ -18,7 +18,7 @@ def cnv_analysis():
     controlfreec=config_gui.controlfreec
     bedtools= config_gui.bedtools
     projectdir=globalv.projectdir
-    capturingkit=globalv.capturing_kit
+    capturingkit=globalv.capturingkit
     test=globalv.test
     GUIpath=config_gui.GUIpath
 
