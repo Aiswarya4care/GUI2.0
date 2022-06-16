@@ -1,3 +1,35 @@
+# Importing the required modules
+from bs4 import BeautifulSoup
+import glob, os
+import pandas as pd
+
+# Storing the data into Pandas DataFrame
+df = pd.DataFrame(columns = ['Sample Name', "Sequence_length", "Total_Sequences"], dtype=object)
+
+print(df)
+for file in glob.glob("*_fastqc.html"):
+    
+    with open(file) as fp:
+        soup = BeautifulSoup(fp, 'html.parser')
+        htmltable = soup.find('table')
+        rows=list()
+        
+        for row in htmltable.findAll("tr"):
+            rows.append(row)
+            
+        sample_id = str(rows[1].findAll("td")[1])[4:-17]
+        seq_length = int(str(rows[6].findAll("td")[1])[4:-5])
+        seq_count = int(str(rows[4].findAll("td")[1])[4:-5])
+        df.loc[len(df.index)] = [sample_id, seq_length, seq_count]
+        
+# Calculating the Total_size(GB)
+df['Total_size'] = 2 * df['Sequence_length'] * df['Total_Sequences'].div(1e9)
+
+#Assigning the scoring parameters
+df['qual_Total_size(GB)'] = [0 if i <= 1.5 else 2 if i >= 2 else 1 for i in list(df['Total_size'])]
+
+df.to_csv('multiqc.txt')
+
 #Export csv files from basespace
 #Create a folder and save the csv files
 #python script for scoring parameters
@@ -22,7 +54,7 @@ print(df)
 #Assigning the scoring parameters
 df['qual_Percent duplicate aligned reads'] = [0 if i >= 56.242 else 2 if i <= 11.256 else 1 for i in list(df['Percent duplicate aligned reads'])]
 df['qual_Unique base enrichment'] = [0 if i <= 46.786 else 2 if i >= 70.636 else 1 for i in list(df['Unique base enrichment'])]
-df['qual_Mean target coverage depth'] = [0 if i <= 49.34 else 2 if i >= 169.4 else 1 for i in list(df['Mean target coverage depth'])]
+df['qual_Mean target coverage depth'] = [0 if i <= 40 else 2 if i >= 169.4 else 1 for i in list(df['Mean target coverage depth'])]
 df['qual_Uniformity of coverage (Pct > 0.2*mean)'] = [0 if i <=  81.562 else 2 if i >= 96.656 else 1 for i in list(df['Uniformity of coverage (Pct > 0.2*mean)'])]
 print(df)
   

@@ -1,3 +1,36 @@
+# Importing the required modules
+from bs4 import BeautifulSoup
+import glob, os
+import pandas as pd
+
+# Storing the data into Pandas DataFrame
+df = pd.DataFrame(columns = ['Sample Name', "Sequence_length", "Total_Sequences"], dtype=object)
+
+print(df)
+for file in glob.glob("*_fastqc.html"):
+    
+    with open(file) as fp:
+        soup = BeautifulSoup(fp, 'html.parser')
+        htmltable = soup.find('table')
+        rows=list()
+        
+        for row in htmltable.findAll("tr"):
+            rows.append(row)
+            
+        sample_id = str(rows[1].findAll("td")[1])[4:-17]
+        seq_length = int(str(rows[6].findAll("td")[1])[4:-5])
+        seq_count = int(str(rows[4].findAll("td")[1])[4:-5])
+        df.loc[len(df.index)] = [sample_id, seq_length, seq_count]
+        
+# Calculating the Total_size(GB)
+df['Total_size'] = 2 * df['Sequence_length'] * df['Total_Sequences'].div(1e9)
+
+#Assigning the scoring parameters
+df['qual_Total_size(GB)'] = [0 if i <= 6 else 2 if i >= 9 else 1 for i in list(df['Total_size'])]
+
+df.to_csv('multiqc.txt')
+
+
 #Export csv files from basespace
 #Create a folder and save the csv files
 #python script for scoring parameters
@@ -28,7 +61,7 @@ print(df)
   
 # reading and selecting specific cols from input csv files
 QC_metrics = pd.read_csv('multiqc.txt')
-Column_list = ["Sample Name", "Total_size","qual_Total_size(GB)"]
+Column_list = ["Sample Name", "Total_size", "qual_Total_size(GB)"]
 QC_metrics = pd.read_csv('multiqc.txt', usecols=Column_list)
 
 #Merge required QC_parameters
@@ -43,6 +76,6 @@ df1['QC_status'] = df1['qual_Percent duplicate aligned reads'] * df1['qual_Uniqu
 df1['QC_status'] = df1['QC_status'].apply(lambda x: 'Fail' if x == 0 else 'Pass')
 
 #Select specific columns for output
-header = ["Sample Name", "Percent duplicate aligned reads","qual_Percent duplicate aligned reads", "Unique base enrichment", "qual_Unique base enrichment", "Mean target coverage depth", "qual_Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)", "qual_Uniformity of coverage (Pct > 0.2*mean)", "Total_size", "qual_Total_size(GB)","QC_score", "QC_status"]
+header = ["Sample Name", "Percent duplicate aligned reads","qual_Percent duplicate aligned reads", "Unique base enrichment", "qual_Unique base enrichment","Mean target coverage depth","qual_Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)",  "qual_Uniformity of coverage (Pct > 0.2*mean)", "Total_size", "qual_Total_size(GB)","QC_score", "QC_status"]
 df1.to_csv('output.csv', columns = header)
 
