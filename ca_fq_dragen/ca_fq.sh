@@ -7,4 +7,7 @@ do
 done
 sleep 2m
 bs upload dataset --project={{pid}} *R1_001.fastq.gz *R2_001.fastq.gz
+
+perl {{fastqc}} *.gz
+
 echo "############ FQ and CA completed ###########"

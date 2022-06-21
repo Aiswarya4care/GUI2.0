@@ -7,9 +7,6 @@ from alive_progress import alive_bar
 from importlib import reload
 import globalv
 
-global GUIpath
-GUIpath=GUIpath=os.path.realpath(__file__).split('main.py')[0]
-
 
 def rna_qc():
   reload(globalv)

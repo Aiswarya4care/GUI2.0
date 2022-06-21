@@ -17,8 +17,8 @@ from codes.CNV_merge import cnv_merge
 from codes.MSI import msi_analysis
 from codes.TMB import tmb_calculation
 from codes.gene_coverage import gene_cov
-from codes.RNA_fusion import rna_fusion
-from codes.RNA_QC import rna_qc
+#from codes.RNA_fusion import rna_fusion
+from codes.RNA_fusion_QC import rna_fusion_qc
 from codes.DNA_QC import dna_qc
 from codes.Dragen39 import dragen39
 
@@ -191,10 +191,10 @@ tmb_btn=tk.Button(window, text = 'Run TMB', command = tmb_calculation ,height = 
 genecov_btn= tk.Button(window, text = 'Gene Coverage', command = gene_cov ,height = 1, width = 18) 
 
 #RNA fusion
-rnafus_btn=tk.Button(window, text = 'RNA Fusion', command = rna_fusion ,height = 1, width = 18) 
+#rnafus_btn=tk.Button(window, text = 'RNA Fusion', command = rna_fusion ,height = 1, width = 18) 
 
 #RNA QC
-rnaqc_btn= tk.Button(window, text = 'RNA QC', command = rna_qc ,height = 1, width = 18) 
+rnaqc_btn= tk.Button(window, text = 'RNA Fusion & QC', command = rna_fusion_qc ,height = 1, width = 18) 
 
 #DNA QC
 dnaqc_btn= tk.Button(window, text = 'DNA QC', command = dna_qc ,height = 1, width = 18
@@ -246,7 +246,7 @@ rnalabel.grid(row=0,column=4,pady=15)
 rna_drag_btn.grid(row=1,column=4,pady=6)
 rnaqc_btn.grid(row=2,column=4,pady=6)
 genecov_btn.grid(row=3,column=4,pady=8)
-rnafus_btn.grid(row=4,column=4,pady=8)
+#rnafus_btn.grid(row=4,column=4,pady=8)
 zip_btn.grid(row=5,column=4,pady=6)
 
 #mandatory buttons
