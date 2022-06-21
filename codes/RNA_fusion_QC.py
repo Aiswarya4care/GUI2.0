@@ -22,7 +22,7 @@ def rna_fusion_qc():
 		os.system("echo '##########Starting copying preliminary, coverage and general stats files from basespace #################'")
 		command_n='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.fusion_candidates.preliminary '+path+'/'
 		#print(command_n)
-		command_m='cp' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/'
+		command_m='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/'
 		rename1='mv '+path+'/multiqc_general_stats.txt '+path+'/'+line_1+'_multiqc_general_stats.txt'
 		command_o='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/'
 		os.system(command_n)
@@ -58,7 +58,7 @@ def rna_fusion_qc():
 		df1.to_excel(path+r'/'+f_name+'.xlsx', index = False)
 
 	################ Running coverconcat.sh ######################
-	os.system(GUIpath+'/rna_qc_scipts/coverconcat2.sh')	
+	os.system(GUIpath+'/rna_qc_scripts/coverconcat2.sh')	
 
 
 	################ Running RNA QC script ######################
