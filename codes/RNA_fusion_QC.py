@@ -58,8 +58,24 @@ def rna_fusion_qc():
 		df1.to_excel(path+r'/'+f_name+'.xlsx', index = False)
 
 	################ Running coverconcat.sh ######################
-	os.system(GUIpath+'/rna_qc_scripts/coverconcat2.sh')	
+	#giving the necessary permissions
+	os.chdir(path)
+	os.system('chmod 777 *')
 
+    #modifying the annotation_mod.sh file
+	coverconcatfile=path+'/ca_fq_dragen36.sh'
+    # Read in the file
+	with open(coverconcatfile, 'r') as file :
+		filedata = file.read()
+
+    # Replace the project directory location, annotation_db. annotation_spk
+		filedata = filedata.replace('{{location}}', path)
+    
+    # Write the file out again
+	with open(coverconcatfile, 'w') as file:
+		file.write(filedata)
+	
+	os.system(GUIpath+'/rna_qc_scripts/coverconcat2.sh')	
 
 	################ Running RNA QC script ######################
 
