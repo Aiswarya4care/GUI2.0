@@ -27,6 +27,8 @@ sambamba = '/usr/bin/sambamba'
 controlfreec= '/home/ubuntu/Programs/FREEC-11.6/src/freec'
 bedtools= '/home/ubuntu/Programs/./bedtools.static.binary intersect'
 
+#FusionInspector
+
 ############# Bed file ID for dragen #################
 dra_bed_ids= {
 

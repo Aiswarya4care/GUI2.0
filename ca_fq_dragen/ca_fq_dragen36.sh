@@ -19,7 +19,7 @@ done
 printf -v joined '%s,' "${bsids[@]}"
 bsids=${joined%,}
 echo $bsids
-{{bscmd}}
+
 echo "########################"
 echo "Dragen Launched"
 echo "########################"

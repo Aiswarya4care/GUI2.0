@@ -21,6 +21,8 @@ from codes.gene_coverage import gene_cov
 from codes.RNA_fusion_QC import rna_fusion_qc
 from codes.DNA_QC import dna_qc
 from codes.Dragen39 import dragen39
+from codes.sorting import sort
+from codes.cgi_analysis import cgi
 
 window=tk.Tk()
 
@@ -142,8 +144,11 @@ bsrefresh_btn=tk.Button(window,text = 'Refresh Basespace', command = bsrefresh, 
 #Display Information
 Output = Text(window, height = 12, width = 60, bg = "light cyan")
 
+#SOrting files based on sample extension
+sort_btn=tk.Button(window,text = 'Sort files', command = sort, height = 1, width = 18)
+
 #Cutadapt & FastQ button
-cutad_fqclabel= tk.Label(window, text='Cutadapt & FastQC',**font_options)
+#cutad_fqclabel= tk.Label(window, text='Cutadapt & FastQC',**font_options)
 cutad_fqc_btn=tk.Button(window,text = 'Cutadapt & FastQ', command = cafa, height = 1, width = 18)
 
 #Cutadapt, Fastqc and dragen button
@@ -154,8 +159,8 @@ dna_drag36_btn= tk.Button(window,text = 'Dragen 3.6', command = cafadra, height 
 dna_drag39_btn= tk.Button(window,text = 'Dragen 3.9', command = dragen39, height = 1, width = 18)
 rna_drag_btn= tk.Button(window,text = 'Gene fusion Var call', command = cafadra, height = 1, width = 18)
 
-#Zip files for email
-zip_btn=tk.Button(window, text = 'Zip files for Mail', command = panel ,height = 1, width = 18)
+#CGI analysis
+cgi_btn=tk.Button(window, text = 'Run CGI', command = cgi ,height = 1, width = 18) 
 
 #Annotation
 annotate_btn=tk.Button(window, text = 'Annotation', command = anno,height = 1, width = 18) 
@@ -199,6 +204,10 @@ rnaqc_btn= tk.Button(window, text = 'RNA Fusion & QC', command = rna_fusion_qc ,
 #DNA QC
 dnaqc_btn= tk.Button(window, text = 'DNA QC', command = dna_qc ,height = 1, width = 18
 )
+
+#Zip files for email
+zip_btn=tk.Button(window, text = 'Zip files for Mail', command = panel ,height = 1, width = 18)
+
 #Complete DNA data analysis
 completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_qc ,height = 1, width = 18
 )
@@ -226,20 +235,21 @@ projbrowse_btn.grid(row=4, column=1,pady=6,padx=30)
 
 ##### DNA Data analysis ####
 dnalabel.grid(row=0,column=3,pady=15)
-dna_drag36_btn.grid(row=1,column=3,pady=6)
-cutad_fqc_btn.grid(row=2, column=3,pady=8, padx=50)
+sort_btn.grid(row=1, column=3,pady=8, padx=50)
+dna_drag36_btn.grid(row=2,column=3,pady=6)
 dna_drag39_btn.grid(row=3,column=3,pady=6)
 dnaqc_btn.grid(row=4,column=3,pady=6)
 panel_btn.grid(row=5,column=3,pady=8) 
-annotate_btn.grid(row=6,column=3,pady=6)
-filtereng_btn.grid(row=7,column=3,pady=8)
-filterengtmb_btn.grid(row=8,column=3,pady=8)
-cnv_btn.grid(row=9,column=3,pady=6)
-cnvmerge_btn.grid(row=10,column=3,pady=8)
-msi_btn.grid(row=11,column=3,pady=6)
-cnvmsi_btn.grid(row=12,column=3,pady=8)
-tmb_btn.grid(row=13,column=3,pady=6)
-zip_btn.grid(row=14,column=3,pady=8)
+cgi_btn.grid(row=6,column=3,pady=6)
+annotate_btn.grid(row=7,column=3,pady=6)
+filtereng_btn.grid(row=8,column=3,pady=8)
+filterengtmb_btn.grid(row=9,column=3,pady=8)
+cnv_btn.grid(row=10,column=3,pady=6)
+cnvmerge_btn.grid(row=11,column=3,pady=8)
+msi_btn.grid(row=12,column=3,pady=6)
+cnvmsi_btn.grid(row=13,column=3,pady=8)
+tmb_btn.grid(row=14,column=3,pady=6)
+zip_btn.grid(row=15,column=3,pady=8)
 
 ##### RNA Analysis ####
 rnalabel.grid(row=0,column=4,pady=15)

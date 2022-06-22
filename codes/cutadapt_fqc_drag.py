@@ -4,9 +4,6 @@ import config_gui
 import pandas as pd
 import numpy as np
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import messagebox
 from importlib import reload
 from config_gui import dra_bed_ids
 from config_gui import projectid
@@ -42,9 +39,25 @@ def cafadra():
         if s in samples:
             samples.remove(s)
     
-#project selection and project id retrieval
-    
-    if sample_type=="DNA [Blood]":
+################# #project selection and project id retrieval ###################
+
+# Running RNA DRAGEN after auto detecting ST8 and CT files 
+
+    if sample_type=="RNA":
+        adapter='AGATCGGAAGAGC'
+        if ("-ST8-" in ':'.join(samples))*("-CT-" in ':'.join(samples)) ==1:
+            print("Both ST8 and CT samples are present")
+            tk.messagebox.showwarning(title=None, message="Selected directory contains both SE8 and CE samples")
+
+        elif ("-ST8-" in ':'.join(samples))*("-CT-" not in ':'.join(samples)) ==1:
+            print("ST8 samples present in the folder")
+            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:354119770 -o app-session-name:"+ appsess +" -l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:23683257154 -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+        
+        elif ("-CT-" in ':'.join(samples))*("-ST8-" not in ':'.join(samples)) ==1:
+            print("CT samples present in the folder")
+            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:354119770 -o app-session-name:"+ appsess +" -l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:25985863705 -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+   
+    elif sample_type=="DNA [Blood]":
         adapter='AGATCGGAAGAGC'
         bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:0 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o sv_checkbox:1 -o commandline-disclaimer:true"
         
@@ -56,10 +69,6 @@ def cafadra():
         bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o liquid_tumor:1 -o vc-af-call-threshold:1 -o vc-af-filter-threshold:5 -o sv_checkbox:1 -o commandline-disclaimer:true"
         adapter='CTGTCTCTTATACACATCT'
 
-    else:
-        adapter='AGATCGGAAGAGC'
-        bscmd="bs launch application -n \"DRAGEN Enrichment\" --app-version 3.6.3 -o app-session-name:"+ appsess +" -l "+ appsess +" -o project-id:" + pid + " -o vc-type:1 -o annotation-source:ensembl -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:" + str(bed_id) + " -o qc-coverage-region-padding-2:150 -o input_list.sample-id:$bsids -o picard_checkbox:1 -o vc-af-call-threshold:5 -o vc-af-filter-threshold:10 -o sv_checkbox:1 -o commandline-disclaimer:true"
-        
 
     #Coping the shell script and modifying the content  
     loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/ca_fq_dragen36.sh'     
