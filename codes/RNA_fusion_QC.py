@@ -62,8 +62,12 @@ def rna_fusion_qc():
 	os.chdir(path)
 	os.system('chmod 777 *')
 
+	#copying coverconcat to folder
+	loc_coverconcat_file= GUIpath + '/rna_qc_scripts/coverconcat2.sh'
+	os.system('cp '+ loc_coverconcat_file + ' ' + path) 
+
     #modifying the annotation_mod.sh file
-	coverconcatfile=path+'/ca_fq_dragen36.sh'
+	coverconcatfile=path+'/coverconcat2.sh'
     # Read in the file
 	with open(coverconcatfile, 'r') as file :
 		filedata = file.read()
