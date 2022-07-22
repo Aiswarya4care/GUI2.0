@@ -43,8 +43,8 @@ def cnv_analysis():
             samples.remove(s)
 
     #fetching cnv annot and cnv ref file 
-    cnv_annot_bed= GUIpath.split('/codes/')[0] + '/bed_files/cnv_bed_files/cnv_annotation_bedfiles/genes_absolute.bed'
-    cnv_filter_bed_loc= GUIpath.split('/codes/')[0] + '/bed_files/cnv_bed_files/cnv_filter_bedfiles/'
+    cnv_annot_bed= GUIpath + '/bed_files/cnv_bed_files/cnv_annotation_bedfiles/genes_absolute.bed'
+    cnv_filter_bed_loc= GUIpath + '/bed_files/cnv_bed_files/cnv_filter_bedfiles/'
     if test=='TarGT_Indigene':
         cnv_filter_bed= cnv_filter_bed_loc + 'indiegene_whole-gene.bed'
     elif test=='TarGT_Absolute':
@@ -58,7 +58,7 @@ def cnv_analysis():
         os.system("mkdir "+ location+ "/CNV/" + s)
 
         #Coping the shell script and modifying the content  
-        loc_cnvconfig_file= GUIpath.split('/codes/')[0] + '/cnv/samplename_cnv_config.txt'     
+        loc_cnvconfig_file= GUIpath + '/cnv/samplename_cnv_config.txt'     
         os.system('cp '+ loc_cnvconfig_file + ' ' + location+ "/CNV/" + s) 
         
         #giving the necessary permissions

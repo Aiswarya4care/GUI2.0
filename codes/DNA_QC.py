@@ -34,7 +34,7 @@ def dna_qc():
     os.system('mkdir '+ location + '/QC')
 
     ###### segregating files into lists #########3
-    samples=glob.glob("*_fastqc.html")
+    samples=glob.glob("*_S1_L001_R1_001_fastqc.html")
     se8=list(filter(lambda x:'-SE8-' in x, samples))
     ce=list(filter(lambda x:'-CE-' in x, samples))
 
