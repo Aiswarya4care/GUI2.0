@@ -47,13 +47,13 @@ window.title("Patient Data Processing")
 #Browsing the folder with samples or to perform analysis
 def browse():
     global folderPath
-    folder_selected = filedialog.askdirectory()
+    folder_selected = filedialog.askdirectory(initialdir="/home/")
     folderPath.set(folder_selected)
 
 #Selecting project directory (somatic or germline folders)
 def projectdir_browse(): 
     #choosing a project dir
-    projectdir_selected = filedialog.askdirectory()
+    projectdir_selected = filedialog.askdirectory(initialdir="/home/")
     projectdirPath.set(projectdir_selected)
 
 #saving all the global and cross file variables in globalv.py file
