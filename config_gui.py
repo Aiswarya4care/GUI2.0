@@ -59,13 +59,13 @@ testprefix={
 capkitsuffix={
 'SureSelectV7_covered.bed' : 'SSE.bed',
 'sureselectxt_v8_covered.bed' : 'SE8.bed',
-'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_sorted.bed' : 'Indie.bed',
+'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed' : 'Indie.bed',
 'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',
 'Roche_hg19.bed' : 'Roche.bed'
 }
 
 ############ Developer Options ###############
-default_files=['ca','panel','cutadaptlog.txt','FQlog.txt','MSI','CNV','run_cnv.sh','cutadaptlog', 'FE','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
+default_files=['ca','panel','cutadaptlog.txt','FQlog.txt','MSI','CNV','run_cnv.sh','cutadaptlog', 'QC','FE','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
 
 
 

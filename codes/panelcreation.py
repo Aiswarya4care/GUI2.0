@@ -20,7 +20,7 @@ def panel():
     prefix=testprefix[test]
     suffix=capkitsuffix[capturingkit]
 
-    panel_bed= GUIpath.split('codes')[0] + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
+    panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
 
     file_list=os.listdir(location)
 
@@ -34,13 +34,16 @@ def panel():
         samples.append(sample[0])
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
-    print(samples)
+    
+
     #Removing default file names from the sample name list
     default_files=config_gui.default_files
     for s in default_files:
         if s in samples:
             samples.remove(s)
-        
+
+    print(samples)
+
     mkdir="mkdir "+ location+ "/panel"
     os.system(mkdir)
     panelcreate= location +  "/panel/panelcreate.sh"
