@@ -47,11 +47,35 @@ window.title("Patient Data Processing")
 #Browsing the folder with samples or to perform analysis
 def browse():
     global folderPath
-    folder_selected = filedialog.askdirectory(initialdir="/home/")
+    #setting a toggle button to hidden files
+    try:
+        try:
+            window.tk.call('tk_getOpenFile', '-foobarbaz')
+        except TclError:
+            pass
+        # now set the magic variables accordingly
+        window.tk.call('set', '::tk::dialog::file::showHiddenBtn', '1')
+        window.tk.call('set', '::tk::dialog::file::showHiddenVar', '0')
+    except:
+        pass
+    folder_selected = filedialog.askdirectory(initialdir='/home/')
+   
     folderPath.set(folder_selected)
 
 #Selecting project directory (somatic or germline folders)
 def projectdir_browse(): 
+        #setting a toggle button to hidden files
+    try:
+        try:
+            window.tk.call('tk_getOpenFile', '-foobarbaz')
+        except TclError:
+            pass
+        # now set the magic variables accordingly
+        window.tk.call('set', '::tk::dialog::file::showHiddenBtn', '1')
+        window.tk.call('set', '::tk::dialog::file::showHiddenVar', '0')
+    except:
+        pass
+    
     #choosing a project dir
     projectdir_selected = filedialog.askdirectory(initialdir="/home/")
     projectdirPath.set(projectdir_selected)
