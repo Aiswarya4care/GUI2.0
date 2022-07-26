@@ -30,11 +30,18 @@ def dna_qc():
     #creating QC folder inside the location
     if 'QC' in samples:
         os.system('rm -r '+ location + '/QC')
+    else:
+        os.system('mkdir '+ location + '/QC')
 
-    os.system('mkdir '+ location + '/QC')
+    ###### fetching sample names #########3
+    samples=glob.glob(location+"/*.html")
 
-    ###### segregating files into lists #########3
-    samples=glob.glob("*_S1_L001_R1_001_fastqc.html")
+    #renaming the files (removing _S1_L001_R1_001_)
+    for i in samples:
+        if '_S1_L001_R1_001_fastqc.html' in i:
+            os.rename(i,i.split('_S1_L001_R1_001_fastqc.html')[0]+".html")
+
+    #segregating the files to respective folder
     se8=list(filter(lambda x:'-SE8-' in x, samples))
     ce=list(filter(lambda x:'-CE-' in x, samples))
 
@@ -45,18 +52,27 @@ def dna_qc():
     else:
         script_path= GUIpath + '/dna_qc_scripts/somatic/'
             
-    #performing QC based on CE or SE8
+    ############# performing QC based on SE8 #######################
     if len(se8)>0:
         os.system('mkdir '+ location + '/QC/SE8')
         os.chdir(location)
+
+        #copying script inside the QC folder
         for script in glob.glob(script_path+'*SE8.py'):
             shutil.copy(script,location + '/QC/SE8')
         for s in se8:
-            print(s)
             shutil.copy(s,location + '/QC/SE8')
         
         os.chdir(location+'/QC/SE8')
-    
+        
+        #adding location to the python script
+        with open(glob.glob(location+"/QC/SE8/*.py")[0], 'r') as file :
+            filedata = file.read()
+            # Replace the location
+            filedata = filedata.replace('{{location}}', "'" +location + "'")
+        with open(glob.glob(location+"/QC/SE8/*.py")[0], 'w') as file:
+            file.write(filedata)
+            
         if len(glob.glob(location + '/QC/SE8'+'/*metrics*.csv'))>0:
             answer = tk.messagebox.askyesno("Confirmation", 'Running QC for SE8 samples')
             if answer:
@@ -67,18 +83,26 @@ def dna_qc():
             if answer:
                 os.system('python3 '+ script )
             
-        
+    ############# performing QC based on CE #######################        
     if len(ce)>0:
         os.system('mkdir '+ location + '/QC/CE')
         os.chdir(location)
         for script in glob.glob(script_path+'*CE.py'):
             shutil.copy(script,location + '/QC/CE')
         for c in ce:
-            print(c)
+            
             shutil.copy(c,location + '/QC/CE')
         
         os.chdir(location+'/QC/CE')
-
+        
+        #adding location to the python script
+        with open(glob.glob(location+"/QC/CE/*.py")[0], 'r') as file :
+            filedata = file.read()
+            # Replace the location
+            filedata = filedata.replace('{{location}}', "'" +location + "'")
+        with open(glob.glob(location+"/QC/CE/*.py")[0], 'w') as file:
+            file.write(filedata)
+        
         if len(glob.glob(location + '/QC/CE'+'/*metrics*.csv'))>0:
             answer = tk.messagebox.askyesno("Confirmation", 'Running QC for CE samples')
             if answer:
@@ -89,6 +113,7 @@ def dna_qc():
             if answer:
                 os.system('python3 '+ script )
         
+            
 
-        
+            
 
