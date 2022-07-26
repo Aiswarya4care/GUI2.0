@@ -60,9 +60,9 @@ df['qual_Uniformity of coverage (Pct > 0.2*mean)'] = [0 if i <=  81.562 else 2 i
 print(df)
   
 # reading and selecting specific cols from input csv files
-QC_metrics = pd.read_csv('multiqc.txt')
-Column_list = ["Sample Name", "Total_size", "qual_Total_size(GB)"]
-QC_metrics = pd.read_csv('multiqc.txt', usecols=Column_list)
+QC_metrics = pd.read_csv(location+ '/QC/SE8/multiqc.txt')
+Column_list = ["Sample Name", "Total_size","qual_Total_size(GB)"]
+QC_metrics = pd.read_csv(location+'/QC/SE8/multiqc.txt', usecols=Column_list)
 
 #Merge required QC_parameters
 df1 = pd.merge(df, QC_metrics, on='Sample Name')
@@ -77,5 +77,7 @@ df1['QC_status'] = df1['QC_status'].apply(lambda x: 'Fail' if x == 0 else 'Pass'
 
 #Select specific columns for output
 header = ["Sample Name", "Percent duplicate aligned reads","qual_Percent duplicate aligned reads", "Unique base enrichment", "qual_Unique base enrichment","Mean target coverage depth","qual_Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)",  "qual_Uniformity of coverage (Pct > 0.2*mean)", "Total_size", "qual_Total_size(GB)","QC_score", "QC_status"]
-df1.to_csv('output.csv', columns = header)
+
+df1.to_csv(location+'/QC/SE8/output.csv', columns = header)
+
 

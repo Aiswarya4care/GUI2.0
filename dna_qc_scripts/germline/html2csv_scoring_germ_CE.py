@@ -54,8 +54,7 @@ df['qual_Percent duplicate aligned reads'] = [0 if i >= 56.242 else 2 if i <= 11
 df['qual_Unique base enrichment'] = [0 if i <= 46.786 else 2 if i >= 70.636 else 1 for i in list(df['Unique base enrichment'])]
 df['qual_Mean target coverage depth'] = [0 if i <= 40 else 2 if i >= 169.4 else 1 for i in list(df['Mean target coverage depth'])]
 df['qual_Uniformity of coverage (Pct > 0.2*mean)'] = [0 if i <=  81.562 else 2 if i >= 96.656 else 1 for i in list(df['Uniformity of coverage (Pct > 0.2*mean)'])]
-print(df)
-  
+
 # reading and selecting specific cols from input csv files
 QC_metrics = pd.read_csv(location+ '/QC/CE/multiqc.txt')
 Column_list = ["Sample Name", "Total_size","qual_Total_size(GB)"]
@@ -74,5 +73,6 @@ df1['QC_status'] = df1['QC_status'].apply(lambda x: 'Fail' if x == 0 else 'Pass'
 
 #Select specific columns for output
 header = ["Sample Name", "Percent duplicate aligned reads","qual_Percent duplicate aligned reads", "Unique base enrichment", "qual_Unique base enrichment", "Mean target coverage depth", "qual_Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)", "qual_Uniformity of coverage (Pct > 0.2*mean)", "Total_size", "qual_Total_size(GB)","QC_score", "QC_status"]
+
 df1.to_csv(location+'/QC/CE/output.csv', columns = header)
 

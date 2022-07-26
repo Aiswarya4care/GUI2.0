@@ -33,6 +33,7 @@ df['Total_size'] = 2 * df['Sequence_length'] * df['Total_Sequences'].div(1e9)
 #Assigning the scoring parameters
 df['qual_Total_size(GB)'] = [0 if i <= 3 else 2 if i >= 4 else 1 for i in list(df['Total_size'])]
 
+
 df.to_csv(location+'/QC/CE/'+ 'multiqc.txt')
 
 #Export csv files from basespace
@@ -54,9 +55,9 @@ df['qual_Percent duplicate aligned reads'] = [0 if i >= 70 else 2 if i <= 40 els
 df['qual_Percent Target coverage at 50X'] = [0 if i <= 60 else 2 if i >= 90 else 1 for i in list(df['Percent Target coverage at 50X'])]
 df['qual_Mean target coverage depth'] = [0 if i <= 85 else 2 if i >= 100 else 1 for i in list(df['Mean target coverage depth'])]
 df['qual_Uniformity of coverage (Pct > 0.2*mean)'] = [0 if i <=  80 else 2 if i >= 90 else 1 for i in list(df['Uniformity of coverage (Pct > 0.2*mean)'])]
-  
+
 # reading and selecting specific cols from input csv files
-QC_metrics = pd.read_csv(location+ '/QC/CE/multiqc.txt')
+QC_metrics = pd.read_csv('multiqc.txt')
 Column_list = ["Sample Name", "Total_size","qual_Total_size(GB)"]
 QC_metrics = pd.read_csv(location+'/QC/CE/multiqc.txt', usecols=Column_list)
 
