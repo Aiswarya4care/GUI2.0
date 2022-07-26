@@ -18,7 +18,7 @@ def dragen39():
     appsess=globalv.appsess
     bed_id=dra_bed_ids[capturingkit]
     projectdir=globalv.projectdir
-
+    fastqc= config_gui.fastqc
     
     #fetching project id from config_gui file
     pid= projectid[sample_type]
@@ -48,6 +48,7 @@ def dragen39():
     if ("-SE8-" in ':'.join(samples))*("-CE-" in ':'.join(samples)) ==1:
         print("Both SE8 and CE samples are present")
         tk.messagebox.showwarning(title=None, message="Selected directory contains both SE8 and CE samples")
+        dragen39.terminate() #fake command- doesnt do anything (just temporrary fix to stop the code from running further)
 
     elif ("-SE8-" in ':'.join(samples))*("-CE-" not in ':'.join(samples)) ==1:
         print("SE8 samples present in the folder")
@@ -93,7 +94,8 @@ def dragen39():
         filedata = filedata.replace('{{location}}', location)
         filedata = filedata.replace('{{bscmd}}', bscmd)
         filedata = filedata.replace('{{pid}}', pid)
-    
+        filedata = filedata.replace('{{fastqc}}', fastqc)
+
     # Write the file out again
     with open(dragen39file, 'w') as file:
         file.write(filedata)

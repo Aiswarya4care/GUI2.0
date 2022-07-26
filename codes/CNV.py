@@ -43,14 +43,23 @@ def cnv_analysis():
             samples.remove(s)
 
     #fetching cnv annot and cnv ref file 
-    cnv_annot_bed= GUIpath + '/bed_files/cnv_bed_files/cnv_annotation_bedfiles/genes_absolute.bed'
-    cnv_filter_bed_loc= GUIpath + '/bed_files/cnv_bed_files/cnv_filter_bedfiles/'
+    cnv_capturing_bed= GUIpath + '/bed_files/cnv_bed_files/cnv_capturing_bedfiles/genes_absolute.bed'
+    cnv_intersect_bed_loc= GUIpath + '/bed_files/cnv_bed_files/cnv_intersect_bedfiles/'
     if test=='TarGT_Indigene':
-        cnv_filter_bed= cnv_filter_bed_loc + 'indiegene_whole-gene.bed'
+        cnv_intersect_bed= cnv_intersect_bed_loc + 'indiegene_whole-gene.bed'
+
     elif test=='TarGT_Absolute':
-        cnv_filter_bed= cnv_filter_bed_loc + 'genes_absolute.bed'
+        cnv_intersect_bed= cnv_intersect_bed_loc + 'genes_absolute.bed'
     else:
-        cnv_filter_bed= cnv_filter_bed_loc + 'cnv_36_genes.bed'
+        cnv_intersect_bed= cnv_intersect_bed_loc + 'cnv_36_genes.bed'
+
+    ################# selecting modified capturing bed files #################
+    if capturingkit=='SureSelectXT_V8_Covered.bed':
+        modified_capt_bed= 'SureSelectXT_V8_Covered.bed'
+    elif capturingkit=='Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed':
+        modified_capt_bed= 'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_modified.bed'
+    else:
+        modified_capt_bed='###########################'
 
     ########################################   
     #generating config files for each sample#
@@ -92,13 +101,13 @@ def cnv_analysis():
     for s in samples:
         f2.write('\n' + controlfreec + " -conf " + s + "/" + s+"_cnv.txt" + '\n')
         f2.write('\n')
-        f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_annot_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
+        f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_capturing_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
         f2.write(s + "\"_cnv_annotated_output.txt\"" + '\n')
         
-        f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_filter_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
+        f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_intersect_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
         f2.write(s + "\"_cnv_filter_output.txt\"" + '\n')
         
-        f2.write("perl CNV_config_Somatic.pl " + projectdir + "/AppResults/"+s+"/Files/"+ s+ ".bam" + "/home/ubuntu/Programs/files_for_control_freec/bed_file_CNV/Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37_modified.bed " + s)
+        f2.write("perl CNV_config_Somatic.pl " + projectdir + "/AppResults/"+s+"/Files/"+ s+ ".bam" + GUIpath + "/bed_files/cnv_bed_files/cnv_capturing_bedfiles"+ modified_capt_bed + s)
 
         f2.write('\n'+ "##############################")
     f2.write('\n'+"echo \"######################\"")
