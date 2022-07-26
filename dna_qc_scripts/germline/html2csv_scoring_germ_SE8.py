@@ -2,12 +2,18 @@
 from bs4 import BeautifulSoup
 import glob, os
 import pandas as pd
+import re
+
+location={{location}}
+
+#set the working directory as QC folder
+os.chdir(location)
 
 # Storing the data into Pandas DataFrame
 df = pd.DataFrame(columns = ['Sample Name', "Sequence_length", "Total_Sequences"], dtype=object)
 
 print(df)
-for file in glob.glob("*_fastqc.html"):
+for file in glob.glob(location + "/QC/SE8/" +"*.html"):
     
     with open(file) as fp:
         soup = BeautifulSoup(fp, 'html.parser')
@@ -17,9 +23,9 @@ for file in glob.glob("*_fastqc.html"):
         for row in htmltable.findAll("tr"):
             rows.append(row)
             
-        sample_id = str(rows[1].findAll("td")[1])[4:-17]
-        seq_length = int(str(rows[6].findAll("td")[1])[4:-5])
-        seq_count = int(str(rows[4].findAll("td")[1])[4:-5])
+        sample_id = str(rows[1].findAll("td")[1]).split('_')[0].split('>')[1]
+        seq_length = int(re.findall(r'\d+', str(rows[6].findAll("td")[1]))[0])
+        seq_count = int(re.findall(r'\d+', str(rows[4].findAll("td")[1]))[0])
         df.loc[len(df.index)] = [sample_id, seq_length, seq_count]
         
 # Calculating the Total_size(GB)
@@ -28,24 +34,18 @@ df['Total_size'] = 2 * df['Sequence_length'] * df['Total_Sequences'].div(1e9)
 #Assigning the scoring parameters
 df['qual_Total_size(GB)'] = [0 if i <= 6 else 2 if i >= 9 else 1 for i in list(df['Total_size'])]
 
-df.to_csv('multiqc.txt')
+df.to_csv(location+'/QC/SE8/'+ 'multiqc.txt')
 
 
 #Export csv files from basespace
 #Create a folder and save the csv files
 #python script for scoring parameters
 
-#importing important libraries/packages
-import pandas as pd
-import os
-import glob
+#merge all the csv files
+csvfiles = glob.glob(os.path.join(location + '/QC/SE8/' , "metrics*.csv"))
+mergedfile=pd.concat(map(pd.read_csv, csvfiles), ignore_index=True)
 
-#set the working directory
-path = os.getcwd()
-
-#merge the csv files
-cmd = "awk 'FNR==1 && NR!=1{next;}{print}'  *.csv > merged.csv"
-os.system(cmd)
+mergedfile.to_csv(location+'/QC/SE8/'+ 'merged.csv')
 
 #extract specific columns from csv
 col_list = ["Sample Name","Percent duplicate aligned reads", "Unique base enrichment", "Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)"]
