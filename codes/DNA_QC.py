@@ -28,10 +28,8 @@ def dna_qc():
             samples.remove(s)
             
     #creating QC folder inside the location
-    if 'QC' in samples:
-        os.system('rm -r '+ location + '/QC')
-    else:
-        os.system('mkdir '+ location + '/QC')
+    os.system('rm -r '+ location + '/QC')
+    os.system('mkdir '+ location + '/QC')
 
     ###### fetching sample names #########3
     samples=glob.glob(location+"/*.html")
@@ -76,12 +74,14 @@ def dna_qc():
         if len(glob.glob(location + '/QC/SE8'+'/*metrics*.csv'))>0:
             answer = tk.messagebox.askyesno("Confirmation", 'Running QC for SE8 samples')
             if answer:
-                os.system('python3 '+ script )
+                script=glob.glob(location+ '/QC/SE8/' + '*.py')
+                os.system('python3 '+ script[0] )
         else:
             tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the SE8 folder')
             answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC for SE8 samples?')
             if answer:
-                os.system('python3 '+ script )
+                script=glob.glob(location+ '/QC/SE8/' + '*.py')
+                os.system('python3 '+ script[0] )
             
     ############# performing QC based on CE #######################        
     if len(ce)>0:
@@ -106,12 +106,14 @@ def dna_qc():
         if len(glob.glob(location + '/QC/CE'+'/*metrics*.csv'))>0:
             answer = tk.messagebox.askyesno("Confirmation", 'Running QC for CE samples')
             if answer:
-                os.system('python3 '+ script )
+                script=glob.glob(location+ '/QC/SE8/' + '*.py')
+                os.system('python3 '+ script[0] )
         else:
             tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the CE folder')
             answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC for CE samples?')
             if answer:
-                os.system('python3 '+ script )
+                script=glob.glob(location+ '/QC/SE8/' + '*.py')
+                os.system('python3 '+ script[0] )
         
             
 

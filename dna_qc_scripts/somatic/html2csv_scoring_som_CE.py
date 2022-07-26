@@ -57,7 +57,7 @@ df['qual_Mean target coverage depth'] = [0 if i <= 85 else 2 if i >= 100 else 1 
 df['qual_Uniformity of coverage (Pct > 0.2*mean)'] = [0 if i <=  80 else 2 if i >= 90 else 1 for i in list(df['Uniformity of coverage (Pct > 0.2*mean)'])]
 
 # reading and selecting specific cols from input csv files
-QC_metrics = pd.read_csv('multiqc.txt')
+QC_metrics = pd.read_csv(location+'/QC/CE/multiqc.txt')
 Column_list = ["Sample Name", "Total_size","qual_Total_size(GB)"]
 QC_metrics = pd.read_csv(location+'/QC/CE/multiqc.txt', usecols=Column_list)
 
