@@ -78,8 +78,8 @@ def dna_qc():
             if answer:
                 os.system('python3 '+ script )
         else:
-            tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the folder')
-            answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC?')
+            tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the SE8 folder')
+            answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC for SE8 samples?')
             if answer:
                 os.system('python3 '+ script )
             
@@ -108,8 +108,8 @@ def dna_qc():
             if answer:
                 os.system('python3 '+ script )
         else:
-            tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the folder')
-            answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC?')
+            tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the CE folder')
+            answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC for CE samples?')
             if answer:
                 os.system('python3 '+ script )
         
