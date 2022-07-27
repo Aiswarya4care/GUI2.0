@@ -39,8 +39,13 @@ def dna_qc():
     se8=list(filter(lambda x:'-SE8-' in x, samples))
     ce=list(filter(lambda x:'-CE-' in x, samples))
 
-    script_path= GUIpath + '/dna_qc_scripts/somatic/'
-    
+    #choosing between germline and somatic
+    if sample_type=='DNA [Blood]':
+        script_path= GUIpath + '/dna_qc_scripts/germline/'
+        
+    else:
+        script_path= GUIpath + '/dna_qc_scripts/somatic/'
+        
     ############# performing QC based on SE8 #######################
     if len(se8)>0:
         os.system('mkdir '+ location + '/QC/SE8')
@@ -57,8 +62,8 @@ def dna_qc():
         #renaming the files (removing _S1_L001_R1_001_)
         for i in os.listdir(location+'/QC/SE8/'):
             if '_S1_L001_R1_001_fastqc.html' in i:
-                os.rename(i,i.split('_S1_L001_R1_001_fastqc.html')[0]+".html")
-                
+                os.rename(location+ '/QC/SE8/' + i,location+ '/QC/SE8/' + i.split('_S1_L001_R1_001_fastqc.html')[0]+".html")
+            
         os.chdir(location+'/QC/SE8')
         
         #adding location to the python script
@@ -95,7 +100,7 @@ def dna_qc():
         #renaming the files (removing _S1_L001_R1_001_)
         for i in os.listdir(location+'/QC/CE/'):
             if '_S1_L001_R1_001_fastqc.html' in i:
-                os.rename(i,i.split('_S1_L001_R1_001_fastqc.html')[0]+".html")
+                os.rename(location+ '/QC/CE/' + i,location+ '/QC/CE/' + i.split('_S1_L001_R1_001_fastqc.html')[0]+".html")
                 
         os.chdir(location+'/QC/CE')
         
