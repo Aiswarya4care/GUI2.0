@@ -101,14 +101,16 @@ def cnv_analysis():
     for s in samples:
         f2.write('\n' + controlfreec + " -conf " + s + "/" + s+"_cnv.txt" + '\n')
         f2.write('\n')
+        
+        f2.write("perl CNV_config_Somatic.pl " + projectdir + "/AppResults/"+s+"/Files/"+ s+ ".bam" + GUIpath + "/bed_files/cnv_bed_files/cnv_capturing_bedfiles"+ modified_capt_bed + s)
+
         f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_capturing_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
         f2.write(s + "\"_cnv_annotated_output.txt\"" + '\n')
         
         f2.write(bedtools + " -a " +s +"/" + s + ".bam_CNVs" +" -b " + cnv_intersect_bed + " -loj | sort -V | awk -F\"\t\" \'{print $1\"\t\"$2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$9}\' | awk -vOFS=\"\t\" \'$1=$1; BEGIN { str=\"Chromosome Start End Predicted_copy_number Type_of_alteration Gene\"; split(str,arr,\" \"); for(i in arr) printf(\"%s\t\", arr[i]);print}\' | awk '$6 != \".\"\' > ")
         f2.write(s + "\"_cnv_filter_output.txt\"" + '\n')
         
-        f2.write("perl CNV_config_Somatic.pl " + projectdir + "/AppResults/"+s+"/Files/"+ s+ ".bam" + GUIpath + "/bed_files/cnv_bed_files/cnv_capturing_bedfiles"+ modified_capt_bed + s)
-
+        
         f2.write('\n'+ "##############################")
     f2.write('\n'+"echo \"######################\"")
     f2.write('\n'+"echo \"######### DONE #########\"")

@@ -21,9 +21,7 @@ def dna_qc():
     samples= pd.unique(file_list)
     samples=np.array(samples).tolist()
 
-    #Removing default file names from the sample name list
-    default_files=['ca','panel', 'ca_fq_dragen36.sh','dragen39.sh','cutadaptlog.txt','FQlog.txt','MSI','CNV','run_cnv.sh','cutadaptlog', 'QC','FE','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
-
+    default_files=config_gui.default_files
     for s in default_files:
         if s in samples:
             samples.remove(s)
