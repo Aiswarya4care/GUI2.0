@@ -25,7 +25,7 @@ chrLenFile = '/home/ubuntu/Programs/files_for_control_freec/fai_file/my_genome.f
 chrFiles = '/home/ubuntu/Programs/files_for_control_freec/chromFa/'
 sambamba = '/usr/bin/sambamba'
 controlfreec= '/home/ubuntu/Programs/FREEC-11.6/src/freec'
-bedtools= '/home/ubuntu/Programs/./bedtools.static.binary intersect'
+bedtools= '/home/ubuntu/Programs/./bedtools.static.binary'
 
 #FusionInspector
 
