@@ -102,7 +102,7 @@ def cnv_analysis():
         filedata = filedata.replace('{{sambamba}}', sambamba)
         
     # Write the file out again
-    with open(cnvannofile, 'w') as file:
+    with open(cnvperlfile, 'w') as file:
         file.write(filedata)
         
     answer = tk.messagebox.askyesno("Confirmation", "Run CNV analysis?")

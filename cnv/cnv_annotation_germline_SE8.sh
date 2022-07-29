@@ -6,7 +6,7 @@ echo "Starting ${line}"
 mkdir ${line}
 #preparing config file
 echo "##########Starting preparing config file#################"
-perl CNV_config_Germline.pl {{projectdir}}/AppResults/${line}/Files/${line}.bam {{GUIpath}}/bed_files/cnv_bed_files/cnv_capturing_bedfiles/{{modified_capt_bed}}  ${line}
+perl cnv_config_germline.pl {{projectdir}}/AppResults/${line}/Files/${line}.bam {{GUIpath}}/bed_files/cnv_bed_files/cnv_capturing_bedfiles/{{modified_capt_bed}}  ${line}
 echo "##########Ending preparing config file#################"
 #run CNV
 echo "##########Starting CNV Control Freec#################"
