@@ -15,6 +15,7 @@ def filtereng_tmb():
 
     #importing external files for filter engine
     canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
+    cohort4= pd.read_csv(GUIpath + "/filter/4basecare-germline-cohort.tsv", sep='\t')
 
     ######### selecting gene list #############
     genes= pd.read_csv(GUIpath+ "/filter/genelist.csv")
@@ -42,7 +43,8 @@ def filtereng_tmb():
         print(f)
 
         #Detecting dragen 3.6 or 3.9 & reading columns file
-        if 'INFO:hotspot' in vcf.columns:
+        vcfdetect=pd.read_csv(vcfloc, sep="/t")
+        if 'INFO:hotspot' in vcfdetect.columns:
             collist= pd.read_csv(GUIpath+ "/filter/columns39.csv")
         else:
             collist= pd.read_csv(GUIpath+ "/filter/columns36.csv")        
@@ -343,51 +345,51 @@ def filtereng_tmb():
         ####################################
         ############## Filtration ##########
         
-        df= final_df
+        dftmb= final_df
         
         ##################### After PASS filter ##################
         
-        df=df[df['FILTER']=='PASS']
+        dftmb=dftmb[dftmb['FILTER']=='PASS']
         
-        afpass=len(df)
+        afpass=len(dftmb)
         
         ######### filtering allele frequency ###############
         
-        allele_freq=list(df.columns[df.columns.str.contains(':AF')])[0]
-        df[allele_freq]=df[allele_freq].replace('.',100).fillna(100) 
-        df[allele_freq]=  df[allele_freq].astype(float)
-        df=df[df[allele_freq]>=0.05]
+        allele_freq=list(dftmb.columns[dftmb.columns.str.contains(':AF')])[0]
+        dftmb[allele_freq]=dftmb[allele_freq].replace('.',100).fillna(100) 
+        dftmb[allele_freq]=  dftmb[allele_freq].astype(float)
+        dftmb=dftmb[dftmb[allele_freq]>=0.05]
             
-        afallele=len(df)
+        afallele=len(dftmb)
         
         
         ######## filtering MQ ###################
-        mq=list(df.columns[df.columns.str.contains(':MQ')])[0]
-        df[mq]=df[mq].replace('.',100).fillna(100) 
-        df[mq]=  df[mq].astype(float)
-        df=df[df[mq]>=20]
-           
-        afmq=len(df)
+        mq=list(dftmb.columns[dftmb.columns.str.contains(':MQ')])[0]
+        dftmb[mq]=dftmb[mq].replace('.',100).fillna(100) 
+        dftmb[mq]=  dftmb[mq].astype(float)
+        dftmb=dftmb[dftmb[mq]>=20]
+        
+        afmq=len(dftmb)
         
         ########## Filtering DP
-        dp=list( df.columns[df.columns.str.contains(":DP")])[0]
-        df[dp]=df[dp].replace('.',100).fillna(100) 
-        df[dp]=  df[dp].astype(float)
-        df=df[df[dp]>=30]
+        dp=list( dftmb.columns[dftmb.columns.str.contains(":DP")])[0]
+        dftmb[dp]=dftmb[dp].replace('.',100).fillna(100) 
+        dftmb[dp]=  dftmb[dp].astype(float)
+        dftmb=dftmb[dftmb[dp]>=30]
         
-        afdp=len(df)
+        afdp=len(dftmb)
 
         
         ####### filtering Func.knownGene
-       
-        df= df[df['Func.ensGene'].str.contains('exonic|splicing', case=False, regex=True)]
-        df= df[df['Func.ensGene'].str.contains('RNA')==False]
-        afknowngene= len(df)   
+    
+        dftmb= dftmb[dftmb['Func.ensGene'].str.contains('exonic|splicing', case=False, regex=True)]
+        dftmb= dftmb[dftmb['Func.ensGene'].str.contains('RNA')==False]
+        afknowngene= len(dftmb)   
         
         ##### filtering synonymous
-        df= df[df['ExonicFunc.ensGene']!='synonymous SNV']
-        df= df[df['ExonicFunc.ensGene']!='.'] #commented on 10/12/2021 Friday
-        afsynony= len(df)  
+        dftmb= dftmb[dftmb['ExonicFunc.ensGene']!='synonymous SNV']
+        dftmb= dftmb[dftmb['ExonicFunc.ensGene']!='.'] #commented on 10/12/2021 Friday
+        afsynony= len(dftmb)  
         
         #####filtering pop freq
         
@@ -395,45 +397,37 @@ def filtereng_tmb():
             
         print(f + " filtering in progress..")
         for p in popfreqs:
-            df[p]=df[p].replace('.',0).fillna(0) 
-            df[p]=  df[p].astype(float)
-            df=df[df[p]< 0.01]
+            dftmb[p]=dftmb[p].replace('.',0).fillna(0) 
+            dftmb[p]=  dftmb[p].astype(float)
+            dftmb=dftmb[dftmb[p]< 0.01]
             
-        afpop=len(df)
+        afpop=len(dftmb)
             
         ########## Filtering allele freq 0.44 & 0.55
-        df=df[(df[allele_freq]>=0.55) | (df[allele_freq]<=0.44)]
+        dftmb=dftmb[(dftmb[allele_freq]>=0.55) | (dftmb[allele_freq]<=0.44)]
         
-        af_alfq=len(df)
+        af_alfq=len(dftmb)
         
-    
+
         
         ################## Final step of filtration ###############
         
         ####################### Removing 4basecare cohort alone ###############
-        cohort4=cohort4.rename(columns={'chr':'CHROM', 'start':'POS', 'ref':'REF_x', 'alt':'ALT_x'})
-        df=df.merge(cohort4, how = 'outer',on= ['CHROM','POS','REF_x','ALT_x'],indicator=True).loc[lambda x : x['_merge']=='left_only']
-    
-        afcohort4= len(df)
+        cohort4=cohort4.rename(columns={'chr':'CHROM_x', 'start':'POS_x', 'ref':'REF_x', 'alt':'ALT_x'})
+        df_filter=pd.merge(dftmb,cohort4, how = 'left', on= ['CHROM_x','POS_x','REF_x','ALT_x'], indicator=True)
+        afcohort4= len(dftmb)
         
-       ################################################################################
-            
         print(f + " :filtered")
         ###################################
-        ### making filtered csv
-        to_append= [f,tot_var,afpass,afallele, afmq, afdp,afknowngene,afsynony,afpop,af_alfq,afcohort4]
+        ### making filtered csv after tmb calculation
+        tmb='tmbvalue'
+        to_append= [f,tot_var,afpass,afallele, afmq, afdp,afknowngene,afsynony,afpop,af_alfq,afcohort4,tmb]
         dflen=len(tmb_filtered_df)
         tmb_filtered_df.loc[dflen]=to_append
         print(to_append)  
         
-        output_path= dirpath + "/tmbfiltered/" + f + '_tmbfiltered_output.csv'        
-        df.to_csv(output_path, index=False)
-        
-        print( "###" + str(num+1) + " out of " + str(len(folders)) + " files done")
-                
-    filtered_df.to_csv(dirpath+"/"+"FE_filtered.csv") 
-    filtered_df.to_csv(dirpath+"/"+"tmb_filtered.csv", index=False)    
-    
+    tmb_filtered_df.to_csv(dirpath + '/tmbinfo.csv', index=False)    
+    filtered_df.to_csv(dirpath+"/"+"FE_filtered.csv")   
 
     print("#############################")
     print("############ DONE ###########")
