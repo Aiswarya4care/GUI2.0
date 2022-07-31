@@ -12,22 +12,22 @@ def cgi():
     location= globalv.location
     cgi_data=config_gui.cgi_data
     
-    #copying cgi script to the selected location
+   #copying cgi script to the selected location
     os.system('mkdir ' + location + '/cgi')
     loc_cgi_file= GUIpath + '/cgi/cgikrispy2.sh'
-    os.system('cp '+ loc_cgi_file + ' ' + location + '/cgi')
+    os.system('cp '+ loc_cgi_file + ' ' + location + '/cgi/')
 
     ######## fetching sample names ########
-    samples= glob.glob(location+"panel/*_panel.vcf")
+    samples= glob.glob(location+"/panel/*_panel.vcf")
     samples=np.array(samples).tolist()
     samples=[i.split('/panel/')[1] for i in samples]
     #giving the necessary permissions
     os.chdir(location)
     os.system('chmod 777 *')
-    print(samples)
 
-    cgifile=location+'/cgi/cgikrispy2.sh'
-    print(cgifile)
+
+    cgifile=location+'cgi/cgikrispy2.sh'
+    
     # Reading cgi script for modification
     with open(cgifile, 'r') as file :
         cgifiledata = file.read()
