@@ -56,7 +56,7 @@ testprefix={
 
 capkitsuffix={
 'SureSelectV7_covered.bed' : 'SSE.bed',
-'SureselectXT_v8_covered.bed' : 'SE8.bed',
+'SureSelectXT_V8_Covered.bed' : 'SE8.bed',
 'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed' : 'Indie.bed',
 'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',
 'Roche_hg19.bed' : 'Roche.bed'
