@@ -4,7 +4,7 @@ export TRANSVAR_DOWNLOAD_DIR=${CGI_DATA}/transvar
 
 input=({{samplenames}})
  
-for line in $inputs;
+for line in $input;
 do
 echo "Starting CGI analysis for  ${line}"
 cgi -i ${line} -o ${line}_CGI
