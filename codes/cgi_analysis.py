@@ -26,7 +26,7 @@ def cgi():
     os.system('chmod 777 *')
 
 
-    cgifile=location+'cgi/cgikrispy2.sh'
+    cgifile=location+'/cgi/cgikrispy2.sh'
     
     # Reading cgi script for modification
     with open(cgifile, 'r') as file :
