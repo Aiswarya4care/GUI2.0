@@ -17,7 +17,9 @@ def panel():
     test=globalv.test
 
     ########### selecting the panel bed file #############
+    print(test)
     prefix=testprefix[test]
+    print(capturingkit)
     suffix=capkitsuffix[capturingkit]
 
     panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix

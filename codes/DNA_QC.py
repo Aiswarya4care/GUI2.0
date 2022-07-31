@@ -81,7 +81,7 @@ def dna_qc():
             tk.messagebox.showwarning(title='Warning', message='Please add metrics files to the folder')
             answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC?')
             if answer:
-                os.system('python3 '+ script )
+                os.system('python3 '+ glob.glob(location+"/QC/SE8/*.py")[0] )
             
     ############# performing QC based on CE #######################        
     if len(ce)>0:
@@ -119,7 +119,7 @@ def dna_qc():
             answer = tk.messagebox.askyesno("Re-Confirmation", 'Continue with DNA QC?')
             if answer:
                 script=glob.glob(location+ '/QC/SE8/' + '*.py')
-                os.system('python3 '+ script[0] )
+                os.system('python3 '+ glob.glob(location+"/QC/CE/*.py")[0])
         
 
         

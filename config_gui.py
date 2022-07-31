@@ -1,6 +1,6 @@
 ################### GUI Path #################
 
-GUIpath='/home/ash/Documents/GitHub/GUI2.0'
+GUIpath='/home/basecare/Patient_samples/GUI_Testing/GUI2.0'
 
 ############# Project ID for dragen ###########
 projectid={
@@ -14,18 +14,18 @@ projectid={
 annotation_db= '/home/basecare/Programs/Annotation_db'
 annotation_spk= '/home/basecare/Annotation_SPK'
 simplifyvcf='/home/basecare/Programs/VCF-Simplify-master/VcfSimplify.py'
-fastqc= '/home/ubuntu/Programs/fastqc_v0.11.9/FastQC/fastqc'
+fastqc= '/home/basecare/Programs/fastqc_v0.11.9/FastQC/fastqc'
 cgi_data='/home/basecare/cgi_commercial1/datasets'
 #MSI
-msisensor= '/home/ubuntu/Programs/msisensor2/msisensor2'
-msi_microlist= '/home/ubuntu/Programs/MSI_Mirco_List/micro.list'
+msisensor= '/home/basecare/Programs/msisensor2/msisensor2'
+msi_microlist= '/home/basecare/Programs/MSI_Mirco_List/micro.list'
 
 #CNV
-chrLenFile = '/home/ubuntu/Programs/files_for_control_freec/fai_file/my_genome.fa.fai'
-chrFiles = '/home/ubuntu/Programs/files_for_control_freec/chromFa/'
+chrLenFile = '/home/basecare/Programs/files_for_control_freec/fai_file/my_genome.fa.fai'
+chrFiles = '/home/basecare/Programs/files_for_control_freec/chromFa/'
 sambamba = '/usr/bin/sambamba'
-controlfreec= '/home/ubuntu/Programs/FREEC-11.6/src/freec'
-bedtools= '/home/ubuntu/Programs/./bedtools.static.binary'
+controlfreec= '/home/basecare/Programs/FREEC-11.6/src/freec'
+bedtools= '/home/basecare/Programs/./bedtools.static.binary'
 
 #FusionInspector
 
@@ -42,8 +42,6 @@ dra_bed_ids= {
 }
 
 ########### test name and panel bed prefix #############
-
-########### capturing kit and panel bed prefix/suffix ###########
 testprefix={
 'TarGT_Absolute' : 'TA_',
 'TarGT_Core' : 'TC_',
@@ -58,14 +56,13 @@ testprefix={
 
 capkitsuffix={
 'SureSelectV7_covered.bed' : 'SSE.bed',
-'sureselectxt_v8_covered.bed' : 'SE8.bed',
+'SureselectXT_v8_covered.bed' : 'SE8.bed',
 'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed' : 'Indie.bed',
 'Illumina_Exome_TargetedRegions_v1.2.hg19.bed' : 'Illumina.bed',
 'Roche_hg19.bed' : 'Roche.bed'
 }
-
 ############ Developer Options ###############
-default_files=['ca','panel', 'dragen39.sh','cutadaptlog.txt','FQlog.txt','MSI','CNV','run_cnv.sh','cutadaptlog', 'QC','FE', 'FE_filtered','FE_merged','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
+default_files=['annotation','ca','panel', 'dragen39.sh','cutadaptlog.txt','FQlog.txt','MSI','CNV','run_cnv.sh','cutadaptlog', 'QC','FE', 'FE_filtered','FE_merged','tmbmerged','tmbfiltered','tmb','sample','config.pl','annotation'] #pre-existing file names to be removed from the sample name list
 
 
 

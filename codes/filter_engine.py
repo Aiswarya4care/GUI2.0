@@ -341,10 +341,6 @@ def filtereng():
         
         print(f + " :filtered")
         ###################################
-        ### making filtered csv
-        to_append= [f,tot_var,afknowngene,afsynony,afpop,aft4,afben,afcad,afgen]
-        dflen=len(filtered_df)
-        filtered_df.loc[dflen]=to_append
         
     ####################------------------------------------------------------------------------------------
     ##################  Adding clinical sig and role data to the FENG file   #################################
@@ -355,7 +351,7 @@ def filtereng():
         
         #### adding pathogenic VUS #######
         df1 = df3.reset_index(drop=True)
-        df2 = pd.read_excel(DB_path_vus)
+        df2 = pd.read_excel(DB_path_vus, sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
         
         row_num =  len(df1.index)
         
@@ -410,7 +406,7 @@ def filtereng():
         #################### Role - TSG/Oncogenic ########################
         
         df = df_new_01
-        de = pd.read_excel(DB_role)
+        de = pd.read_excel(DB_role, sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
         
         input_row= len(df.index)
         #print (input_row)

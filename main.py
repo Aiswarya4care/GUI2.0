@@ -23,6 +23,7 @@ from codes.DNA_QC import dna_qc
 from codes.Dragen39 import dragen39
 from codes.sorting import sort
 from codes.cgi_analysis import cgi
+from codes.dna_data_analysis import dna_data_analysis
 
 window=tk.Tk()
 
@@ -233,7 +234,7 @@ dnaqc_btn= tk.Button(window, text = 'DNA QC', command = dna_qc ,height = 1, widt
 zip_btn=tk.Button(window, text = 'Zip files for Mail', command = panel ,height = 1, width = 18)
 
 #Complete DNA data analysis
-completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_qc ,height = 1, width = 18
+completedna_btn=tk.Button(window, text = 'DNA Data Analysis', command = dna_data_analysis ,height = 1, width = 18
 )
 #Complete RNA data analysis
 completerna_btn=tk.Button(window, text = 'RNA Data Analysis', command = dna_qc ,height = 1, width = 18
@@ -294,10 +295,3 @@ close_btn.grid(row=13,column=0,pady=6)
 
 window.mainloop()        
   
-
-
-
-
-
-
-

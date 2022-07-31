@@ -16,8 +16,8 @@ def tmb_calculation():
     reload(globalv)
     dirpath= globalv.location
     
-    collist= pd.read_csv(GUIpath+ "/Filter/columns.csv")
-    cohort4= pd.read_csv(GUIpath+ "/Filter/4basecare-germline-cohort.tsv",sep='\t')
+    collist= pd.read_csv(GUIpath+ "/filter/columns39.csv")
+    cohort4= pd.read_csv(GUIpath+ "/filter/4basecare-germline-cohort.tsv",sep='\t')
     folders= os.listdir(dirpath)
     
     os.system("mkdir " + dirpath + "/tmbmerged")
