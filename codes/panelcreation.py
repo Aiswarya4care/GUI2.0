@@ -5,6 +5,7 @@ import config_gui
 import tkinter as tk
 from importlib import reload
 from config_gui import GUIpath, testprefix, capkitsuffix, bedtools
+import glob
 
 import globalv
 
@@ -23,19 +24,17 @@ def panel():
     suffix=capkitsuffix[capturingkit]
 
     panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
-
-    file_list=os.listdir(location)
-
-    if 'panel' in file_list:
-        os.system("rm -r " + location + "/panel")
-
     
-    samples=[]
-    for file in file_list:
-        sample= file.split("_")
-        samples.append(sample[0])
+    if 'panel' in file_list:
+            os.system("rm -r " + location + "/panel")   
+    
+    file_list=glob.glob(location+"/*_R1_fastqc.html")
+    
+    samples=[s.split('/')[-1] for s in file_list]
+
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
+
     
 
     #Removing default file names from the sample name list
