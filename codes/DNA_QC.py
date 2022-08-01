@@ -27,7 +27,8 @@ def dna_qc():
             samples.remove(s)
             
     #creating QC folder inside the location
-    os.system('rm -r '+ location + '/QC')
+    if 'QC' in default_files:
+        os.system('rm -r '+ location + '/QC')
     os.system('mkdir '+ location + '/QC')
 
     ###### fetching sample names #########3
