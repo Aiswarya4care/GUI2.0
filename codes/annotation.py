@@ -10,7 +10,9 @@ def anno():
     GUIpath=config_gui.GUIpath
     location= globalv.location
     projectdir= globalv.projectdir
-    
+
+    #making a directory in 
+    os.system('mkdir '+ location + '/annotation')
     #fetching config location from config_gui file
     annotation_db= config_gui.annotation_db
     annotation_spk= config_gui.annotation_spk
@@ -19,8 +21,8 @@ def anno():
     #copying annotation.sh and config.pl to the selected location
     loc_ann_file= GUIpath.split('/codes/')[0] + '/annotation/annotation_mod.sh'
     loc_confi_file= GUIpath.split('/codes/')[0] + '/annotation/config.pl'
-    os.system('cp '+ loc_ann_file + ' ' + location)
-    os.system('cp '+ loc_confi_file + ' ' + location)
+    os.system('cp '+ loc_ann_file + ' ' + location + '/annotation/')
+    os.system('cp '+ loc_confi_file + ' ' + location+ '/annotation/')
 
     #giving the necessary permissions
     os.chdir(location)
@@ -50,7 +52,7 @@ def anno():
         filedata = filedata.replace('{{annotation_db}}', annotation_db)
         filedata = filedata.replace('{{annotation_spk}}', annotation_spk)
         filedata = filedata.replace('{{simplifyvcf}}', simplifyvcf)
-        filedata = filedata.replace('{{location}}', location)
+        filedata = filedata.replace('{{location}}', location + '/annotation/')
     # Write the file out again
     with open(annofile, 'w') as file:
         file.write(filedata)
