@@ -25,8 +25,8 @@ def panel():
 
     panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
     
-    if 'panel' in file_list:
-            os.system("rm -r " + location + "/panel")   
+    if 'panel' in os.system(location):
+                os.system("rm -r " + location + "/panel")   
     
     file_list=glob.glob(location+"/*_R1_fastqc.html")
     
