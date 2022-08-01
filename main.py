@@ -295,4 +295,3 @@ completerna_btn.grid(row=12,column=0,pady=6)
 close_btn.grid(row=13,column=0,pady=6)
 
 window.mainloop()        
-  
