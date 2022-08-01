@@ -24,6 +24,8 @@ from codes.Dragen39 import dragen39
 from codes.sorting import sort
 from codes.cgi_analysis import cgi
 from codes.dna_data_analysis import dna_data_analysis
+from importlib import reload
+import globalv
 
 window=tk.Tk()
 
@@ -83,6 +85,7 @@ def projectdir_browse():
 
 #saving all the global and cross file variables in globalv.py file
 def globalva_update():
+    reload(globalv)
     Output.delete('1.0',END)
     capturingkit=cap_kit.get()
     stype= sampletype.get()
