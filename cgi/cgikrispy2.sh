@@ -1,3 +1,4 @@
+cd {{location}}
 export CGI_DATA={{cgi_data}}
 export TRANSVAR_CFG=${CGI_DATA}/transvar.cfg
 export TRANSVAR_DOWNLOAD_DIR=${CGI_DATA}/transvar

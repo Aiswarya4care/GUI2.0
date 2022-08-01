@@ -33,6 +33,7 @@ def cgi():
 
     # Replace the cgi data location and samples
         cgifiledata = cgifiledata.replace('{{samplenames}}', str(samples).strip("[]").replace("'","").replace(",",""))
+        cgifiledata = cgifiledata.replace('{{location}}', location + '/panel/')
         cgifiledata = cgifiledata.replace('{{cgi_data}}', cgi_data)
 
     with open(cgifile, 'w') as file:
