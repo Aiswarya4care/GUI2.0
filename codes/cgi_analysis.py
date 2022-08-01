@@ -3,6 +3,7 @@ import globalv
 import config_gui
 from importlib import reload
 import glob
+import tkinter as tk
 import numpy as np
 
 def cgi():
@@ -39,4 +40,18 @@ def cgi():
     with open(cgifile, 'w') as file:
             file.write(cgifiledata)
             
-    os.system("bash " + cgifile )
+    answer = tk.messagebox.askyesno("Confirmation", "Run CGI analysis?")
+
+    if answer:
+        print("################################")
+        print("############ Running CGI analysis ###########")
+        print("################################")
+        os.system("bash "+ cgifile)
+        print("################################")
+        print("############ CGI analysis completed ###########")
+        print("################################")
+        
+    else:
+        print('##### CGI Analysis Aborted #####')
+
+
