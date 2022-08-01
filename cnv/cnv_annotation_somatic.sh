@@ -5,7 +5,7 @@ echo "Starting ${line}"
 mkdir ${line}
 #preparing config file
 echo "##########Starting preparing config file#################"
-perl cnv_config_somatic.pl /home/basecare/basespace/Projects/GUI2.0_Testing/AppResults/${line}/Files/${line}.bam {{GUIpath}}/bed_files/cnv_bed_files/cnv_capturing_bedfiles/SureSelectXT_V8_Covered.bed ${line}
+perl cnv_config_somatic.pl {{projectdir}}/AppResults/${line}/Files/${line}.bam {{GUIpath}}/bed_files/cnv_bed_files/cnv_capturing_bedfiles/SureSelectXT_V8_Covered.bed ${line}
 echo "##########Ending preparing config file#################"
 #run CNV
 echo "##########Starting CNV Control Freec#################"
