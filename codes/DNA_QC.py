@@ -32,7 +32,7 @@ def dna_qc():
     os.system('mkdir '+ location + '/QC')
 
     ###### fetching sample names #########3
-    samples=glob.glob(location+"/*S1_L001_R1_001_fastqc.html")
+    samples=glob.glob(location+"/*_R1_fastqc.html")
 
     #segregating the files to respective folder
     se8=list(filter(lambda x:'-SE8-' in x, samples))
