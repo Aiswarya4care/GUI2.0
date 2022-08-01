@@ -25,7 +25,7 @@ def panel():
 
     panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
     
-    if 'panel' in os.system(location):
+    if 'panel' in  os.listdir(location):
                 os.system("rm -r " + location + "/panel")   
     
     
