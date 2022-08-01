@@ -85,7 +85,6 @@ def projectdir_browse():
 
 #saving all the global and cross file variables in globalv.py file
 def globalva_update():
-    reload(globalv)
     Output.delete('1.0',END)
     capturingkit=cap_kit.get()
     stype= sampletype.get()
