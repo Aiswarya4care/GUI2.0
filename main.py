@@ -24,8 +24,6 @@ from codes.Dragen39 import dragen39
 from codes.sorting import sort
 from codes.cgi_analysis import cgi
 from codes.dna_data_analysis import dna_data_analysis
-from importlib import reload
-import globalv
 
 window=tk.Tk()
 

@@ -51,11 +51,11 @@ def cafadra():
 
         elif ("-ST8-" in ':'.join(samples))*("-CT-" not in ':'.join(samples)) ==1:
             print("ST8 samples present in the folder")
-            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:354119770 -o app-session-name:"+ appsess +"-l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:23683257154 -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:" + pid + " -o app-session-name:"+ appsess +" -l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:" + str(bed_id) + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
         
         elif ("-CT-" in ':'.join(samples))*("-ST8-" not in ':'.join(samples)) ==1:
             print("CT samples present in the folder")
-            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:354119770 -o app-session-name:"+ appsess +"-l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:25985863705 -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
+            bscmd="bs launch application -n \"DRAGEN RNA Pipeline\" --app-version 3.6.3 -o project-id:" + pid + " -o app-session-name:"+ appsess +" -l "+ appsess +" output_format:BAM -o coverage_list.coverage_bed_id:" + str(bed_id) + " -o sample-id:$bsids -o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 -o quantification_checkbox:1 -o commandline-disclaimer:true"
    
     elif sample_type=="DNA [Blood]":
         adapter='AGATCGGAAGAGC'

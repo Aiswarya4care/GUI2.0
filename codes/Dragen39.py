@@ -74,7 +74,7 @@ def dragen39():
         adapter='AGATCGGAAGAGC'
         
     #Coping the shell script and modifying the content  
-    loc_cafqdra_file= GUIpath.split('/codes/')[0] + '/ca_fq_dragen/dragen39.sh'     
+    loc_cafqdra_file= GUIpath + '/ca_fq_dragen/dragen39.sh'     
     os.system('cp '+ loc_cafqdra_file + ' ' + location) 
     print(loc_cafqdra_file)
     print(location)

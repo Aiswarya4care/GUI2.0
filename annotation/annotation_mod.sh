@@ -1,4 +1,4 @@
-cd {{lcoation}}/annotation
+cd {{location}}/annotation
 input="list.txt"
 while IFS= read -r line
 do
