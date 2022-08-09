@@ -25,23 +25,16 @@ def panel():
 
     panel_bed= GUIpath + '/bed_files/panel_bed_files/' + str(test)+ "/" + prefix + suffix
     
-    if 'panel' in os.system(location):
+    if 'panel' in  os.listdir(location):
                 os.system("rm -r " + location + "/panel")   
     
-    file_list=glob.glob(location+"/*_R1_fastqc.html")
     
+    file_list=glob.glob(location+"/*_R1_fastqc.html")
     samples=[s.split('/')[-1] for s in file_list]
-
+    samples=[s.split('_R1')[0] for s in samples]
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
 
-    
-
-    #Removing default file names from the sample name list
-    default_files=config_gui.default_files
-    for s in default_files:
-        if s in samples:
-            samples.remove(s)
 
     print(samples)
 
