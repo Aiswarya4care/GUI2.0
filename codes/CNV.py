@@ -33,8 +33,8 @@ def cnv_analysis():
     samples=[]
     for file in file_list:
         sample=file.split("/")[-1]
-        if '_R1' in file_list[0]:
-            sample= sample.split("_R1")
+        if ' _S1_L001_R1_001' in file_list[0]:
+            sample= sample.split(" _S1_L001_R1_001")
         else:
             sample= sample.split("_R1")
         samples.append(sample[0])
