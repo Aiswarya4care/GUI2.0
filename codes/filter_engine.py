@@ -13,6 +13,8 @@ def filtereng():
     sample_type=globalv.sample_type
     test=globalv.test
 
+    dirpath= dirpath + '/annotation/'
+
     #importing external files for filter engine
     canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
 
