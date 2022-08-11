@@ -25,7 +25,6 @@ perl {{annotation_db}}/table_annovar.pl "${line}/${line}.avinput" {{annotation_d
 echo "##########Ending annovar annotation#################"
 #preparing config file
 echo "##########Starting cancervar annotation#################"
-perl {{annotation_spk}}/config.pl ${line}/${line}
 #running cancervar
 python3 {{annotation_db}}/CancerVar.py -c config.ini
 echo "##########Ending cancervar annotation#################"

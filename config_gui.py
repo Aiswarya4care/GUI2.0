@@ -12,7 +12,6 @@ projectid={
 
 ############# Path of tools/software ###########
 annotation_db= '/home/basecare/Programs/Annotation_db'
-annotation_spk= '/home/basecare/Annotation_SPK'
 simplifyvcf='/home/basecare/Programs/VCF-Simplify-master/VcfSimplify.py'
 fastqc= '/home/basecare/Programs/fastqc_v0.11.9/FastQC/fastqc'
 cgi_data='/home/basecare/cgi_commercial1/datasets'

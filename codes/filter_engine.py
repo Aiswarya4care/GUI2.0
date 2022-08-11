@@ -37,12 +37,7 @@ def filtereng():
     for s in default_files:
         if s in folders:
             folders.remove(s)
-    print('##############################################################')  
-    print('##############################################################') 
-    print('################# SAMPLE NAMES #################')   
-    print(folders)
-    print('##############################################################')  
-    print('##############################################################')     
+    
     filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
 
     #processing every sample in folder one by one
