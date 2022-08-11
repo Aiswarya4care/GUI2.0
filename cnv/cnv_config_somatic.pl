@@ -2,8 +2,8 @@ $path  = $ARGV[0]; $bed_file = $ARGV[1]; $output = $ARGV[2];
 open (O, ">$output/config_CNV.txt");
 print O "[general]
 
-chrLenFile = /home/basecare/Programs/files_for_control_freec/fai_file/my_genome.fa.fai
-chrFiles = /home/basecare/Programs/files_for_control_freec/chromFa/
+chrLenFile = {{chrLenFile}}
+chrFiles = {{chrFiles}}
 window = 0
 ploidy = 2
 intercept=1
@@ -15,7 +15,7 @@ degree=3
 coefficientOfVariation = 0.05
 breakPointThreshold = 0.6
 maxThreads = 10
-sambamba = /usr/bin/sambamba
+sambamba = {{sambamba}}
 SambambaThreads = 10
 
 

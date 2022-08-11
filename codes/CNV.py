@@ -33,10 +33,10 @@ def cnv_analysis():
     samples=[]
     for file in file_list:
         sample=file.split("/")[-1]
-        if '_S1_L001_R1_001_' in file_list[0]:
-            sample= sample.split("_S1_L001_R1_")
+        if '_R1' in file_list[0]:
+            sample= sample.split("_R1")
         else:
-            sample= sample.split("_R1_")
+            sample= sample.split("_R1")
         samples.append(sample[0])
     samples= pd.unique(samples)
     samples=np.array(samples).tolist()
