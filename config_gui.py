@@ -1,6 +1,6 @@
 ################### GUI Path #################
 
-GUIpath='/home/basecare/Patient_samples/GUI_Testing/GUI2.0'
+GUIpath='/home/ash/Documents/GitHub/GUI2.0'
 
 ############# Project ID for dragen ###########
 projectid={

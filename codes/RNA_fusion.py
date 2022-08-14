@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import glob
 from importlib import reload
-
+import numpy as np
 import globalv
 
 
@@ -11,30 +11,44 @@ def rna_fusion():
 	path= globalv.location
 	projectdir=globalv.projectdir
 
-	#copying the files from basespace to local system
-	f = open(path+'/'+'list.txt')
-	for line in f:
-		line_1=line.replace('\n',"")
-		print(line_1)
-		os.system("echo '##########Starting copying preliminary, coverage and general stats files from basespace #################'")
-		command_n='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.fusion_candidates.preliminary '+path+'/'
-		#print(command_n)
-		command_m='cp' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/'
-		rename1='mv '+path+'/multiqc_general_stats.txt '+path+'/'+line_1+'_multiqc_general_stats.txt'
-		command_o='cp ' +str(projectdir) + '/AppResults/'+line_1+'_*/Files/'+line_1+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/'
-		os.system(command_n)
-		os.system(command_m)
-		os.system(rename1)
-		os.system(command_o)
-		os.system("echo '##########Done copying preliminary, coverage and general stats files from basespace #################'")
+	file_list=os.listdir(path)
 
-	os.system("echo '################## ALL FILES ARE DONE ###########################'")
-	mkdir_cmd='mkdir '+ path +'/'+'modified_files'
-	os.system(mkdir_cmd)
-	os.system("echo '################## CREATED DIRECTORY modified_files ###########################'")
+	if 'fusions' in file_list:
+		os.system("rm -r " + path + "/fusions")
+
+	os.system("mkdir "+ path+ "/fusions")
+	os.system('mkdir '+ path +'/fusions/'+'modified_files')
+
+	samples=glob.glob(path+"/*_R1_fastq.gz")
+	samples=[s.split('/')[-1] for s in file_list]
+	samples=[s.split('_R1')[0] for s in samples]
+	samples= pd.unique(samples)
+	samples=np.array(samples).tolist()
+
+	print(samples)
 	
+	fusioncreate= path +  "/fusions/fusions.sh"
+	f1= open(fusioncreate,"x")
+	f1.close()
+	f1= open(fusioncreate,"w+")
+	f1.write("cd "+ path + "/fusions" + '\n')
 
-	files = glob.glob(os.path.join(path,"*.preliminary"))
+	f1= open(fusioncreate,"x")
+	f1.close()
+	f1= open(fusioncreate,"w+")
+	f1.write("echo '##########Starting copying preliminary, coverage and general stats files from basespace #################'")
+
+	for s in samples:
+			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/'+s+'.fusion_candidates.preliminary '+path+'/fusions/')
+			f1.write('\n' +'cp' +str(projectdir) + '/AppResults/'+s+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/fusions')
+			f1.write('\n' +'mv '+path+'/multiqc_general_stats.txt '+path+'/'+s+'_multiqc_general_stats.txt')
+			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/'+s+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/')
+			f1.write('\n' + "echo '##########Done copying preliminary, coverage and general stats files from basespace #################'")
+	f1.write('\n' +"echo '################## ALL FILES ARE DONE ###########################'")
+	f1.write('\n' +"echo '################## CREATED DIRECTORY modified_files ###########################'")
+	f1.close()
+
+	files = glob.glob(os.path.join(path+"/fusions/","*.preliminary"))
 	
 	#Editing Score coloumn
 	for fp in files:

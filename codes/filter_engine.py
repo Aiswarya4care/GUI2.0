@@ -148,7 +148,7 @@ def filtereng():
             alter_depth=list(merged_df.columns[merged_df.columns.str.contains(':AD')])[0]
             merged_df[alter_depth]= merged_df[alter_depth].fillna('.')
             merged_df[alter_depth]= merged_df[alter_depth].replace('.','.,.')
-            merged_df[['Ref_Depth', 'Mutant_Depth']] = merged_df[alter_depth].str.split(",", expand=True)
+            merged_df[['Ref_Depth', 'Mutant_Depth']] = merged_df[alter_depth].str.split(",", expand=True).drop([2],axis=1)
         else:
             #splitting the AD column into two columns 
             alter_depth=list(merged_df.columns[merged_df.columns.str.contains(':AD')])[0]
