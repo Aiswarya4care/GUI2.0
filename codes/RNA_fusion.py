@@ -4,7 +4,7 @@ import glob
 from importlib import reload
 import numpy as np
 import globalv
-
+import config_gui
 
 def rna_fusion():
 	reload(globalv)
@@ -25,29 +25,29 @@ def rna_fusion():
 	samples= pd.unique(samples)
 	samples=np.array(samples).tolist()
 
+	default_files=config_gui.default_files
+	for s in default_files:
+		if s in samples:
+			samples.remove(s)
+			
 	print(samples)
-	
+
 	fusioncreate= path +  "/fusions/fusions.sh"
-	f1= open(fusioncreate,"x")
-	f1.close()
+
 	f1= open(fusioncreate,"w+")
 	f1.write("cd "+ path + "/fusions" + '\n')
 
-	f1= open(fusioncreate,"x")
-	f1.close()
-	f1= open(fusioncreate,"w+")
 	f1.write("echo '##########Starting copying preliminary, coverage and general stats files from basespace #################'")
 
 	for s in samples:
 			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/'+s+'.fusion_candidates.preliminary '+path+'/fusions/')
-			f1.write('\n' +'cp' +str(projectdir) + '/AppResults/'+s+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/fusions')
-			f1.write('\n' +'mv '+path+'/multiqc_general_stats.txt '+path+'/'+s+'_multiqc_general_stats.txt')
-			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/'+s+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/')
-			f1.write('\n' + "echo '##########Done copying preliminary, coverage and general stats files from basespace #################'")
-	f1.write('\n' +"echo '################## ALL FILES ARE DONE ###########################'")
-	f1.write('\n' +"echo '################## CREATED DIRECTORY modified_files ###########################'")
-	f1.close()
+			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/multiqc_data/multiqc_general_stats.txt '+path+'/fusions')
+			f1.write('\n' +'mv '+path+'/fusions/multiqc_general_stats.txt '+path+'/fusions/'+s+'_multiqc_general_stats.txt')
+			f1.write('\n' +'cp ' +str(projectdir) + '/AppResults/'+s+'_*/Files/'+s+'.qc-coverage-region-1_coverage_metrics.csv '+path+'/fusions')
+			f1.write('\n' +"#############################################" + '\n')
 
+	f1.write('\n' +"echo '################## ALL FILES ARE DONE ###########################'")
+	f1.close()
 	files = glob.glob(os.path.join(path+"/fusions/","*.preliminary"))
 	
 	#Editing Score coloumn
