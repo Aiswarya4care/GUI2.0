@@ -441,7 +441,7 @@ def filtereng():
         else:
             cancervarscore=df_sort[' CancerVar: CancerVar and Evidence ']
             
-        df_sort[' CancerVar: CancerVar and Evidence ']=cancervarscore.astype(int)
+        df_sort[' CancerVar: CancerVar and Evidence ']=cancervarscore.astype(str)
 
         #according to 4basecare patho/vus
         df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':1, '.' :2, 'VUS':3, 'DRUG RESPONSE':5, 'RISK FACTOR':5,'DRUG RESPONSE/PATHOGENIC':20, 'LIKELY PATHOGENIC':10, 'PATHOGENIC; DRUG RESPONSE':20, 'PATHOGENIC':20 }})         
@@ -476,7 +476,7 @@ def filtereng():
         df1['sort_score']= df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated']
         df_sort['sort_score']=df1['sort_score']
         df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
-        final_FENG_df=df_sort.drop('sort_score', axis=1)
+        final_FENG_df=df_sort.drop(['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4','sort_score'], axis=1,inplace=True)
 
         output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
         final_FENG_df.to_excel( str(output_path), index=False)
