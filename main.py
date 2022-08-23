@@ -9,7 +9,6 @@ from codes.cutadapt_fqc_drag import cafadra
 from codes.annotation import anno
 from codes.panelcreation import panel
 from codes.filter_engine import filtereng
-from codes.filter_engine_tmb import filtereng_tmb
 from codes.CNV import cnv_analysis 
 from codes.CNV_merge import cnv_merge
 from codes.MSI import msi_analysis
@@ -198,7 +197,7 @@ panel_btn=tk.Button(window, text = 'Panel Creation', command = panel ,height = 1
 filtereng_btn=tk.Button(window, text = 'Filter Engine', command = filtereng,height = 1, width = 18) 
 
 #Filter Engine Somatic
-filterengtmb_btn=tk.Button(window, text = 'Filter Engine + TMB', command = filtereng_tmb,height = 1, width = 18) 
+#filterengtmb_btn=tk.Button(window, text = 'Filter Engine + TMB', command = filtereng_tmb,height = 1, width = 18) 
 
 #CNV Analysis
 cnv_btn=tk.Button(window, text = 'Run CNV', command = cnv_analysis, height = 1, width = 18) 
