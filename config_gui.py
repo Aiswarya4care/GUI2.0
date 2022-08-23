@@ -40,6 +40,18 @@ dra_bed_ids= {
 
 }
 
+############# Panel size for TMB calculation #################
+tmbpanelsize= {
+
+'Illumina_Exome_TargetedRegions_v1.2.hg19.bed':0,
+'Indiegene_Target_2109PD006-V1_4BaseCare_1K_DNA_GRCh37.bed':4.4,
+'Indiegene_Target_2109PD008-V1_4BaseCare_RNA_Fusion_GRCh37.bed':0,
+'Roche_hg19.bed':0,
+'SureSelectV7_covered.bed':0,
+'SureSelectXT_V8_Covered.bed':41.48
+
+}
+
 ########### test name and panel bed prefix #############
 testprefix={
 'TarGT_Absolute' : 'TA_',

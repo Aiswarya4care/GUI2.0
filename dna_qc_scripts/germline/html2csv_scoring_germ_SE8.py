@@ -49,7 +49,7 @@ mergedfile.to_csv(location+'/QC/SE8/'+ 'merged.csv')
 
 #extract specific columns from csv
 col_list = ["Sample Name","Percent duplicate aligned reads", "Unique base enrichment", "Mean target coverage depth", "Uniformity of coverage (Pct > 0.2*mean)"]
-df = pd.read_csv("merged.csv", usecols=col_list)
+df = pd.read_csv(location + '/QC/SE8/merged.csv', usecols=col_list)
 print(df)
 
 #Assigning the scoring parameters
