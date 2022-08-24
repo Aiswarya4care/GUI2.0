@@ -31,7 +31,7 @@ def anno():
     os.system('chmod 777 *')
 
     #Fetching sample details
-    file_list=glob.glob(location+"/*_R1_fastq.gz")
+    file_list=glob.glob(location+"/*_R1.fastq.gz")
     #collecting sample names
     samples=[]
     for file in file_list:
