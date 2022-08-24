@@ -56,7 +56,7 @@ tmbpanelsize= {
 testprefix={
 'TarGT_Absolute' : 'TA_',
 'TarGT_Core' : 'TC_',
-'TarGT_Indigene' : 'TI_',
+'TarGT_Indiegene' : 'TI_',
 'TarGT_Focus' : 'TF_',
 'TarGT_Absolute_Germline' : 'TA_Germline_',
 'Germline_Plus' : 'Gplus_',
