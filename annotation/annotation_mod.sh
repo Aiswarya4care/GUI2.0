@@ -26,7 +26,7 @@ echo "##########Ending annovar annotation#################"
 #preparing config file
 echo "##########Starting cancervar annotation#################"
 #running cancervar
-python3 {{annotation_db}}/CancerVar.py -c config.ini
+python3 {{annotation_db}} -c config.ini
 echo "##########Ending cancervar annotation#################"
 rm config.ini
 done < "$input"
