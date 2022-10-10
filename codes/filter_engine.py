@@ -472,7 +472,9 @@ def filtereng():
         drugres=list(filter(lambda x:'rug_response' in x, clinvar))
         for d in list(set(drugres)):
             df1=df1.replace({'clinvar: Clinvar ': {d : 4}})
-        
+    
+        df1[' CancerVar: CancerVar and Evidence ']= [float(i) for i in df1[' CancerVar: CancerVar and Evidence ']]
+    
         df1['sort_score']= df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated']
         df_sort['sort_score']=df1['sort_score']
         df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
