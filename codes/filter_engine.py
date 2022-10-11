@@ -448,8 +448,9 @@ def filtereng():
         
         #scoring clinvar and intervar inhouse
         df1=df1.replace({'InterVar_automated':{'.':2,'UNCERTAIN_SIGNIFICANCE':3,'LIKELY_BENIGN':1,'BENIGN':1, 'LIKELY_PATHOGENIC':4,'PATHOGENIC':5}})
+        df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: other ': 3, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
         df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
-        
+            
         ####scoring clinvar############
         
         #conflicting
