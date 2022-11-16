@@ -17,15 +17,15 @@ def filtereng():
 
     #importing external files for filter engine
     canonical = pd.read_excel(GUIpath+ "/filter/canonical.xlsx", sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
-
+    
     ######### selecting gene list #############
     genes= pd.read_csv(GUIpath+ "/filter/genelist.csv")
     testgenes= list(genes[test].dropna())
     testgenes=[g.upper() for g in testgenes]
-
+    
     #making FE_merged and FE_filtered folders in the destination dir
     folders= os.listdir(dirpath)
-
+    
     if 'FE_merged' in folders:
         os.system('rm -r ' + dirpath + '/FE_merged')
         os.system('rm -r ' + dirpath + '/FE_filtered')
@@ -33,7 +33,7 @@ def filtereng():
     os.system("mkdir " + dirpath + "/FE_merged")
     os.system("mkdir " + dirpath + "/FE_filtered")
     warnings.filterwarnings("ignore")
-
+    
     #Removing default file names from the sample name list
     default_files=config_gui.default_files
     for s in default_files:
@@ -41,7 +41,7 @@ def filtereng():
             folders.remove(s)
     
     filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
-
+    
     #processing every sample in folder one by one
     for f in folders:
         num=folders.index(f)
@@ -51,12 +51,12 @@ def filtereng():
         annovar= [obj for obj in files if '_out.hg19_multianno' in obj]
         vcf= [obj for obj in files if 'final.tab' in obj]
         print(f)
-
+    
         #locations of different files
         cancerloc= dirpath + "/" + f + "/" + cancer[0]
         vcfloc= dirpath + "/" + f + "/" + vcf[0]
         annoloc= dirpath + "/" + f + "/" + annovar[0]
-
+    
         
         #Detecting dragen 3.6 or 3.9 & reading columns file
         vcfdetect=pd.read_csv(vcfloc, sep="/t")
@@ -75,7 +75,7 @@ def filtereng():
         
         annocol=collist['multianno'][collist['multianno'].notna()]
         annovar= pd.read_csv(annoloc,usecols=annocol, sep='\t')
-
+    
         # modifying vcf position values
         
         for i in range(len(vcf)):
@@ -102,7 +102,7 @@ def filtereng():
             merged_df[merged_df.columns[i]]=merged_df.columns[i]+ ":" + merged_df[merged_df.columns[i]]
         
         merged_df['intervar_inhouse']=merged_df[list(merged_df.columns[31:59])].apply(lambda x: ', '.join(x[x.notnull()]), axis = 1)
-
+    
         ##Inserting columns 
         merged_df.insert(6, "IGV_link", value=None, allow_duplicates=False)
         merged_df.insert(7, "Mutant_allelic_burden_%", value=None, allow_duplicates=False)
@@ -142,7 +142,7 @@ def filtereng():
         #removing duplicates
         merged_df = merged_df.drop_duplicates()
         
-
+    
         if sample_type=="DNA [Blood]":
             #splitting the AD column into two columns 
             alter_depth=list(merged_df.columns[merged_df.columns.str.contains(':AD')])[0]
@@ -153,7 +153,7 @@ def filtereng():
             #splitting the AD column into two columns 
             alter_depth=list(merged_df.columns[merged_df.columns.str.contains(':AD')])[0]
             merged_df[['Ref_Depth', 'Mutant_Depth']] = merged_df[alter_depth].str.split(",", expand=True)
-
+    
         merged_df=merged_df.dropna(axis='columns', how='all')
         print(f + " : merged")
             
@@ -275,9 +275,9 @@ def filtereng():
         print("Modifying AA change....")
         
         aa=df3['AAChange.ensGene']
-
+    
         to_replace={'A':'Ala','R':'Arg','N':'Asn','D':'Asp','B':'Asx','C':'Cys','E':'Glu','Q':'Gln','Z':'Glx','G':'Gly','H':'His','I':'Ile','L':'Leu','K':'Lys','M':'Met','F':'Phe','P':'Pro','S':'Ser','T':'Thr','W':'Trp','Y':'Tyr','V':'Val'}
-
+    
         for a in aa:
             if 'ENS' in a:
                 #splitting the list with , only if 'ENS' pattern is present- to avoid UNKNOWNS
@@ -315,7 +315,7 @@ def filtereng():
         df3['AAChange.ensGene'] = aa  
         
         print("AAChange.ensGene column modified ")
-
+    
         df3=df3.dropna(axis='columns', how='all')
         df3=df3.astype(str)
         df3.drop_duplicates(subset=None, keep="first", inplace=True)
@@ -347,14 +347,15 @@ def filtereng():
     ####################------------------------------------------------------------------------------------
     ##################  Adding clinical sig and role data to the FENG file   #################################
     #####################-------------- by prabir saha----------------------------------------------------------------------
-
+    
         DB_path_vus = GUIpath+"/filter/Clinical_Significance_DB.xlsx"   # Pathogen/VUS database
         DB_role = GUIpath + "/filter/Role_of_Gene_DB.xlsx"   # TSG/Oncogtenic database
         
         #### adding pathogenic VUS #######
         df1 = df3.reset_index(drop=True)
-        df2 = pd.read_excel(DB_path_vus, sheet_name=0, mangle_dupe_cols=True, engine='openpyxl')
-        
+        df2 = pd.read_excel(DB_path_vus, sheet_name=0, engine='openpyxl')
+        df2.drop(df2.filter(regex="Unname"),axis=1, inplace=True)
+    
         row_num =  len(df1.index)
         
         list1 = []   # Empty list to put output of if else condition
@@ -403,8 +404,10 @@ def filtereng():
         for i in range(input_row_01,outp_row_01):
             df_new_01.drop([i],axis=0, inplace=True)   # remove unneccessary data
         
+        
         df_new_01.rename(columns = {'Clin Sig':'Clin_Sig_inhouse'}, inplace= True)
-    
+        df_new_01.drop(df_new_01.filter(regex="Unname"),axis=1, inplace=True)
+        
         #################### Role - TSG/Oncogenic ########################
         
         df = df_new_01
@@ -427,10 +430,10 @@ def filtereng():
         df_new.drop('New_Format',axis=1, inplace=True)
         df_new.drop('Therap_list',axis=1, inplace=True)
         df_new.drop('Pathway',axis=1, inplace=True)
-
+    
         #df_new is the output of the above chunk of code #
         print('Clinical sig and role added to FENG file for ' + f)
-
+    
         #####################--------------------------------------------------------------#######################    
         ######################## Sorting variants based on various criteria ##########################
         ######################-----------------------------------------------------------------####################
@@ -440,17 +443,17 @@ def filtereng():
             cancervarscore=df_sort[' CancerVar: CancerVar and Evidence '].str.split(':', expand=True)[1].str.split('#', expand=True)[0]
         else:
             cancervarscore=df_sort[' CancerVar: CancerVar and Evidence ']
-            
-        df_sort[' CancerVar: CancerVar and Evidence ']=cancervarscore.astype(str)
-
+        
+        ####converting columns to float
+        df_sort[' CancerVar: CancerVar and Evidence ']=cancervarscore.astype(float)
+        
         #according to 4basecare patho/vus
         df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':1, '.' :2, 'VUS':3, 'DRUG RESPONSE':5, 'RISK FACTOR':5,'DRUG RESPONSE/PATHOGENIC':20, 'LIKELY PATHOGENIC':10, 'PATHOGENIC; DRUG RESPONSE':20, 'PATHOGENIC':20 }})         
         
         #scoring clinvar and intervar inhouse
         df1=df1.replace({'InterVar_automated':{'.':2,'UNCERTAIN_SIGNIFICANCE':3,'LIKELY_BENIGN':1,'BENIGN':1, 'LIKELY_PATHOGENIC':4,'PATHOGENIC':5}})
-        df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: other ': 3, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
-        df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
-            
+        df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: other ':2, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
+        
         ####scoring clinvar############
         
         #conflicting
@@ -473,17 +476,16 @@ def filtereng():
         drugres=list(filter(lambda x:'rug_response' in x, clinvar))
         for d in list(set(drugres)):
             df1=df1.replace({'clinvar: Clinvar ': {d : 4}})
-    
-        df1[' CancerVar: CancerVar and Evidence ']= [float(i) for i in df1[' CancerVar: CancerVar and Evidence ']]
-    
+        
+       
+         
         df1['sort_score']= df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated']
         df_sort['sort_score']=df1['sort_score']
         df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
-        final_FENG_df=df_sort.drop(['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4','sort_score'], axis=1,inplace=True)
-
+    
         output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
-        final_FENG_df.to_excel( str(output_path), index=False)
-
+        df_sort.to_excel( str(output_path), index=False)
+    
         ###################################
         ### making filtered csv
         to_append= [f,tot_var,afknowngene,afsynony,afpop,aft4,afben,afcad,afgen]
@@ -491,11 +493,11 @@ def filtereng():
         filtered_df.loc[dflen]=to_append
         print(to_append)  
         print( "###" + str(num+1) + " out of " + str(len(folders)) + " files done")
-
+    
     filtered_df.to_csv(dirpath+"/"+"FE_filtered.csv")        
     print("#############################")
     print("############ DONE ###########")
     print("#############################")
-
-
-############################################################_END FILTER_ENGINE ############################################################
+    
+    
+    ############################################################_END FILTER_ENGINE ############################################################
