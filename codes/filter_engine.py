@@ -248,6 +248,8 @@ def filtereng():
             if len(df3)>0:  
                 df3=df3[colindex] 
                 afgen=len(df3)
+            else:
+                afgen=0
         else:
             df3=pd.DataFrame()
             afgen=0
