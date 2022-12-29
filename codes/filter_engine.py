@@ -117,11 +117,11 @@ def filtereng():
             
         if sample_type== 'DNA [Blood]': 
             merged_df[allele_freq]=merged_df[allele_freq].str.split(',', expand=True)[0].replace('.',0).fillna(0)
-            merged_df['Mutant_allelic_burden_%'] = merged_df[allele_freq]*100
+            merged_df['Mutant_allelic_burden_%'] = merged_df[allele_freq].astype(float)*100
             merged_df = merged_df.round({'Mutant_allelic_burden_%' : 0})
         else:
             merged_df[allele_freq] = merged_df[allele_freq].replace('.',0).fillna(0)
-            merged_df['Mutant_allelic_burden_%'] = merged_df[allele_freq]*100
+            merged_df['Mutant_allelic_burden_%'] = merged_df[allele_freq].astype(float)*100
             merged_df = merged_df.round({'Mutant_allelic_burden_%' : 0})
         
 
