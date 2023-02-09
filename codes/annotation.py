@@ -60,7 +60,9 @@ def anno():
 
     # Replace the project directory location, annotation_db. annotation_spk
         annoconfigdata = annoconfigdata.replace('{{annotation_db}}', annotation_db)
-        
+
+    with open(annoconfigfile, 'w') as file :
+        file.write(annoconfigdata)  
 
     #modifying the annotation_mod.sh file
     annofile=location+'/annotation/annotation_mod.sh'
