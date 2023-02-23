@@ -586,7 +586,31 @@ def filtereng():
             df1['sort_score']= special_score + df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated'] +  df1['Polyphen2_HVAR_pred'] + df1['MutationTaster_pred'] + df1['SIFT_pred'] + df1['FATHMM_pred'] + df1['MetaSVM_pred'] + df1['MetaLR_pred']
             df_sort['sort_score']=df1['sort_score']
             df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
-        
+            Tag=[]
+            for v in df_sort['sort_score']:
+                if v>=4.5:
+                    Tag.append('Pathogenic')
+                elif v>=3.5 and v<4.5:
+                    Tag.append('Grey')
+                elif v>1 and v<3.5:
+                    Tag.append('Grey')
+                else:
+                    Tag.append('-')
+            df_sort['Tag']=Tag
+
+             ######### Tagging false calls ############
+            FC=[]
+            for v in range(len(df_sort['FILTER'])):
+                if df1['Clin_Sig_inhouse'][v]>8:
+                    FC.append('True call')
+                elif (df_sort['FILTER'][v]!='PASS') & (df_sort['FILTER'][v]!='systematic_noise') & (df1['clinvar: Clinvar '][v]<2) & (df1['Clin_Sig_inhouse'][v]<8):
+                    FC.append('Probable False call')
+                else:
+                    FC.append('-')
+                    
+            df_sort['False call']=FC
+            
+            df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
             df_sort.to_excel( str(output_path), index=False)
         
