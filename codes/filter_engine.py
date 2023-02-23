@@ -43,7 +43,6 @@ def filtereng():
     filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
     
     #processing every sample in folder one by one
-    #processing every sample in folder one by one
     for f in folders:
         num=folders.index(f)
         f_path= dirpath + "/" + f
@@ -164,7 +163,6 @@ def filtereng():
         merged_df=merged_df.dropna(axis='columns', how='all')
         print(f + " : merged")
             
-        #re-arranging the index
         #re-arranging the index
         cols=list(merged_df.columns)
         colind= list(collist['reindex_wo_art'][collist['reindex_wo_art'].notna()])
@@ -479,6 +477,7 @@ def filtereng():
             df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':0.36, '.' :0, 'VUS':1.08, 'DRUG RESPONSE':5.4, 'RISK FACTOR':7.2,'DRUG RESPONSE/PATHOGENIC':10.8, 'LIKELY PATHOGENIC':9, 'PATHOGENIC; DRUG RESPONSE':10.8, 'PATHOGENIC': 10.8}})         
             
             #scoring intervar inhouse
+            df1['InterVar_automated']=[x.upper() for x in df1['InterVar_automated']]
             df1=df1.replace({'InterVar_automated':{'.':0.12,'UNCERTAIN_SIGNIFICANCE':0.12,'LIKELY_BENIGN':0,'BENIGN':0, 'LIKELY_PATHOGENIC':0.18,'PATHOGENIC':0.3}})
             df1['InterVar_automated']=df1['InterVar_automated'].astype(float)
             
@@ -603,8 +602,6 @@ def filtereng():
     print("#############################")
     print("############ DONE ###########")
     print("#############################")
-
-
 
 
     ############################################################_END FILTER_ENGINE ############################################################
