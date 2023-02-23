@@ -468,11 +468,11 @@ def filtereng():
             df_sort[' CancerVar: CancerVar and Evidence ']=cancervarscore.astype(float)
             
             #according to 4basecare patho/vus
-            df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':1, '.' :2, 'VUS':3, 'DRUG RESPONSE':5, 'RISK FACTOR':5,'DRUG RESPONSE/PATHOGENIC':20, 'LIKELY PATHOGENIC':10, 'PATHOGENIC; DRUG RESPONSE':20, 'PATHOGENIC':20 }})         
+            df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':0.36, '.' :0, 'VUS':1.08, 'DRUG RESPONSE':5.4, 'RISK FACTOR':7.2,'DRUG RESPONSE/PATHOGENIC':10.8, 'LIKELY PATHOGENIC':9, 'PATHOGENIC; DRUG RESPONSE':10.8, 'PATHOGENIC': 10.8}})         
             
-            #scoring clinvar and intervar inhouse
-            df1=df1.replace({'InterVar_automated':{'.':2,'UNCERTAIN_SIGNIFICANCE':3,'LIKELY_BENIGN':1,'BENIGN':1, 'LIKELY_PATHOGENIC':4,'PATHOGENIC':5}})
-            df1=df1.replace({'clinvar: Clinvar ':{'clinvar: UNK ':2, 'clinvar: not_provided ':2, 'clinvar: other ':2, 'clinvar: Uncertain_significance ':3,'clinvar: Likely_benign ':1,'clinvar: Likely_pathogenic ':6,'clinvar: Pathogenic/Likely_pathogenic ':6,'clinvar: Pathogenic ':6}})
+            #scoring intervar inhouse
+            df1=df1.replace({'InterVar_automated':{'.':0.12,'UNCERTAIN_SIGNIFICANCE':0.12,'LIKELY_BENIGN':0,'BENIGN':0, 'LIKELY_PATHOGENIC':0.18,'PATHOGENIC':0.3}})
+            df1['InterVar_automated']=df1['InterVar_automated'].astype(float)
             
             ####scoring clinvar############
             
@@ -480,38 +480,117 @@ def filtereng():
             clinvar= df1['clinvar: Clinvar '].astype(str)
             conflict=list(filter(lambda x:'Conflicting' in x, clinvar))
             for c in list(set(conflict)):  
-                df1=df1.replace({'clinvar: Clinvar ': {c : 3}})
+                df1=df1.replace({'clinvar: Clinvar ': {c : 0.9}})
             #pathogenic
             clinvar= df1['clinvar: Clinvar '].astype(str)
             pathogenic=list(filter(lambda x:'athogenic' in x, clinvar))
             for p in list(set(pathogenic)):
-                df1=df1.replace({'clinvar: Clinvar ': {p : 6}})
+                df1=df1.replace({'clinvar: Clinvar ': {p : 2.7}})
             #benign
             clinvar= df1['clinvar: Clinvar '].astype(str)
-            benign=list(filter(lambda x:'enign' in x, clinvar))
+            benign=list(filter(lambda x:'Likely_benign' in x, clinvar))
             for b in list(set(benign)):
-                df1=df1.replace({'clinvar: Clinvar ': {b : 1}})
+                df1=df1.replace({'clinvar: Clinvar ': {b : 0.36}})
             #drug response
             clinvar= df1['clinvar: Clinvar '].astype(str)
             drugres=list(filter(lambda x:'rug_response' in x, clinvar))
             for d in list(set(drugres)):
-                df1=df1.replace({'clinvar: Clinvar ': {d : 4}})
+                df1=df1.replace({'clinvar: Clinvar ': {d : 2.34}})
+            
+            #affects
+            clinvar= df1['clinvar: Clinvar '].astype(str)
+            affects=list(filter(lambda x:'affects' in x, clinvar))
+            for a in list(set(affects)):
+                df1=df1.replace({'clinvar: Clinvar ': {a : 0.9}})
+            
+            #others 
+            clinvar= df1['clinvar: Clinvar '].astype(str)
+            others=list(df1['clinvar: Clinvar '][df1['clinvar: Clinvar '].str.isnumeric()==False])
+            for o in list(set(others)):
+                df1=df1.replace({'clinvar: Clinvar ': {o : 0.36}})
+            
+            ################ Scoring Cancervar #############
+            cancervar=df1[' CancerVar: CancerVar and Evidence ']
+            cancervar_high=list(filter(lambda x: x>=8, cancervar))
+            for i in list(set(cancervar_high)):
+                df1=df1.replace({' CancerVar: CancerVar and Evidence ': {i : 0.3}})
+            cancervar_tier3=list(filter(lambda x: x<8 and 3<x, cancervar))
+            for i in list(set(cancervar_tier3)):
+                df1=df1.replace({' CancerVar: CancerVar and Evidence ': {i : 0.18}})
+            cancervar_tier4=list(filter(lambda x: x<=3, cancervar))
+            for i in list(set(cancervar_tier4)):
+                df1=df1.replace({' CancerVar: CancerVar and Evidence ': {i : 0}})
+            cancervar_unknown=list(filter(lambda x: x=='.', cancervar))
+            for i in list(set(cancervar_unknown)):
+                df1=df1.replace({' CancerVar: CancerVar and Evidence ': {i : 0.12}})
+            
+            ################ Scoring CADD #############
+            CADD=df1['CADD13_PHRED'].replace('.',0).astype(float)
+        
+            CADD_unknown=list(filter(lambda x: x<20, CADD))
+            for i in list(set(CADD_unknown)):
+                df1=df1.replace({'CADD13_PHRED': {i : 0.16}})
+            
+            CADD_high=list(filter(lambda x: x>=30, CADD))
+            for i in list(set(CADD_high)):
+                df1=df1.replace({'CADD13_PHRED': {i : 0.8}})
+            
+            CADD_moderate=list(filter(lambda x: x<30 and 20<x, CADD))
+            for i in list(set(CADD_moderate)):
+                df1=df1.replace({'CADD13_PHRED': {i : 0.48}})
     
-            df1['sort_score']= df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated']
+            CADD_low=list(filter(lambda x: x<20, CADD))
+            for i in list(set(CADD_low)):
+                df1=df1.replace({'CADD13_PHRED': {i : 0.32}})
+        
+            ################ Scoring In-silico #####################
+            insilico= ['SIFT_pred', 'FATHMM_pred', 'MetaSVM_pred', 'MetaLR_pred']
+            for i in insilico:              
+                to_replace= {'.':0, 'D':0.16, 'T':0}
+                for key, value in to_replace.items():
+                df1[i] = df1[i].replace(key, value)
+            
+            to_replace= {'.':0, 'B':0.16, 'D':0.16, 'P':0}
+            for key, value in to_replace.items():
+                df1['Polyphen2_HVAR_pred'] = df1['Polyphen2_HVAR_pred'].replace(key, value)
+            
+            to_replace= {'.':0.32, 'A':0.48, 'D':0.48, 'N':0, 'P':0, 'Unknown':0.32}
+            for key, value in to_replace.items():
+                df1['MutationTaster_pred'] = df1['MutationTaster_pred'].replace(key, value)
+            
+            ##################Special score #######################
+            special_score=[]
+            for i, row in df1.iterrows():
+                if 'Insertion' in row['ExonicFunc.ensGene']:
+                    ss=2.7
+                if 'Deletion' in row['ExonicFunc.ensGene']:
+                    ss=2.7
+                elif '.' in row['ExonicFunc.ensGene']:
+                    ss=1.8
+                elif 'splicing' in row['Func.ensGene']:
+                    ss=1.8
+                elif 'Stopgain' in row['ExonicFunc.ensGene']:
+                    ss=1.8
+                else:
+                    ss=0
+                special_score.append(ss)  
+            
+             ################ compiling scores #############
+            df1['sort_score']= special_score + df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated'] +  df1['Polyphen2_HVAR_pred'] + df1['MutationTaster_pred'] + df1['SIFT_pred'] + df1['FATHMM_pred'] + df1['MetaSVM_pred'] + df1['MetaLR_pred']
             df_sort['sort_score']=df1['sort_score']
             df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
         
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
             df_sort.to_excel( str(output_path), index=False)
-        
+    
         ###################################
         ### making filtered csv
-        to_append= [f,tot_var,afknowngene,afsynony,afpop,aft4,afben,afcad,afgen]
+        to_append= [f,tot_var,afgen,afknowngene,afsynony,afpop,aft4,afben,afcad]
         dflen=len(filtered_df)
         filtered_df.loc[dflen]=to_append
         print(to_append)  
         print( "###" + str(num+1) + " out of " + str(len(folders)) + " files done")
-    
+
     filtered_df.to_csv(dirpath+"/"+"FE_filtered.csv")        
     print("#############################")
     print("############ DONE ###########")
