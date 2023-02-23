@@ -43,6 +43,7 @@ def filtereng():
     filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
     
     #processing every sample in folder one by one
+    #processing every sample in folder one by one
     for f in folders:
         num=folders.index(f)
         f_path= dirpath + "/" + f
@@ -164,18 +165,19 @@ def filtereng():
         print(f + " : merged")
             
         #re-arranging the index
+        #re-arranging the index
         cols=list(merged_df.columns)
         colind= list(collist['reindex_wo_art'][collist['reindex_wo_art'].notna()])
         colindex=list( [cols[int(i)] for i in colind] )
                             
         final_df=merged_df[colindex]           
         tot_var=len(final_df)
-        
+            
         #writing merged file
         output_path= dirpath + "/FE_merged/" + f + '_merged_output.csv'        
         final_df.to_csv(output_path, index=False)
         
-        ############## Filtration ##########
+        ############## Filtration ########## 
         
         #######$$$$$$ Filtering for Clinvar pathogenic variants 
         clinvar= final_df[final_df['clinvar: Clinvar '].str.contains('pathogen', case=False, regex=True)]
@@ -187,7 +189,6 @@ def filtereng():
             afknowngene= len(df)   
         else:
             afknowngene= 0
-            
         ##### filtering synonymous
         if len(df)>0:
             df= df[df['ExonicFunc.ensGene']!='synonymous SNV']
@@ -231,7 +232,11 @@ def filtereng():
         
         afcad=len(df)
         
+        ##$$$$$ COMBINING clinvar variants and filtered variants together $$$$$###
         
+        if len(df)>0:
+            df=df.append(clinvar,sort=False)
+
         ###### Gene filtering
         if len(df)>0:
             df['Ref.Gene']= [x.upper() for x in df['Ref.Gene']]
@@ -254,9 +259,7 @@ def filtereng():
             df3=pd.DataFrame()
             afgen=0
 
-        ##$$$$$ COMBINING clinvar variants and filtered variants together $$$$$###
-        if len(df3)>0:
-            df3=df3.append(clinvar,sort=False)
+        
         
         #modified 27-10-2021
             df3['ExonicFunc.ensGene'] = df3['ExonicFunc.ensGene'].str.upper()
@@ -267,7 +270,12 @@ def filtereng():
             for p in popfreqs:
                 df3[p]=df3[p].replace('.',0).fillna(0) 
                 df3[p]=  df3[p].astype(float).round(4)
-            
+        #redundanct code for CADD
+            if len(df3)>0:
+                df['CADD13_PHRED']=df['CADD13_PHRED'].replace('.',15).fillna(15)
+                df['CADD13_PHRED']=[float(i) for i in list(df['CADD13_PHRED'])]
+                df=df[df['CADD13_PHRED']>=15]
+        
         ##Generating the Genomic Alt column
         
             #Rows not containing Frameshift Deletion
@@ -497,7 +505,7 @@ def filtereng():
             for d in list(set(drugres)):
                 df1=df1.replace({'clinvar: Clinvar ': {d : 2.34}})
             
-            #affects
+        #affects
             clinvar= df1['clinvar: Clinvar '].astype(str)
             affects=list(filter(lambda x:'affects' in x, clinvar))
             for a in list(set(affects)):
@@ -542,14 +550,14 @@ def filtereng():
             CADD_low=list(filter(lambda x: x<20, CADD))
             for i in list(set(CADD_low)):
                 df1=df1.replace({'CADD13_PHRED': {i : 0.32}})
-        
+            
             ################ Scoring In-silico #####################
             insilico= ['SIFT_pred', 'FATHMM_pred', 'MetaSVM_pred', 'MetaLR_pred']
-            for i in insilico:
+            for i in insilico:              
                 to_replace= {'.':0, 'D':0.16, 'T':0}
                 for key, value in to_replace.items():
                     df1[i] = df1[i].replace(key, value)
-                
+            
             to_replace= {'.':0, 'B':0.16, 'D':0.16, 'P':0}
             for key, value in to_replace.items():
                 df1['Polyphen2_HVAR_pred'] = df1['Polyphen2_HVAR_pred'].replace(key, value)
@@ -573,17 +581,16 @@ def filtereng():
                     ss=1.8
                 else:
                     ss=0
-                special_score.append(ss)  
-            
-             ################ compiling scores #############
+                special_score.append(ss)   
+            ################ compiling scores #############
             df1['sort_score']= special_score + df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated'] +  df1['Polyphen2_HVAR_pred'] + df1['MutationTaster_pred'] + df1['SIFT_pred'] + df1['FATHMM_pred'] + df1['MetaSVM_pred'] + df1['MetaLR_pred']
             df_sort['sort_score']=df1['sort_score']
             df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
         
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
             df_sort.to_excel( str(output_path), index=False)
-    
-        ###################################
+        
+            ###################################
         ### making filtered csv
         to_append= [f,tot_var,afgen,afknowngene,afsynony,afpop,aft4,afben,afcad]
         dflen=len(filtered_df)
@@ -595,6 +602,6 @@ def filtereng():
     print("#############################")
     print("############ DONE ###########")
     print("#############################")
-    
-    
+
+
     ############################################################_END FILTER_ENGINE ############################################################
