@@ -505,17 +505,18 @@ def filtereng():
             for d in list(set(drugres)):
                 df1=df1.replace({'clinvar: Clinvar ': {d : 2.34}})
             
-        #affects
+            #affects
             clinvar= df1['clinvar: Clinvar '].astype(str)
             affects=list(filter(lambda x:'affects' in x, clinvar))
             for a in list(set(affects)):
                 df1=df1.replace({'clinvar: Clinvar ': {a : 0.9}})
             
             #others 
-            clinvar= df1['clinvar: Clinvar '].astype(str)
-            others=list(df1['clinvar: Clinvar '][df1['clinvar: Clinvar '].str.isnumeric()==False])
-            for o in list(set(others)):
-                df1=df1.replace({'clinvar: Clinvar ': {o : 0.36}})
+            if len(df1['clinvar: Clinvar '][pd.to_numeric(df1['clinvar: Clinvar '], errors='coerce').notnull()])!= len(df1):
+                clinvar= df1['clinvar: Clinvar '].astype(str)
+                others=list(df1['clinvar: Clinvar '][df1['clinvar: Clinvar '].str.isnumeric()==False])
+                for o in list(set(others)):
+                    df1=df1.replace({'clinvar: Clinvar ': {o : 0.36}})
             
             ################ Scoring Cancervar #############
             cancervar=df1[' CancerVar: CancerVar and Evidence ']
