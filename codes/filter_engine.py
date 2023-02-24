@@ -40,7 +40,8 @@ def filtereng():
         if s in folders:
             folders.remove(s)
     
-    filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
+    filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after pop_freq', 'after synony','after t4', 'after benign', 'after cadd' ])
+
     #processing every sample in folder one by one:
     for f in folders:
         num=folders.index(f)
