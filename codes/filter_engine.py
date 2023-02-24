@@ -559,7 +559,7 @@ def filtereng():
             for i in insilico:              
                 to_replace= {'.':0, 'D':0.16, 'T':0}
                 for key, value in to_replace.items():
-                df1[i] = df1[i].replace(key, value)
+                    df1[i] = df1[i].replace(key, value)
             
             to_replace= {'.':0, 'B':0.16, 'D':0.16, 'P':0}
             for key, value in to_replace.items():
@@ -592,7 +592,7 @@ def filtereng():
             Tag=[]
             for v in df_sort['sort_score']:
                 if v>=4.5:
-                Tag.append('Pathogenic')
+                    Tag.append('Pathogenic')
                 elif v>=3.5 and v<4.5:
                     Tag.append('Grey')
                 elif v>1 and v<3.5:
