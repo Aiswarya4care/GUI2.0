@@ -610,6 +610,10 @@ def filtereng():
                     
             df_sort['False call']=FC
             
+            #converting numeric columns to str
+            df_sort['sort_score'] = df_sort['sort_score'].map(str)
+            df_sort[' CancerVar: CancerVar and Evidence '] = df_sort[' CancerVar: CancerVar and Evidence '].map(str)
+            
             df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
             df_sort.to_excel( str(output_path), index=False)
