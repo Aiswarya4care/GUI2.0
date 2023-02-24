@@ -41,25 +41,25 @@ def filtereng():
             folders.remove(s)
     
     filtered_df= pd.DataFrame(columns=['samplename','total_var','after exonic', 'after synony','after t4', 'after benign', 'after cadd', 'after pop_freq','after gen'])
-    
-    #processing every sample in folder one by one
+    #processing every sample in folder one by one:
     for f in folders:
         num=folders.index(f)
         f_path= dirpath + "/" + f
         files= os.listdir(f_path)
         cancer= [obj for obj in files if 'cancervar.hg19_multianno.txt.cancervar' in obj]
+        subannovar=[obj for obj in files if 'hg19_multianno.txt.grl_p' in obj]
         annovar= [obj for obj in files if '_out.hg19_multianno' in obj]
         vcf= [obj for obj in files if 'final.tab' in obj]
         print(f)
-
+        
         #locations of different files
         cancerloc= dirpath + "/" + f + "/" + cancer[0]
         vcfloc= dirpath + "/" + f + "/" + vcf[0]
         annoloc= dirpath + "/" + f + "/" + annovar[0]
-
+        subannoloc=dirpath + "/" + f + "/" + subannovar[0]
         
         #Detecting dragen 3.6 or 3.9 & reading columns file
-        vcfdetect=pd.read_csv(vcfloc, sep="/t")
+        vcfdetect=pd.read_csv(vcfloc, sep="\t")
         if 'INFO:hotspot' in vcfdetect.columns:
             collist= pd.read_csv(GUIpath+ "/filter/columns39.csv")
         else:
@@ -73,9 +73,16 @@ def filtereng():
         vcfcol=[int(i) for i in vcfcol] #converting it into integers
         vcf= pd.read_csv(vcfloc, usecols=vcfcol, sep='\t')
         
+        ########### Adding Gnomad info to annovar ################
+        subannovar=pd.read_csv(subannoloc, usecols=['gnomAD_genome_ALL', 'gnomAD_genome_EAS','gnomAD_genome_OTH'], sep='\t')
+        
         annocol=collist['multianno'][collist['multianno'].notna()]
-        annovar= pd.read_csv(annoloc,usecols=annocol, sep='\t')
-
+        annovar= pd.read_csv(annoloc,usecols=annocol, sep='\t') 
+        
+        for g in ['gnomAD_genome_ALL', 'gnomAD_genome_EAS','gnomAD_genome_OTH']:
+            annovar[g]=pd.to_numeric(subannovar[g].values, errors='coerce')
+            annovar[g]=annovar[g].replace('.',0).fillna(0)
+        
         # modifying vcf position values
         
         for i in range(len(vcf)):
@@ -104,8 +111,8 @@ def filtereng():
         merged_df['intervar_inhouse']=merged_df[list(merged_df.columns[31:59])].apply(lambda x: ', '.join(x[x.notnull()]), axis = 1)
 
         ##Inserting columns 
-        merged_df.insert(6, "IGV_link", value=None, allow_duplicates=False)
-        merged_df.insert(7, "Mutant_allelic_burden_%", value=None, allow_duplicates=False)
+        merged_df.insert(len(merged_df.columns), "IGV_link", value=None, allow_duplicates=False)
+        merged_df.insert(len(merged_df.columns), "Mutant_allelic_burden_%", value=None, allow_duplicates=False)
         
         #add igv data in to the empty column
         merged_df['End'] =  merged_df['End'].replace('.', 0).fillna(0)
@@ -164,6 +171,7 @@ def filtereng():
         print(f + " : merged")
             
         #re-arranging the index
+        #re-arranging the index
         cols=list(merged_df.columns)
         colind= list(collist['reindex_wo_art'][collist['reindex_wo_art'].notna()])
         colindex=list( [cols[int(i)] for i in colind] )
@@ -176,17 +184,20 @@ def filtereng():
         final_df.to_csv(output_path, index=False)
         
         ############## Filtration ########## 
-        
+        df3=final_df
+            
         #######$$$$$$ Filtering for Clinvar pathogenic variants 
-        clinvar= final_df[final_df['clinvar: Clinvar '].str.contains('pathogen', case=False, regex=True)]
+        #clinvar= df3[df3['clinvar: Clinvar '].str.contains('pathogenic', case=False, regex=True)]
+        clinvar= df3[df3['clinvar: Clinvar '].str.lower().str.contains('pathogenic ', regex=True)]
         
         ####### filtering Func.knownGene
-        if len(final_df)>0:
-            df= final_df[final_df['Func.ensGene'].str.contains('exonic|splicing', case=False, regex=True)]
+        if len(df3)>0:
+            df= df3[df3['Func.ensGene'].str.contains('exonic|splicing', case=False, regex=True)]
             df= df[df['Func.ensGene'].str.contains('RNA')==False]
             afknowngene= len(df)   
         else:
             afknowngene= 0
+            
         ##### filtering synonymous
         if len(df)>0:
             df= df[df['ExonicFunc.ensGene']!='synonymous SNV']
@@ -196,7 +207,7 @@ def filtereng():
             afsynony= 0
         #####filtering pop freq
         
-        popfreqs=['esp6500siv2_all','ExAC_ALL','ExAC_SAS','AF','AF_sas','1000g2015aug_all','1000g2015aug_SAS']
+        popfreqs=['esp6500siv2_all','ExAC_ALL','ExAC_SAS','AF','AF_sas','1000g2015aug_all','1000g2015aug_SAS','gnomAD_genome_ALL', 'gnomAD_genome_EAS','gnomAD_genome_OTH']
         
         print(f + " filtering in progress..")
         
@@ -230,34 +241,12 @@ def filtereng():
         
         afcad=len(df)
         
+    
+
         ##$$$$$ COMBINING clinvar variants and filtered variants together $$$$$###
-        
-        if len(df)>0:
-            df=df.append(clinvar,sort=False)
-
-        ###### Gene filtering
-        if len(df)>0:
-            df['Ref.Gene']= [x.upper() for x in df['Ref.Gene']]
-            df2=df[df['Ref.Gene'].str.contains('|'.join(testgenes))]
-            df3= pd.DataFrame()
-            for g in range(len(df2)):
-                if ";" in df2['Ref.Gene'].iloc[g]:
-                    gene= df2['Ref.Gene'].iloc[g].split(";")[0]
-                else:
-                    gene= df2['Ref.Gene'].iloc[g]
-                    
-                    if gene in testgenes:
-                        df3=df3.append(df2.iloc[g])
-            if len(df3)>0:  
-                df3=df3[colindex] 
-                afgen=len(df3)
-            else:
-                afgen=0
-        else:
-            df3=pd.DataFrame()
-            afgen=0
-
-        
+        df3=df
+        if len(df3)>0:
+            df3=df3.append(clinvar,sort=False)
         
         #modified 27-10-2021
             df3['ExonicFunc.ensGene'] = df3['ExonicFunc.ensGene'].str.upper()
@@ -291,7 +280,8 @@ def filtereng():
             df_d['Genomic Alteration'] = df_d['CHROM_x'].astype(str) + [':g.'] + df_d['POS_x'].astype(str) + "_" + df_d['End_x'].astype(str)
             
             #merging both dataframes
-            df3 = pd.merge(df_n, df_d, how='outer')
+            if len(df_d)>0:
+                df3 = pd.merge(df_n, df_d, how='outer')
             #changing coloumn
             col_list = list(df3.columns)
             col_list[-2], col_list[-1] = col_list[-1], col_list[-2]
@@ -366,15 +356,15 @@ def filtereng():
             df3.drop_duplicates(subset=None, keep="first", inplace=True)
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx'  
             df3.to_excel(output_path, index=False)
-
+            
             print(f + " :filtered")
             ###################################
-           
+            
             ########### Re-arranging embemsl column ########
             df3 = df3.rename(columns={'ensemble_value': 'Ensemble_Value'})
             df3.insert(loc=9, column='ensemble_value', value=df3['Ensemble_Value'])
             df3.drop('Ensemble_Value', axis=1, inplace=True)
-        
+            
     ####################------------------------------------------------------------------------------------
     ##################  Adding clinical sig and role data to the FENG file   #################################
     #####################-------------- by prabir saha----------------------------------------------------------------------
@@ -459,8 +449,7 @@ def filtereng():
                 df_new.drop([i],axis=0, inplace=True)
             
             df_new.drop('New_Format',axis=1, inplace=True)
-            df_new.drop('Therap_list',axis=1, inplace=True)
-            df_new.drop('Pathway',axis=1, inplace=True)
+        
         
             #df_new is the output of the above chunk of code #
             print('Clinical sig and role added to FENG file for ' + f)
@@ -470,6 +459,7 @@ def filtereng():
             ######################-----------------------------------------------------------------####################
             
             df_sort= df_new
+                            
             if "#" in df_sort[' CancerVar: CancerVar and Evidence '][0]:
                 cancervarscore=df_sort[' CancerVar: CancerVar and Evidence '].str.split(':', expand=True)[1].str.split('#', expand=True)[0]
             else:
@@ -480,9 +470,8 @@ def filtereng():
             
             #according to 4basecare patho/vus
             df1=df_sort.replace({'Clin_Sig_inhouse': {'UNCERTAIN SIGNIFICANCE':0.36, '.' :0, 'VUS':1.08, 'DRUG RESPONSE':5.4, 'RISK FACTOR':7.2,'DRUG RESPONSE/PATHOGENIC':10.8, 'LIKELY PATHOGENIC':9, 'PATHOGENIC; DRUG RESPONSE':10.8, 'PATHOGENIC': 10.8}})         
-            
+            df1['Clin_Sig_inhouse']=df1['Clin_Sig_inhouse'].astype(float)
             #scoring intervar inhouse
-            df1['InterVar_automated']=[x.upper() for x in df1['InterVar_automated']]
             df1=df1.replace({'InterVar_automated':{'.':0.12,'UNCERTAIN_SIGNIFICANCE':0.12,'LIKELY_BENIGN':0,'BENIGN':0, 'LIKELY_PATHOGENIC':0.18,'PATHOGENIC':0.3}})
             df1['InterVar_automated']=df1['InterVar_automated'].astype(float)
             
@@ -509,19 +498,26 @@ def filtereng():
             for d in list(set(drugres)):
                 df1=df1.replace({'clinvar: Clinvar ': {d : 2.34}})
             
-            #affects
+        #affects
             clinvar= df1['clinvar: Clinvar '].astype(str)
             affects=list(filter(lambda x:'affects' in x, clinvar))
             for a in list(set(affects)):
                 df1=df1.replace({'clinvar: Clinvar ': {a : 0.9}})
             
             #others 
-            if len(df1['clinvar: Clinvar '][pd.to_numeric(df1['clinvar: Clinvar '], errors='coerce').notnull()])!= len(df1):
-                clinvar= df1['clinvar: Clinvar '].astype(str)
+            clinvar= df1['clinvar: Clinvar '].astype(str)
+            if len([num for num in df1['clinvar: Clinvar '] if isinstance(num, (int,float))])!= len(df1):
+                nonnumerics=df1['clinvar: Clinvar '].str.isnumeric()==False
+                nonnumerics=nonnumerics.sum()
+            else:
+                nonnumerics=0
+                
+            if nonnumerics>0:
                 others=list(df1['clinvar: Clinvar '][df1['clinvar: Clinvar '].str.isnumeric()==False])
+            
                 for o in list(set(others)):
                     df1=df1.replace({'clinvar: Clinvar ': {o : 0.36}})
-            
+                
             ################ Scoring Cancervar #############
             cancervar=df1[' CancerVar: CancerVar and Evidence ']
             cancervar_high=list(filter(lambda x: x>=8, cancervar))
@@ -551,17 +547,19 @@ def filtereng():
             CADD_moderate=list(filter(lambda x: x<30 and 20<x, CADD))
             for i in list(set(CADD_moderate)):
                 df1=df1.replace({'CADD13_PHRED': {i : 0.48}})
-
+    
             CADD_low=list(filter(lambda x: x<20, CADD))
             for i in list(set(CADD_low)):
                 df1=df1.replace({'CADD13_PHRED': {i : 0.32}})
+            
+            df1['CADD13_PHRED']=df1['CADD13_PHRED'].replace('.',0).astype(float)
             
             ################ Scoring In-silico #####################
             insilico= ['SIFT_pred', 'FATHMM_pred', 'MetaSVM_pred', 'MetaLR_pred']
             for i in insilico:              
                 to_replace= {'.':0, 'D':0.16, 'T':0}
                 for key, value in to_replace.items():
-                    df1[i] = df1[i].replace(key, value)
+                df1[i] = df1[i].replace(key, value)
             
             to_replace= {'.':0, 'B':0.16, 'D':0.16, 'P':0}
             for key, value in to_replace.items():
@@ -590,11 +588,11 @@ def filtereng():
             ################ compiling scores #############
             df1['sort_score']= special_score + df1['clinvar: Clinvar '] + df1[' CancerVar: CancerVar and Evidence ']+ df1['Clin_Sig_inhouse']+ df1['InterVar_automated'] +  df1['Polyphen2_HVAR_pred'] + df1['MutationTaster_pred'] + df1['SIFT_pred'] + df1['FATHMM_pred'] + df1['MetaSVM_pred'] + df1['MetaLR_pred']
             df_sort['sort_score']=df1['sort_score']
-            df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
+            
             Tag=[]
             for v in df_sort['sort_score']:
                 if v>=4.5:
-                    Tag.append('Pathogenic')
+                Tag.append('Pathogenic')
                 elif v>=3.5 and v<4.5:
                     Tag.append('Grey')
                 elif v>1 and v<3.5:
@@ -602,8 +600,8 @@ def filtereng():
                 else:
                     Tag.append('-')
             df_sort['Tag']=Tag
-
-             ######### Tagging false calls ############
+            
+            ######### Tagging false calls ############
             FC=[]
             for v in range(len(df_sort['FILTER'])):
                 if df1['Clin_Sig_inhouse'][v]>8:
@@ -615,17 +613,18 @@ def filtereng():
                     
             df_sort['False call']=FC
             
+            df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
+            
             #converting numeric columns to str
             df_sort['sort_score'] = df_sort['sort_score'].map(str)
             df_sort[' CancerVar: CancerVar and Evidence '] = df_sort[' CancerVar: CancerVar and Evidence '].map(str)
             
-            df_sort=df_sort.sort_values(by=['sort_score'], ascending=False)
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx' 
             df_sort.to_excel( str(output_path), index=False)
         
             ###################################
         ### making filtered csv
-        to_append= [f,tot_var,afgen,afknowngene,afsynony,afpop,aft4,afben,afcad]
+        to_append= [f,tot_var,afknowngene,afsynony,afpop,aft4,afben,afcad]
         dflen=len(filtered_df)
         filtered_df.loc[dflen]=to_append
         print(to_append)  
