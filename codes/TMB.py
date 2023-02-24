@@ -16,13 +16,13 @@ def tmb_calculation():
     GUIpath=config_gui.GUIpath
     reload(globalv)
     dirpath= globalv.location
-    test=globalv.test
-    panelsize=tmbpanelsize[test] #number that has to be divided with for tmb calculation
+    capturingkit=globalv.capturingkit
+    panelsize=tmbpanelsize[capturingkit] #number that has to be divided with for tmb calculation
 
     cohort4= pd.read_csv(GUIpath+ "/filter/4basecare-germline-cohort.csv")
 
     #fetching sample folders
-    files= os.listdir(dirpath + "annotation/FE_merged/")
+    files= os.listdir(dirpath + "/annotation/FE_merged/")
     warnings.filterwarnings("ignore")
 
             
@@ -33,7 +33,7 @@ def tmb_calculation():
         num=files.index(f)
         ################## TMB Calculation #########################
         
-        dftmb= pd.read_excel(dirpath + "annotation/FE_merged/"+f)
+        dftmb= pd.read_csv(dirpath + "/annotation/FE_merged/"+f)
         
         tot_var=len(dftmb)
         ##################### After PASS filter ##################
