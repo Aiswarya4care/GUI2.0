@@ -366,9 +366,14 @@ def filtereng():
             df3.drop_duplicates(subset=None, keep="first", inplace=True)
             output_path= dirpath + "/FE_filtered/" + f + '_FENG.xlsx'  
             df3.to_excel(output_path, index=False)
-            
+
             print(f + " :filtered")
             ###################################
+           
+            ########### Re-arranging embemsl column ########
+            df3 = df3.rename(columns={'ensemble_value': 'Ensemble_Value'})
+            df3.insert(loc=9, column='ensemble_value', value=df3['Ensemble_Value'])
+            df3.drop('Ensemble_Value', axis=1, inplace=True)
         
     ####################------------------------------------------------------------------------------------
     ##################  Adding clinical sig and role data to the FENG file   #################################
